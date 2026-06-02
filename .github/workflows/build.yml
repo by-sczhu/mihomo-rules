@@ -1,12 +1,10 @@
-name: Build RuleSet
+name: Build PT Ruleset
 
 on:
   workflow_dispatch:
   push:
-    branches:
-      - main
     paths:
-      - 'rule/**'
+      - 'rule/category-pt.list'
 
 permissions:
   contents: write
@@ -16,45 +14,51 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-
       - name: Checkout
         uses: actions/checkout@v4
 
+      - name: Create Workspace
+        run: |
+          mkdir -p build
+
+      - name: Convert List Format
+        run: |
+          sed 's/^+\.//g;s/^/DOMAIN-SUFFIX,/' \
+          rule/category-pt.list \
+          > build/category-pt.txt
+
       - name: Download Mihomo
         run: |
-          wget -O mihomo.gz \
-          https://github.com/MetaCubeX/mihomo/releases/latest/download/mihomo-linux-amd64-compatible.gz
+          wget -q \
+          https://github.com/MetaCubeX/mihomo/releases/latest/download/mihomo-linux-amd64-compatible.gz \
+          -O mihomo.gz
 
           gunzip mihomo.gz
-          chmod +x mihomo
+          mv mihomo mihomo-bin
 
-      - name: Convert RuleSet
+          chmod +x mihomo-bin
+
+      - name: Build MRS
         run: |
+          ./mihomo-bin convert-ruleset domain text \
+          build/category-pt.txt \
+          rule/category-pt.mrs
 
-          mkdir -p build
-          mkdir -p output
-
-          for file in rule/*.list
-          do
-
-            name=$(basename "$file" .list)
-
-            sed 's/^+\.//g;s/^/DOMAIN-SUFFIX,/' "$file" \
-            > "build/${name}.txt"
-
-            ./mihomo convert-ruleset domain text \
-            "build/${name}.txt" \
-            "output/${name}.mrs"
-
-          done
-
-      - name: Generate Tag
-        id: tag
+      - name: Commit MRS
         run: |
-          echo "tag=$(date +'%Y%m%d-%H%M%S')" >> $GITHUB_OUTPUT
+          git config --global user.name github-actions
+          git config --global user.email github-actions@github.com
+
+          git add rule/category-pt.mrs
+
+          git diff --cached --quiet || \
+          git commit -m "Update category-pt.mrs"
+
+          git push
 
       - name: Release
         uses: softprops/action-gh-release@v2
         with:
-          tag_name: ${{ steps.tag.outputs.tag }}
-          files: output/*
+          tag_name: latest
+          files: |
+            rule/category-pt.mrs
