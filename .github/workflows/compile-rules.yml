@@ -1,126 +1,153 @@
-name: Compile All Mihomo Rules to MRS
+name: Build Mihomo MRS
 
 on:
-  workflow_dispatch: # 1. 支持在 GitHub 页面上手动点击按钮触发
+  workflow_dispatch:
+
   push:
     branches:
       - main
-      - master     # 2. 当你往 main 或 master 分支推送代码时触发
+      - master
     paths:
-      - 'rules/*.list' # 只要 rules 目录下的 .list 文件发生变动就会触发
-  schedule:
-    - cron: '0 20 * * *' # 3. 定时触发：国际标准时间 20:00，即北京时间每天凌晨 04:00 全自动重新编译
+      - 'rules/**/*.list'
 
-env:
-  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+  schedule:
+    - cron: '0 20 * * *'
+
+permissions:
+  contents: write
 
 jobs:
-  compile:
+  build:
+    if: github.actor != 'github-actions[bot]'
+
     runs-on: ubuntu-latest
-    permissions:
-      contents: write # 显式声明赋予 GitHub 机器人写入和推送代码的权限
 
     steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 1 # 浅克隆以极速拉取仓库
+      - name: Checkout
+        uses: actions/checkout@v5
 
-      - name: Set Up Latest Stable Mihomo Core
+      - name: Install dependencies
         run: |
-          echo "🚀 正在下载最新稳定版的 Mihomo 内核..."
-          # 使用官方最新 v1.19.26 稳定版内核，规避了 alpha 版本的哈希变动风险
-          DOWNLOAD_URL="https://github.com/MetaCubeX/mihomo/releases/download/v1.19.26/mihomo-linux-amd64-v1.19.26.gz"
-          
-          curl -L -o mihomo.gz "$DOWNLOAD_URL"
+          sudo apt-get update
+          sudo apt-get install -y jq curl
+
+      - name: Download latest Mihomo
+        run: |
+          set -e
+
+          TAG=$(curl -s \
+            https://api.github.com/repos/MetaCubeX/mihomo/releases/latest \
+            | jq -r '.tag_name')
+
+          echo "Latest Mihomo: $TAG"
+
+          URL="https://github.com/MetaCubeX/mihomo/releases/download/${TAG}/mihomo-linux-amd64-${TAG}.gz"
+
+          curl -L "$URL" -o mihomo.gz
+
           gunzip -f mihomo.gz
-          mv mihomo-linux-amd64* mihomo 2>/dev/null || true
-          chmod +x mihomo
-          
-          echo "----------------------------------------"
-          echo "验证 Mihomo 内核是否工作正常："
-          ./mihomo -v
-          echo "----------------------------------------"
 
-      - name: Preprocess and Batch Compile Rules
+          mv mihomo-linux-amd64* mihomo
+
+          chmod +x mihomo
+
+          ./mihomo -v
+
+      - name: Compile all rules
+        shell: bash
         run: |
-          echo "🔍 正在扫描 rules/ 目录下的 .list 文件..."
+          set -e
+
           mkdir -p rules
-          
-          # 开启扩展通配符防空匹配
-          shopt -s nullglob
-          LIST_FILES=(rules/*.list)
-          LIST_FILES=(${LIST_FILES[@]/%*.clean.list/})
-          
-          if [ ${#LIST_FILES[@]} -eq 0 ]; then
-            echo "ℹ️ rules/ 目录下未找到任何需要转换的 .list 文件。"
+
+          mapfile -t FILES < <(
+            find rules \
+              -type f \
+              -name "*.list"
+          )
+
+          if [ ${#FILES[@]} -eq 0 ]; then
+            echo "No .list files found"
             exit 0
           fi
-          
-          echo "✅ 找到 ${#LIST_FILES[@]} 个目标规则文件，开始处理..."
-          echo "----------------------------------------"
-          
-          for INPUT_FILE in "${LIST_FILES[@]}"; do
-            BASE_NAME=$(basename "$INPUT_FILE" .list)
-            TEMP_FILE="rules/$BASE_NAME.clean.list"
-            OUTPUT_FILE="rules/$BASE_NAME.mrs"
-            
-            echo "📁 正在处理: $INPUT_FILE"
-            
-            # 【智能识别类型】文件名含 ip 智能判断为 ipcidr 规则
-            if [[ "${BASE_NAME,,}" == *"ip"* ]]; then
-              RULE_TYPE="ipcidr"
-              echo "   🏷️ 识别结果: IP 规则 (ipcidr)"
-              awk 'NF && !/^#/ {gsub(/\r/, ""); sub(/^[[:space:]]*/, ""); if($0 ~ /^[0-9a-fA-F:\.]+\/[0-9]+$/) print $0}' "$INPUT_FILE" > "$TEMP_FILE" || true
+
+          echo "Found ${#FILES[@]} rule files"
+
+          for INPUT in "${FILES[@]}"
+          do
+            BASENAME=$(basename "$INPUT" .list)
+            DIRNAME=$(dirname "$INPUT")
+
+            TMP="${DIRNAME}/${BASENAME}.tmp"
+            OUTPUT="${DIRNAME}/${BASENAME}.mrs"
+
+            echo "--------------------------------"
+            echo "Processing: $INPUT"
+
+            if [[ "${BASENAME,,}" =~ (ip|cidr) ]]
+            then
+              TYPE="ipcidr"
+
+              awk '
+              NF && !/^#/ {
+                gsub(/\r/,"")
+                gsub(/^[ \t]+/,"")
+                print
+              }' "$INPUT" > "$TMP"
+
             else
-              RULE_TYPE="domain"
-              echo "   🏷️ 识别 results: 域名规则 (domain)"
-              # 清洗策略：移除前缀、空格，并精确使用正则筛选符合 FQDN 规范的条目（允许带开头的点以便支持后缀匹配）
-              awk 'NF && !/^#/ {
-                  gsub(/\r/, ""); 
-                  sub(/^[[:space:]]*/, ""); 
-                  sub(/^(DOMAIN-SUFFIX|DOMAIN|DOMAIN-KEYWORD)[,.[[:space:]]]*/, ""); 
-                  sub(/^\+/, ""); 
-                  if($0!="") print $0
-              }' "$INPUT_FILE" | grep -Ei '^\.?[a-z0-9][-a-z0-9]*(\.[a-z0-9][-a-z0-9]*)*$' > "$TEMP_FILE" || true
+              TYPE="domain"
+
+              awk '
+              NF && !/^#/ {
+                gsub(/\r/,"")
+
+                sub(/^DOMAIN-SUFFIX,/,"")
+                sub(/^DOMAIN,/,"")
+                sub(/^DOMAIN-KEYWORD,/,"")
+                sub(/^\+/,"")
+
+                if(length($0)>0)
+                  print
+              }' "$INPUT" > "$TMP"
             fi
-            
-            if [ ! -s "$TEMP_FILE" ]; then
-              echo "   ⚠️ 警告: 过滤清洗后无有效规则内容，跳过编译。"
-              rm -f "$TEMP_FILE"
-              echo "----------------------------------------"
+
+            if [ ! -s "$TMP" ]
+            then
+              echo "Skip empty rule file"
+              rm -f "$TMP"
               continue
             fi
-            
-            # 【完美适配最新内核语法】无需 cli，直接编译，执行完秒退，绝不监听常驻端口
-            echo "   🚀 正在编译为 MRS -> $OUTPUT_FILE"
-            if ./mihomo rule-set compile --type "$RULE_TYPE" "$TEMP_FILE" "$OUTPUT_FILE"; then
-              echo "   ✅ 成功编译!"
-            else
-              echo "   ❌ 失败: 编译过程中出错！"
-              rm -f "$TEMP_FILE"
-              exit 1
-            fi
-            rm -f "$TEMP_FILE"
-            echo "----------------------------------------"
+
+            echo "Compiling as ${TYPE}"
+
+            ./mihomo rule-set compile \
+              --type "${TYPE}" \
+              "${TMP}" \
+              "${OUTPUT}"
+
+            rm -f "$TMP"
+
+            ls -lh "$OUTPUT"
           done
 
-      - name: Auto Commit and Push MRS Files
+      - name: Commit changes
         run: |
-          git config --local user.email "github-actions[bot]@users.noreply.github.com"
-          git config --local user.name "github-actions[bot]"
-          
-          if [ -n "$(git status --porcelain rules/*.mrs)" ]; then
-            git add rules/*.mrs
-            git commit -m "chore: auto-compile rules to mrs [skip ci]"
-            
-            CURRENT_BRANCH=$(git branch --show-current)
-            echo "正在同步分支: $CURRENT_BRANCH"
-            
-            # 引入高级拉取和防并发冲突机制
-            git pull --rebase origin "$CURRENT_BRANCH"
-            git push origin "$CURRENT_BRANCH"
-            echo "🚀 所有 MRS 二进制规则文件已成功推送到仓库！"
-          else
-            echo "ℹ️ 没有检测到 MRS 文件变动，跳过推送。"
+          if [ -z "$(git status --porcelain)" ]; then
+            echo "No changes"
+            exit 0
           fi
+
+          git config user.name "github-actions[bot]"
+          git config user.email \
+            "41898282+github-actions[bot]@users.noreply.github.com"
+
+          git add rules/**/*.mrs rules/*.mrs || true
+
+          git commit -m "chore: update mrs files"
+
+          git pull --rebase origin \
+            "${GITHUB_REF_NAME}"
+
+          git push origin \
+            "${GITHUB_REF_NAME}"
