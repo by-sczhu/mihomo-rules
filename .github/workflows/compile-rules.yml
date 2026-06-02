@@ -3,10 +3,10 @@ name: Compile Mihomo Rules to MRS
 on:
   push:
     branches:
-      - main  # 你的主分支名称，如果是 master 请改为 master
+      - main  # 如果你的主分支叫 master，请改为 master
     paths:
       - 'rules/*.list' # 仅当 rules 目录下的 .list 文件变动时触发
-  workflow_dispatch: # 允许你在 GitHub 页面上手动点击按钮触发
+  workflow_dispatch: # 允许手动点击按钮触发
 
 jobs:
   compile:
@@ -16,73 +16,56 @@ jobs:
       - name: Checkout Code
         uses: actions/checkout@v4
         with:
-          fetch-depth: 0 # 获取完整历史记录以便后续提交代码
+          fetch-depth: 0 # 必须获取完整历史，否则无法进行 git pull/push
 
       - name: Download and Extract Mihomo Alpha
         env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }} # 注入 Token 彻底解决 GitHub API 限制和 jq 报错
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           echo "Fetching latest alpha download URL..."
-          
-          # 1. 动态获取带有 alpha 的最新包含 linux-amd64 且以 .gz 结尾的真实下载链接
           URL=$(curl -s -H "Authorization: Bearer $GH_TOKEN" https://api.github.com/repos/MetaCubeX/mihomo/releases \
             | jq -r '[.[] | select(.tag_name == "meta-alpha")][0].assets[] | select(.name | /linux-amd64.*\.gz$/) | .browser_download_url')
           
-          # 兜底：如果上面由于某种原因没获取到，则直接拼接官方最常用的 alpha 默认包名
           if [ -z "$URL" ] || [ "$URL" = "null" ]; then
             echo "Fallback to default alpha link..."
             URL="https://github.com/MetaCubeX/mihomo/releases/download/meta-alpha/mihomo-linux-amd64-alpha-b8b1db7.gz"
           fi
           
-          echo "Downloading from: $URL"
-          
-          # 2. 下载并安全解压
           curl -L "$URL" -o mihomo.gz
           gunzip -c mihomo.gz > mihomo
           rm mihomo.gz
-          
-          # 3. 赋予执行权限并打印版本号验证
           chmod +x mihomo
           ./mihomo -v
 
       - name: Compile .list to .mrs
         run: |
-          # 确保 rules 目录存在
           mkdir -p rules
-          
-          # 遍历 rules 目录下的所有 .list 文件
           for file in rules/*.list; do
-            # 如果没有匹配到任何 .list 文件，则跳过
             [ -e "$file" ] || continue
-            
             filename=$(basename "$file" .list)
-            echo "----------------------------------------"
-            echo "Processing: $file"
             
-            # 自动化判断：如果文件名包含 "ip"（不区分大小写），则作为 ipcidr 编译；否则作为 domain 编译
             if [[ "${filename,,}" == *"ip"* ]]; then
-              echo "Detected IP rule type. Compiling to rules/$filename.mrs ..."
               ./mihomo rule-set compile --type ipcidr "$file" "rules/$filename.mrs"
             else
-              echo "Detected Domain rule type. Compiling to rules/$filename.mrs ..."
               ./mihomo rule-set compile --type domain "$file" "rules/$filename.mrs"
             fi
           done
-          echo "----------------------------------------"
-          echo "All compilations completed."
 
       - name: Commit and Push Changes
         run: |
-          # 配置 GitHub Actions 机器人身份
           git config --local user.email "github-actions[bot]@users.noreply.github.com"
           git config --local user.name "github-actions[bot]"
           
-          # 检查是否有新生成的 .mrs 文件变动
           if [ -n "$(git status --porcelain rules/*.mrs)" ]; then
             git add rules/*.mrs
-            # [skip ci] 关键：防止机器人提交代码后再次触发 Actions 导致死循环
             git commit -m "chore: auto-compile rules to mrs [skip ci]"
-            git push
+            
+            # 【核心修复】在 push 前先拉取远程最新更改，采用 rebase 模式防止分叉
+            echo "Pulling latest changes from remote to prevent conflicts..."
+            git pull --rebase origin main
+            
+            # 推送更改
+            git push origin main
             echo "Changes pushed successfully."
           else
             echo "No changes detected in .mrs files. Skipping commit."
