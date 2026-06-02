@@ -3,7 +3,7 @@ name: Compile All Mihomo Rules
 on:
   workflow_dispatch:
   push:
-    # 仅当 rules 目录下的 .list 文件变动时才触发，避免无关变动浪费 Actions 额度
+    # 仅当 rules 目录下的 .list 文件变动时才触发
     paths:
       - 'rules/*.list'
 
@@ -39,7 +39,6 @@ jobs:
         run: |
           echo "🔍 正在扫描 rules/ 目录下的 .list 文件..."
           
-          # 直接定位到 rules 文件夹，确保只处理该目录下的标准规则文件
           mkdir -p rules
           
           # 使用 shopt 确保在没有匹配到文件时不会把 *.list 当作字符串处理
@@ -58,7 +57,6 @@ jobs:
           echo "----------------------------------------"
           
           for INPUT_FILE in "${LIST_FILES[@]}"; do
-            # 严格基于 rules 目录提取文件名
             BASE_NAME=$(basename "$INPUT_FILE" .list)
             
             TEMP_FILE="rules/$BASE_NAME.clean.list"
@@ -103,9 +101,9 @@ jobs:
               continue
             fi
             
-            # 【核心修复版命令】严格遵循规范：rule-set compile <类型> <输入> <输出>
+            # 【核心修复点】加上了旧版内核不可或缺的 cli 前缀
             echo "   🚀 正在编译为 MRS -> $OUTPUT_FILE"
-            if ./mihomo rule-set compile "$RULE_TYPE" "$TEMP_FILE" "$OUTPUT_FILE"; then
+            if ./mihomo cli rule-set compile "$RULE_TYPE" "$TEMP_FILE" "$OUTPUT_FILE"; then
               echo "   ✅ 成功编译!"
             else
               echo "   ❌ 失败: 编译过程中出错！"
@@ -123,12 +121,10 @@ jobs:
           git config --local user.email "github-actions[bot]@users.noreply.github.com"
           git config --local user.name "github-actions[bot]"
           
-          # 仅针对 rules/*.mrs 进行状态检查与提交，非常干净
           if [ -n "$(git status --porcelain rules/*.mrs)" ]; then
             git add rules/*.mrs
             git commit -m "chore: auto-compile rules in rules/ to mrs [skip ci]"
             
-            # 自动适配 main 或 master 分支拉取防冲突
             git pull --rebase origin main || git pull --rebase origin master
             git push
             echo "🚀 rules/ 目录下的 MRS 文件已成功同步推送到仓库！"
