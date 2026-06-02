@@ -18,25 +18,28 @@ jobs:
       - name: Checkout Code
         uses: actions/checkout@v4
 
-      - name: Download Mihomo Alpha (Smart Safe Mode)
+      - name: Download Mihomo Alpha via GitHub CLI
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          echo "Downloading latest alpha from fixed endpoint..."
-          # 直接下载官方永久固定的最新 Alpha 包，彻底避开 API 超时和 jq 限制
-          curl -L "https://github.com/MetaCubeX/mihomo/releases/download/meta-alpha/mihomo-linux-amd64" -o mihomo_download
+          echo "Using GitHub CLI to download latest alpha with pattern matching..."
           
-          # 智能判断下载下来的是二进制文件还是二进制压缩包
-          if file mihomo_download | grep -q "gzip compressed data"; then
-            echo "Detected GZIP format. Extracting..."
-            mv mihomo_download mihomo.gz
-            gunzip -c mihomo.gz > mihomo
-            rm -f mihomo.gz
-          else
-            echo "Detected Direct Binary format."
-            mv mihomo_download mihomo
-          fi
+          # 使用官方 CLI 模糊匹配下载包含 linux-amd64 且以 .gz 结尾的文件，完美避开固定链接失效和 API 报错问题
+          gh release download meta-alpha \
+            --repo MetaCubeX/mihomo \
+            --pattern "*linux-amd64*.gz" \
+            --clobber
           
-          # 赋予权限并验证
+          # 重命名下载下来的压缩包（因为带哈希，用模糊匹配找到它并重命名）
+          mv *linux-amd64*.gz mihomo.gz
+          
+          # 解压并赋予权限
+          echo "Extracting Mihomo kernel..."
+          gunzip -c mihomo.gz > mihomo
+          rm -f mihomo.gz
           chmod +x mihomo
+          
+          # 验证内核是否可用
           ./mihomo -v
 
       - name: Compile .list to .mrs
