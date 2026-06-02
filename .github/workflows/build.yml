@@ -1,13 +1,16 @@
-name: Build PT Ruleset
+name: Build Mihomo Ruleset
 
 on:
   workflow_dispatch:
   push:
     paths:
-      - 'rule/category-pt.list'
+      - 'rule/**'
 
 permissions:
   contents: write
+
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
 
 jobs:
   build:
@@ -17,48 +20,67 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Create Workspace
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Build workspace
         run: |
           mkdir -p build
+          mkdir -p output
 
-      - name: Convert List Format
+      - name: Convert .list → .txt (DOMAIN-SUFFIX)
         run: |
-          sed 's/^+\.//g;s/^/DOMAIN-SUFFIX,/' \
-          rule/category-pt.list \
-          > build/category-pt.txt
+          for file in rule/*.list; do
 
-      - name: Download Mihomo
+            name=$(basename "$file" .list)
+
+            # 转换 Surge 风格 +.xxx → DOMAIN-SUFFIX,xxx
+            sed 's/^+\.//g;s/^/DOMAIN-SUFFIX,/' "$file" \
+              > "build/${name}.txt"
+
+          done
+
+      - name: Install mihomo-ruleset compiler
         run: |
-          wget -q \
-          https://github.com/MetaCubeX/mihomo/releases/latest/download/mihomo-linux-amd64-compatible.gz \
-          -O mihomo.gz
+          python -m pip install --upgrade pip
 
-          gunzip mihomo.gz
-          mv mihomo mihomo-bin
+          pip install git+https://github.com/MetaCubeX/mihomo-ruleset.git
 
-          chmod +x mihomo-bin
-
-      - name: Build MRS
+      - name: Build MRS files
         run: |
-          ./mihomo-bin convert-ruleset domain text \
-          build/category-pt.txt \
-          rule/category-pt.mrs
+          for file in build/*.txt; do
 
-      - name: Commit MRS
+            name=$(basename "$file" .txt)
+
+            python - << 'EOF'
+import sys
+from pathlib import Path
+from mihomo_ruleset import RuleSet
+
+input_file = Path("${file}")
+output_file = Path("output/${name}.mrs")
+
+rules = []
+for line in input_file.read_text().splitlines():
+    if line.strip():
+        rules.append(line.strip())
+
+rs = RuleSet("domain")
+rs.add_rules(rules)
+rs.save(output_file)
+EOF
+
+          done
+
+      - name: Create Release Tag
+        id: tag
         run: |
-          git config --global user.name github-actions
-          git config --global user.email github-actions@github.com
-
-          git add rule/category-pt.mrs
-
-          git diff --cached --quiet || \
-          git commit -m "Update category-pt.mrs"
-
-          git push
+          echo "tag=v$(date +'%Y.%m.%d-%H%M')" >> $GITHUB_OUTPUT
 
       - name: Release
         uses: softprops/action-gh-release@v2
         with:
-          tag_name: latest
-          files: |
-            rule/category-pt.mrs
+          tag_name: ${{ steps.tag.outputs.tag }}
+          files: output/*.mrs
