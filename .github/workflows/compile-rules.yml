@@ -16,6 +16,10 @@ on:
 permissions:
   contents: write
 
+concurrency:
+  group: mrs-build
+  cancel-in-progress: true
+
 jobs:
   build:
     if: github.actor != 'github-actions[bot]'
@@ -26,24 +30,28 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v5
 
-      - name: Install dependencies
+      - name: Install tools
         run: |
           sudo apt-get update
-          sudo apt-get install -y jq curl
+          sudo apt-get install -y curl jq
 
-      - name: Download latest Mihomo
+      - name: Download Latest Mihomo Alpha
         run: |
           set -e
 
-          TAG=$(curl -s \
-            https://api.github.com/repos/MetaCubeX/mihomo/releases/latest \
-            | jq -r '.tag_name')
+          RELEASE_JSON=$(curl -s \
+            https://api.github.com/repos/MetaCubeX/mihomo/releases)
 
-          echo "Latest Mihomo: $TAG"
+          DOWNLOAD_URL=$(echo "$RELEASE_JSON" | jq -r '
+            map(select(.prerelease == true))[0]
+            .assets[]
+            | select(.name | test("linux-amd64.*\\.gz$"))
+            | .browser_download_url
+          ')
 
-          URL="https://github.com/MetaCubeX/mihomo/releases/download/${TAG}/mihomo-linux-amd64-${TAG}.gz"
+          echo "$DOWNLOAD_URL"
 
-          curl -L "$URL" -o mihomo.gz
+          curl -L "$DOWNLOAD_URL" -o mihomo.gz
 
           gunzip -f mihomo.gz
 
@@ -53,12 +61,10 @@ jobs:
 
           ./mihomo -v
 
-      - name: Compile all rules
+      - name: Compile Rules
         shell: bash
         run: |
           set -e
-
-          mkdir -p rules
 
           mapfile -t FILES < <(
             find rules \
@@ -67,24 +73,24 @@ jobs:
           )
 
           if [ ${#FILES[@]} -eq 0 ]; then
-            echo "No .list files found"
+            echo "No rules found"
             exit 0
           fi
 
-          echo "Found ${#FILES[@]} rule files"
+          echo "Found ${#FILES[@]} files"
 
           for INPUT in "${FILES[@]}"
           do
-            BASENAME=$(basename "$INPUT" .list)
-            DIRNAME=$(dirname "$INPUT")
+            NAME=$(basename "$INPUT" .list)
+            DIR=$(dirname "$INPUT")
 
-            TMP="${DIRNAME}/${BASENAME}.tmp"
-            OUTPUT="${DIRNAME}/${BASENAME}.mrs"
+            CLEAN="${DIR}/${NAME}.clean"
+            OUTPUT="${DIR}/${NAME}.mrs"
 
-            echo "--------------------------------"
-            echo "Processing: $INPUT"
+            echo "================================"
+            echo "Processing $INPUT"
 
-            if [[ "${BASENAME,,}" =~ (ip|cidr) ]]
+            if [[ "${NAME,,}" =~ (ip|cidr) ]]
             then
               TYPE="ipcidr"
 
@@ -93,7 +99,7 @@ jobs:
                 gsub(/\r/,"")
                 gsub(/^[ \t]+/,"")
                 print
-              }' "$INPUT" > "$TMP"
+              }' "$INPUT" > "$CLEAN"
 
             else
               TYPE="domain"
@@ -105,49 +111,50 @@ jobs:
                 sub(/^DOMAIN-SUFFIX,/,"")
                 sub(/^DOMAIN,/,"")
                 sub(/^DOMAIN-KEYWORD,/,"")
+
                 sub(/^\+/,"")
 
                 if(length($0)>0)
                   print
-              }' "$INPUT" > "$TMP"
+              }' "$INPUT" > "$CLEAN"
             fi
 
-            if [ ! -s "$TMP" ]
+            if [ ! -s "$CLEAN" ]
             then
-              echo "Skip empty rule file"
-              rm -f "$TMP"
+              echo "Empty after cleanup"
+              rm -f "$CLEAN"
               continue
             fi
 
-            echo "Compiling as ${TYPE}"
+            echo "Convert => ${TYPE}"
 
-            ./mihomo rule-set compile \
-              --type "${TYPE}" \
-              "${TMP}" \
-              "${OUTPUT}"
+            ./mihomo convert-ruleset \
+              "${TYPE}" \
+              text \
+              "$CLEAN" \
+              "$OUTPUT"
 
-            rm -f "$TMP"
+            rm -f "$CLEAN"
 
             ls -lh "$OUTPUT"
           done
 
-      - name: Commit changes
+      - name: Commit
         run: |
           if [ -z "$(git status --porcelain)" ]; then
             echo "No changes"
             exit 0
           fi
 
-          git config user.name "github-actions[bot]"
+          git config user.name github-actions[bot]
           git config user.email \
-            "41898282+github-actions[bot]@users.noreply.github.com"
+            41898282+github-actions[bot]@users.noreply.github.com
 
-          git add rules/**/*.mrs rules/*.mrs || true
+          git add rules/*.mrs
+          git add rules/**/*.mrs
 
-          git commit -m "chore: update mrs files"
+          git commit -m "chore: update mrs"
 
-          git pull --rebase origin \
-            "${GITHUB_REF_NAME}"
+          git pull --rebase origin "${GITHUB_REF_NAME}"
 
-          git push origin \
-            "${GITHUB_REF_NAME}"
+          git push origin "${GITHUB_REF_NAME}"
