@@ -1,9 +1,7 @@
 name: Compile Mihomo Rules
 
 on:
-  # 允许手动触发执行
   workflow_dispatch:
-  # 当指定规则文件发生变动时自动触发
   push:
     paths:
       - 'mihomo-rules/rule/category-pt.list'
@@ -18,46 +16,64 @@ jobs:
 
       - name: Set Up Mihomo Core
         run: |
-          echo "Fetching latest Mihomo alpha release..."
-          # 获取最新的 Mihomo Alpha 下载链接（包含 compile 功能）
-          DOWNLOAD_URL=$(curl -s https://api.github.com/repos/MetaCubeX/mihomo/releases | jq -r '[.[] | select(.tag_name | contains("alpha"))][0].assets[] | select(.name | contains("linux-amd64")) | .browser_download_url' | head -n 1)
+          echo "Downloading stable Mihomo Linux AMD64 core..."
+          DOWNLOAD_URL=$(curl -s https://api.github.com/repos/MetaCubeX/mihomo/releases/latest | jq -r '.assets[] | select(.name | contains("linux-amd64")) | .browser_download_url' | head -n 1)
           
           if [ -z "$DOWNLOAD_URL" ] || [ "$DOWNLOAD_URL" = "null" ]; then
-            # 如果 alpha 获取失败，回退到 regular release
-            DOWNLOAD_URL=$(curl -s https://api.github.com/repos/MetaCubeX/mihomo/releases/latest | jq -r '.assets[] | select(.name | contains("linux-amd64")) | .browser_download_url' | head -n 1)
+            DOWNLOAD_URL=$(curl -s https://api.github.com/repos/MetaCubeX/mihomo/releases | jq -r '[.[] | select(.prerelease==false)][0].assets[] | select(.name | contains("linux-amd64")) | .browser_download_url' | head -n 1)
           fi
           
-          echo "Downloading from: $DOWNLOAD_URL"
-          curl -L -o mihomo.tar.gz "$DOWNLOAD_URL"
-          
-          echo "Extracting Mihomo core..."
-          # 解压并重命名为可执行文件
-          if tar -tzf mihomo.tar.gz >/dev/null 2>&1; then
-            tar -xzf mihomo.tar.gz
-            mv mihomo-linux-amd64* mihomo 2>/dev/null || mv mihomo-* mihomo 2>/dev/null || true
-          else
-            # 部分 release 可能是 gzip 或直接二进制，做个兼容处理
-            gunzip -c mihomo.tar.gz > mihomo 2>/dev/null || mv mihomo.tar.gz mihomo
-          fi
-          
+          curl -L -o mihomo.gz "$DOWNLOAD_URL"
+          gunzip -f mihomo.gz 2>/dev/null || mv mihomo.gz mihomo
           chmod +x mihomo
           ./mihomo -v
 
-      - name: Compile Rule List to MRS
+      - name: Preprocess and Compile Rules
         run: |
           INPUT_FILE="mihomo-rules/rule/category-pt.list"
+          TEMP_FILE="mihomo-rules/rule/category-pt.tmp"
           OUTPUT_FILE="mihomo-rules/rule/category-pt.mrs"
           
-          # 确保输出目录存在
           mkdir -p $(dirname "$OUTPUT_FILE")
           
           if [ -f "$INPUT_FILE" ]; then
-            echo "Compiling $INPUT_FILE to $OUTPUT_FILE..."
-            # 使用 mihomo rule-set compile 命令转换
-            ./mihomo rule-set compile "$INPUT_FILE" "$OUTPUT_FILE"
-            echo "💡 Compilation successful!"
+            echo "🧹 正在清洗和格式化规则文件..."
+            
+            # 自动转换逻辑：
+            # 1. 移除 Windows 换行符 (\r)
+            # 2. 将开头的 +. 或 . 转换为 DOMAIN-SUFFIX,
+            # 3. 过滤掉空行和纯空格行
+            sed -e 's/\r//g' \
+                -e 's/^[[:space:]]*+//g' \
+                -e 's/^\.//g' \
+                -e 's/^[[:space:]]*//g' \
+                "$INPUT_FILE" | awk '
+                NF && !/^#/ {
+                    if ($0 !~ /^([A-Z0-9-]+),/) {
+                        # 如果没有 DOMAIN-SUFFIX 等前缀，自动补上
+                        sub(/^\./, "", $0);
+                        print "DOMAIN-SUFFIX," $0
+                    } else {
+                        print $0
+                    }
+                }' > "$TEMP_FILE"
+
+            echo "📝 格式化后的临时文件内容预览："
+            cat "$TEMP_FILE"
+            echo "----------------------------------------"
+
+            echo "🚀 开始编译成 MRS 二进制文件..."
+            # 使用 -b domain 明确指定这是一个域名类型的规则集
+            if ./mihomo rule-set compile -b domain "$TEMP_FILE" "$OUTPUT_FILE"; then
+              echo "💡 编译成功！"
+              rm -f "$TEMP_FILE"
+            else
+              echo "❌ 编译失败！请查看下方日志中的错误提示。"
+              rm -f "$TEMP_FILE"
+              exit 1
+            fi
           else
-            echo "❌ Error: Input file $INPUT_FILE not found!"
+            echo "❌ 错误: 未找到输入文件 $INPUT_FILE"
             exit 1
           fi
 
@@ -68,12 +84,10 @@ jobs:
           
           OUTPUT_FILE="mihomo-rules/rule/category-pt.mrs"
           
-          # 检查文件是否有实际变动，避免无意义的空提交
           if git status --porcelain "$OUTPUT_FILE" | grep -q 'M\|A'; then
             git add "$OUTPUT_FILE"
             git commit -m "chore: auto-compile category-pt.mrs [skip ci]"
             git push
-            echo "🚀 Updated MRS rule pushed to repository."
           else
-            echo "ℹ️ No changes detected in the compiled MRS file. Skipping push."
+            echo "ℹ️ 文件无变动，跳过推送。"
           fi
