@@ -18,25 +18,24 @@ jobs:
       - name: Checkout Code
         uses: actions/checkout@v4
 
-      - name: Download and Extract Mihomo Alpha
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Download Mihomo Alpha (Smart Safe Mode)
         run: |
-          echo "Fetching latest alpha download URL..."
+          echo "Downloading latest alpha from fixed endpoint..."
+          # 直接下载官方永久固定的最新 Alpha 包，彻底避开 API 超时和 jq 限制
+          curl -L "https://github.com/MetaCubeX/mihomo/releases/download/meta-alpha/mihomo-linux-amd64" -o mihomo_download
           
-          # 替换为更兼容的 contains 和 endswith，彻底解决 jq 的斜杠正则解析报错
-          URL=$(curl -s -H "Authorization: Bearer $GH_TOKEN" https://api.github.com/repos/MetaCubeX/mihomo/releases \
-            | jq -r '[.[] | select(.tag_name == "meta-alpha")][0].assets[] | select(.name | contains("linux-amd64") and endswith(".gz")) | .browser_download_url')
-          
-          if [ -z "$URL" ] || [ "$URL" = "null" ]; then
-            echo "Fallback to default alpha link..."
-            URL="https://github.com/MetaCubeX/mihomo/releases/download/meta-alpha/mihomo-linux-amd64-alpha-b8b1db7.gz"
+          # 智能判断下载下来的是二进制文件还是二进制压缩包
+          if file mihomo_download | grep -q "gzip compressed data"; then
+            echo "Detected GZIP format. Extracting..."
+            mv mihomo_download mihomo.gz
+            gunzip -c mihomo.gz > mihomo
+            rm -f mihomo.gz
+          else
+            echo "Detected Direct Binary format."
+            mv mihomo_download mihomo
           fi
           
-          echo "Downloading from: $URL"
-          curl -L "$URL" -o mihomo.gz
-          gunzip -c mihomo.gz > mihomo
-          rm mihomo.gz
+          # 赋予权限并验证
           chmod +x mihomo
           ./mihomo -v
 
@@ -46,6 +45,7 @@ jobs:
           for file in rules/*.list; do
             [ -e "$file" ] || continue
             filename=$(basename "$file" .list)
+            echo "Compiling $file ..."
             
             if [[ "${filename,,}" == *"ip"* ]]; then
               ./mihomo rule-set compile --type ipcidr "$file" "rules/$filename.mrs"
