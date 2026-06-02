@@ -1,16 +1,11 @@
-name: Build Mihomo Ruleset
+name: Build PT Ruleset
 
 on:
   workflow_dispatch:
   push:
-    paths:
-      - 'rule/**'
 
 permissions:
   contents: write
-
-env:
-  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
 
 jobs:
   build:
@@ -20,67 +15,36 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Setup Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: '3.11'
+      - name: Download Mihomo
+        run: |
+          wget -O mihomo.gz \
+          https://github.com/MetaCubeX/mihomo/releases/latest/download/mihomo-linux-amd64-compatible.gz
+
+          gunzip mihomo.gz
+          chmod +x mihomo
 
       - name: Build workspace
         run: |
-          mkdir -p build
-          mkdir -p output
+          mkdir -p build output
 
-      - name: Convert .list → .txt (DOMAIN-SUFFIX)
+      - name: Convert list → rule text
         run: |
-          for file in rule/*.list; do
+          sed 's/^+\.//g;s/^/DOMAIN-SUFFIX,/' rule/category-pt.list > build/category-pt.txt
 
-            name=$(basename "$file" .list)
-
-            # 转换 Surge 风格 +.xxx → DOMAIN-SUFFIX,xxx
-            sed 's/^+\.//g;s/^/DOMAIN-SUFFIX,/' "$file" \
-              > "build/${name}.txt"
-
-          done
-
-      - name: Install mihomo-ruleset compiler
+      - name: Build MRS
         run: |
-          python -m pip install --upgrade pip
+          ./mihomo convert-ruleset domain text \
+          build/category-pt.txt \
+          output/category-pt.mrs
 
-          pip install git+https://github.com/MetaCubeX/mihomo-ruleset.git
-
-      - name: Build MRS files
-        run: |
-          for file in build/*.txt; do
-
-            name=$(basename "$file" .txt)
-
-            python - << 'EOF'
-import sys
-from pathlib import Path
-from mihomo_ruleset import RuleSet
-
-input_file = Path("${file}")
-output_file = Path("output/${name}.mrs")
-
-rules = []
-for line in input_file.read_text().splitlines():
-    if line.strip():
-        rules.append(line.strip())
-
-rs = RuleSet("domain")
-rs.add_rules(rules)
-rs.save(output_file)
-EOF
-
-          done
-
-      - name: Create Release Tag
-        id: tag
-        run: |
-          echo "tag=v$(date +'%Y.%m.%d-%H%M')" >> $GITHUB_OUTPUT
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ruleset
+          path: output/category-pt.mrs
 
       - name: Release
         uses: softprops/action-gh-release@v2
         with:
-          tag_name: ${{ steps.tag.outputs.tag }}
-          files: output/*.mrs
+          tag_name: latest
+          files: output/category-pt.mrs
