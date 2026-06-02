@@ -3,9 +3,9 @@ name: Compile All Mihomo Rules
 on:
   workflow_dispatch:
   push:
-    # 只要任何目录下的任何 .list 文件变动都会触发
+    # 仅当 rules 目录下的 .list 文件变动时才触发，避免无关变动浪费 Actions 额度
     paths:
-      - '**/*.list'
+      - 'rules/*.list'
 
 env:
   FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
@@ -37,36 +37,40 @@ jobs:
 
       - name: Preprocess and Batch Compile Rules
         run: |
-          echo "🔍 正在扫描仓库中所有的 .list 文件..."
+          echo "🔍 正在扫描 rules/ 目录下的 .list 文件..."
           
-          # 使用 find 命令找出所有的 .list 文件，并排除临时生成的 .clean.list 文件
-          mapfile -t LIST_FILES < <(find . -name "*.list" ! -name "*.clean.list" -type f)
+          # 直接定位到 rules 文件夹，确保只处理该目录下的标准规则文件
+          mkdir -p rules
+          
+          # 使用 shopt 确保在没有匹配到文件时不会把 *.list 当作字符串处理
+          shopt -s nullglob
+          LIST_FILES=(rules/*.list)
+          
+          # 过滤掉可能存在的临时文件
+          LIST_FILES=(${LIST_FILES[@]/%*.clean.list/})
           
           if [ ${#LIST_FILES[@]} -eq 0 ]; then
-            echo "ℹ️ 未找到任何需要转换的 .list 文件。"
+            echo "ℹ️ rules/ 目录下未找到任何需要转换的 .list 文件。"
             exit 0
           fi
           
-          echo "✅ 找到 ${#LIST_FILES[@]} 个目标文件，开始循环处理..."
+          echo "✅ 找到 ${#LIST_FILES[@]} 个目标规则文件，开始处理..."
           echo "----------------------------------------"
           
           for INPUT_FILE in "${LIST_FILES[@]}"; do
-            # 获取文件名和所在目录的基本信息
-            DIR_PATH=$(dirname "$INPUT_FILE")
+            # 严格基于 rules 目录提取文件名
             BASE_NAME=$(basename "$INPUT_FILE" .list)
             
-            # 定义临时文件和输出文件的路径
-            TEMP_FILE="$DIR_PATH/$BASE_NAME.clean.list"
-            OUTPUT_FILE="$DIR_PATH/$BASE_NAME.mrs"
+            TEMP_FILE="rules/$BASE_NAME.clean.list"
+            OUTPUT_FILE="rules/$BASE_NAME.mrs"
             
             echo "📁 正在处理: $INPUT_FILE"
             
-            # 【智能识别类型】如果文件名包含 ip（不区分大小写），则判定为 IPcidr 规则，否则默认为 Domain 规则
+            # 【智能识别类型】根据 rules/ 下的文件名是否包含 ip 智能切换清洗规则与编译类型
             if [[ "${BASE_NAME,,}" == *"ip"* ]]; then
               RULE_TYPE="ipcidr"
               echo "   🏷️ 识别结果: IP 规则 (ipcidr)"
               
-              # IP 规则清洗：只保留包含斜杠掩码的标准 CIDR 行，移除注释和空白
               awk '
               NF && !/^#/ {
                   gsub(/\r/, "");
@@ -80,7 +84,6 @@ jobs:
               RULE_TYPE="domain"
               echo "   🏷️ 识别结果: 域名规则 (domain)"
               
-              # 域名规则清洗：移除前后缀、空格、保留前面的点（代表 SUFFIX 规则）
               awk '
               NF && !/^#/ {
                   gsub(/\r/, "");
@@ -93,7 +96,6 @@ jobs:
               }' "$INPUT_FILE" | grep -Ei '^\.?[a-z0-9][-a-z0-9]*(\.[a-z0-9][-a-z0-9]*)*$' > "$TEMP_FILE" || true
             fi
             
-            # 检查清洗后文件是否为空
             if [ ! -s "$TEMP_FILE" ]; then
               echo "   ⚠️ 警告: 过滤清洗后无有效规则内容，跳过编译此文件。"
               rm -f "$TEMP_FILE"
@@ -101,9 +103,9 @@ jobs:
               continue
             fi
             
-            # 调度 Mihomo 内核进行编译
+            # 【核心修复版命令】严格遵循规范：rule-set compile <类型> <输入> <输出>
             echo "   🚀 正在编译为 MRS -> $OUTPUT_FILE"
-            if ./mihomo rule-set compile --type "$RULE_TYPE" "$TEMP_FILE" "$OUTPUT_FILE"; then
+            if ./mihomo rule-set compile "$RULE_TYPE" "$TEMP_FILE" "$OUTPUT_FILE"; then
               echo "   ✅ 成功编译!"
             else
               echo "   ❌ 失败: 编译过程中出错！"
@@ -111,27 +113,25 @@ jobs:
               exit 1
             fi
             
-            # 清理临时文件
             rm -f "$TEMP_FILE"
             echo "----------------------------------------"
           done
-          echo "🎉 所有可用的 .list 文件已全部处理完毕。"
+          echo "🎉 rules/ 目录下的所有文件已全部处理完毕。"
 
       - name: Commit and Push Changes
         run: |
           git config --local user.email "github-actions[bot]@users.noreply.github.com"
           git config --local user.name "github-actions[bot]"
           
-          # 检查仓库中是否有任何新增或修改的 .mrs 二进制文件
-          if [ -n "$(git status --porcelain **/*.mrs)" ]; then
-            git add **/*.mrs
-            git commit -m "chore: auto-compile all rules to mrs [skip ci]"
+          # 仅针对 rules/*.mrs 进行状态检查与提交，非常干净
+          if [ -n "$(git status --porcelain rules/*.mrs)" ]; then
+            git add rules/*.mrs
+            git commit -m "chore: auto-compile rules in rules/ to mrs [skip ci]"
             
-            # 先拉取最新分支，防止因并发导致提交冲突
+            # 自动适配 main 或 master 分支拉取防冲突
             git pull --rebase origin main || git pull --rebase origin master
-            
             git push
-            echo "🚀 编译后的所有 MRS 文件已成功同步推送到仓库！"
+            echo "🚀 rules/ 目录下的 MRS 文件已成功同步推送到仓库！"
           else
-            echo "ℹ️ 所有 MRS 文件均无变动，跳过推送步骤。"
+            echo "ℹ️ MRS 文件均无变动，跳过推送步骤。"
           fi
