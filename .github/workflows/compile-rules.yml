@@ -1,67 +1,137 @@
-name: Compile Mihomo Rules to MRS
+name: Compile All Mihomo Rules
 
 on:
+  workflow_dispatch:
   push:
-    branches:
-      - main  # 如果你的主分支叫 master，请改为 master
+    # 只要任何目录下的任何 .list 文件变动都会触发
     paths:
-      - 'rules/*.list' # 仅当 rules 目录下的 .list 文件变动时触发
-  workflow_dispatch: # 允许手动点击按钮触发
+      - '**/*.list'
+
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
 
 jobs:
   compile:
     runs-on: ubuntu-latest
     permissions:
-      contents: write
+      contents: write # 显式声明赋予 GitHub 机器人写入仓库的权限
 
     steps:
-      - name: Checkout Code
+      - name: Checkout Repository
         uses: actions/checkout@v4
 
-      - name: Download Mihomo Alpha via GitHub CLI
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Set Up Mihomo Core
         run: |
-          echo "Using GitHub CLI to download latest alpha with pattern matching..."
+          echo "🚀 正在下载固定版本的稳定 Mihomo 内核..."
+          DOWNLOAD_URL="https://github.com/MetaCubeX/mihomo/releases/download/v1.18.3/mihomo-linux-amd64-v1.18.3.gz"
           
-          # 使用官方 CLI 模糊匹配下载包含 linux-amd64 且以 .gz 结尾的文件，完美避开固定链接失效和 API 报错问题
-          gh release download meta-alpha \
-            --repo MetaCubeX/mihomo \
-            --pattern "*linux-amd64*.gz" \
-            --clobber
-          
-          # 重命名下载下来的压缩包（因为带哈希，用模糊匹配找到它并重命名）
-          mv *linux-amd64*.gz mihomo.gz
-          
-          # 解压并赋予权限
-          echo "Extracting Mihomo kernel..."
-          gunzip -c mihomo.gz > mihomo
-          rm -f mihomo.gz
+          curl -L -o mihomo.gz "$DOWNLOAD_URL"
+          gunzip -f mihomo.gz
+          mv mihomo-linux-amd64* mihomo 2>/dev/null || true
           chmod +x mihomo
           
-          # 验证内核是否可用
+          echo "----------------------------------------"
+          echo "验证 Mihomo 内核是否工作正常："
           ./mihomo -v
+          echo "----------------------------------------"
 
-      - name: Compile .list to .mrs
+      - name: Preprocess and Batch Compile Rules
         run: |
-          mkdir -p rules
-          for file in rules/*.list; do
-            [ -e "$file" ] || continue
-            filename=$(basename "$file" .list)
-            echo "Compiling $file ..."
+          echo "🔍 正在扫描仓库中所有的 .list 文件..."
+          
+          # 使用 find 命令找出所有的 .list 文件，并排除临时生成的 .clean.list 文件
+          mapfile -t LIST_FILES < <(find . -name "*.list" ! -name "*.clean.list" -type f)
+          
+          if [ ${#LIST_FILES[@]} -eq 0 ]; then
+            echo "ℹ️ 未找到任何需要转换的 .list 文件。"
+            exit 0
+          fi
+          
+          echo "✅ 找到 ${#LIST_FILES[@]} 个目标文件，开始循环处理..."
+          echo "----------------------------------------"
+          
+          for INPUT_FILE in "${LIST_FILES[@]}"; do
+            # 获取文件名和所在目录的基本信息
+            DIR_PATH=$(dirname "$INPUT_FILE")
+            BASE_NAME=$(basename "$INPUT_FILE" .list)
             
-            if [[ "${filename,,}" == *"ip"* ]]; then
-              ./mihomo rule-set compile --type ipcidr "$file" "rules/$filename.mrs"
+            # 定义临时文件和输出文件的路径
+            TEMP_FILE="$DIR_PATH/$BASE_NAME.clean.list"
+            OUTPUT_FILE="$DIR_PATH/$BASE_NAME.mrs"
+            
+            echo "📁 正在处理: $INPUT_FILE"
+            
+            # 【智能识别类型】如果文件名包含 ip（不区分大小写），则判定为 IPcidr 规则，否则默认为 Domain 规则
+            if [[ "${BASE_NAME,,}" == *"ip"* ]]; then
+              RULE_TYPE="ipcidr"
+              echo "   🏷️ 识别结果: IP 规则 (ipcidr)"
+              
+              # IP 规则清洗：只保留包含斜杠掩码的标准 CIDR 行，移除注释和空白
+              awk '
+              NF && !/^#/ {
+                  gsub(/\r/, "");
+                  sub(/^[[:space:]]*/, "");
+                  if ($0 ~ /^[0-9a-fA-F:\.]+\/[0-9]+$/) {
+                      print $0
+                  }
+              }' "$INPUT_FILE" > "$TEMP_FILE" || true
+              
             else
-              ./mihomo rule-set compile --type domain "$file" "rules/$filename.mrs"
+              RULE_TYPE="domain"
+              echo "   🏷️ 识别结果: 域名规则 (domain)"
+              
+              # 域名规则清洗：移除前后缀、空格、保留前面的点（代表 SUFFIX 规则）
+              awk '
+              NF && !/^#/ {
+                  gsub(/\r/, "");
+                  sub(/^[[:space:]]*/, "");
+                  sub(/^(DOMAIN-SUFFIX|DOMAIN|DOMAIN-KEYWORD)[,.[[:space:]]]*/, "");
+                  sub(/^\+/, "");
+                  if ($0 != "") {
+                      print $0
+                  }
+              }' "$INPUT_FILE" | grep -Ei '^\.?[a-z0-9][-a-z0-9]*(\.[a-z0-9][-a-z0-9]*)*$' > "$TEMP_FILE" || true
             fi
+            
+            # 检查清洗后文件是否为空
+            if [ ! -s "$TEMP_FILE" ]; then
+              echo "   ⚠️ 警告: 过滤清洗后无有效规则内容，跳过编译此文件。"
+              rm -f "$TEMP_FILE"
+              echo "----------------------------------------"
+              continue
+            fi
+            
+            # 调度 Mihomo 内核进行编译
+            echo "   🚀 正在编译为 MRS -> $OUTPUT_FILE"
+            if ./mihomo rule-set compile --type "$RULE_TYPE" "$TEMP_FILE" "$OUTPUT_FILE"; then
+              echo "   ✅ 成功编译!"
+            else
+              echo "   ❌ 失败: 编译过程中出错！"
+              rm -f "$TEMP_FILE"
+              exit 1
+            fi
+            
+            # 清理临时文件
+            rm -f "$TEMP_FILE"
+            echo "----------------------------------------"
           done
+          echo "🎉 所有可用的 .list 文件已全部处理完毕。"
 
-      - name: Auto Commit and Push MRS Files
-        uses: stefanzweifel/git-auto-commit-action@v5
-        with:
-          commit_message: "chore: auto-compile rules to mrs [skip ci]"
-          file_pattern: 'rules/*.mrs'
-          commit_user_name: "github-actions[bot]"
-          commit_user_email: "github-actions[bot]@users.noreply.github.com"
-          commit_author: "github-actions[bot] <github-actions[bot]@users.noreply.github.com>"
+      - name: Commit and Push Changes
+        run: |
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+          
+          # 检查仓库中是否有任何新增或修改的 .mrs 二进制文件
+          if [ -n "$(git status --porcelain **/*.mrs)" ]; then
+            git add **/*.mrs
+            git commit -m "chore: auto-compile all rules to mrs [skip ci]"
+            
+            # 先拉取最新分支，防止因并发导致提交冲突
+            git pull --rebase origin main || git pull --rebase origin master
+            
+            git push
+            echo "🚀 编译后的所有 MRS 文件已成功同步推送到仓库！"
+          else
+            echo "ℹ️ 所有 MRS 文件均无变动，跳过推送步骤。"
+          fi
