@@ -11,26 +11,29 @@ on:
 jobs:
   compile:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
 
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
-        with:
-          fetch-depth: 0 # 必须获取完整历史，否则无法进行 git pull/push
 
       - name: Download and Extract Mihomo Alpha
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           echo "Fetching latest alpha download URL..."
+          
+          # 替换为更兼容的 contains 和 endswith，彻底解决 jq 的斜杠正则解析报错
           URL=$(curl -s -H "Authorization: Bearer $GH_TOKEN" https://api.github.com/repos/MetaCubeX/mihomo/releases \
-            | jq -r '[.[] | select(.tag_name == "meta-alpha")][0].assets[] | select(.name | /linux-amd64.*\.gz$/) | .browser_download_url')
+            | jq -r '[.[] | select(.tag_name == "meta-alpha")][0].assets[] | select(.name | contains("linux-amd64") and endswith(".gz")) | .browser_download_url')
           
           if [ -z "$URL" ] || [ "$URL" = "null" ]; then
             echo "Fallback to default alpha link..."
             URL="https://github.com/MetaCubeX/mihomo/releases/download/meta-alpha/mihomo-linux-amd64-alpha-b8b1db7.gz"
           fi
           
+          echo "Downloading from: $URL"
           curl -L "$URL" -o mihomo.gz
           gunzip -c mihomo.gz > mihomo
           rm mihomo.gz
@@ -51,22 +54,11 @@ jobs:
             fi
           done
 
-      - name: Commit and Push Changes
-        run: |
-          git config --local user.email "github-actions[bot]@users.noreply.github.com"
-          git config --local user.name "github-actions[bot]"
-          
-          if [ -n "$(git status --porcelain rules/*.mrs)" ]; then
-            git add rules/*.mrs
-            git commit -m "chore: auto-compile rules to mrs [skip ci]"
-            
-            # 【核心修复】在 push 前先拉取远程最新更改，采用 rebase 模式防止分叉
-            echo "Pulling latest changes from remote to prevent conflicts..."
-            git pull --rebase origin main
-            
-            # 推送更改
-            git push origin main
-            echo "Changes pushed successfully."
-          else
-            echo "No changes detected in .mrs files. Skipping commit."
-          fi
+      - name: Auto Commit and Push MRS Files
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: "chore: auto-compile rules to mrs [skip ci]"
+          file_pattern: 'rules/*.mrs'
+          commit_user_name: "github-actions[bot]"
+          commit_user_email: "github-actions[bot]@users.noreply.github.com"
+          commit_author: "github-actions[bot] <github-actions[bot]@users.noreply.github.com>"
