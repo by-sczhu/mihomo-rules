@@ -97,8 +97,7 @@ jobs:
         run: |
           echo "🚀 创建极其微型的临时假配置，强制将所有可能阻塞的网络端口彻底禁用..."
           
-          # 核心技巧：通过显式指定这四个端口为 0 并在配置文件里关掉 mixed-port，
-          # 彻底向系统声明“我不占用/不监听任何网络端口”，从而强行打破 Actions 的网络阻塞大坑！
+          # 创建完全关闭所有物理端口监听的临时文件
           cat <<EOF > dummy-config.yaml
           mode: rule
           port: 0
@@ -126,8 +125,8 @@ jobs:
             
             echo "⚡ 编译中: $TEMP_FILE -> $OUTPUT_FILE"
             
-            # 【终极一击】加上 -c dummy-config.yaml 喂给内核，告诉它不准监听任何物理端口！
-            if ./mihomo -c dummy-config.yaml cli rule-set compile "$RULE_TYPE" "$TEMP_FILE" "$OUTPUT_FILE"; then
+            # 【终极修正点】根据日志中 Usage 的官方规范，将原来的 -c 改为唯一的标准参数 -f
+            if ./mihomo -f dummy-config.yaml cli rule-set compile "$RULE_TYPE" "$TEMP_FILE" "$OUTPUT_FILE"; then
               echo "   🎉 成功生成二进制 MRS 文件!"
             else
               echo "   ❌ 失败: 编译过程中出错！"
