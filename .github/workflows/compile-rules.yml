@@ -26,23 +26,17 @@ jobs:
 
       - name: Set Up Alpha Mihomo Core (With Compiler Engine)
         run: |
-          echo "🚀 正在通过 API 动态解析官方最新 Alpha 编译器内核直链..."
+          echo "🚀 正在通过官方免 API 固定直链下载最新 Alpha 编译器内核..."
           
-          # 使用 curl 直接请求官方的 meta-alpha 标签详情，使用 jq 动态提取最新符合 linux-amd64 规范的 .gz 包直链
-          DOWNLOAD_URL=$(curl -s "https://api.github.com/repos/MetaCubeX/mihomo/releases/tags/meta-alpha" | \
-            jq -r '.assets[] | select(.name | test("mihomo-linux-amd64-alpha-.*\\.gz$")) | .browser_download_url' | head -n 1)
+          # 直接使用官方 meta-alpha 稳定发布的基础包直链，彻底绕过 GitHub API 频率限制大坑
+          DOWNLOAD_URL="https://github.com/MetaCubeX/mihomo/releases/download/meta-alpha/mihomo-linux-amd64.gz"
           
-          # 如果动态哈希包由于特殊原因没提取到，执行兜底提取基础 Alpha 包
-          if [ -z "$DOWNLOAD_URL" ] || [ "$DOWNLOAD_URL" = "null" ]; then
-            echo "⚠️ 动态哈希包解析未命中，执行兜底策略提取标准 Alpha 包..."
-            DOWNLOAD_URL=$(curl -s "https://api.github.com/repos/MetaCubeX/mihomo/releases/tags/meta-alpha" | \
-              jq -r '.assets[] | select(.name == "mihomo-linux-amd64.gz") | .browser_download_url')
-          fi
+          echo "🌐 锁定内核直链: $DOWNLOAD_URL"
           
-          echo "🌐 成功锁定内核下载直链: $DOWNLOAD_URL"
-          
-          # 执行稳定流式下载与解压
+          # 执行下载
           curl -L -o mihomo.gz "$DOWNLOAD_URL"
+          
+          # 解压并重命名
           gunzip -f mihomo.gz
           mv mihomo-linux-amd64* mihomo 2>/dev/null || true
           chmod +x mihomo
