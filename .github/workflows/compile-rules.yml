@@ -1,4 +1,4 @@
-name: Compile All Mihomo Rules to MRS (100% Stable)
+name: Compile All Mihomo Rules to MRS (Zero-Block Safe Mode)
 
 on:
   workflow_dispatch:
@@ -24,23 +24,18 @@ jobs:
         with:
           fetch-depth: 1
 
-      - name: Set Up Verified Mihomo Core (100% Fixed URL)
+      - name: Set Up Verified Mihomo Core
         run: |
-          echo "🚀 正在下载具备编译引擎的经典稳定版 Mihomo 内核..."
-          
-          # 这个官方发布包的直链永久固定，100% 能够下载成功，文件体积约 5~10MB 之间
+          echo "🚀 正在下载经典稳定版 Mihomo 内核..."
           DOWNLOAD_URL="https://github.com/MetaCubeX/mihomo/releases/download/v1.18.3/mihomo-linux-amd64-v1.18.3.gz"
           
-          echo "🌐 下载直链: $DOWNLOAD_URL"
           curl -L -o mihomo.gz "$DOWNLOAD_URL"
-          
-          # 解压并赋予执行权限
           gunzip -f mihomo.gz
           mv mihomo-linux-amd64* mihomo 2>/dev/null || true
           chmod +x mihomo
           
           echo "----------------------------------------"
-          echo "验证内核是否准备就绪："
+          echo "验证内核状态："
           ./mihomo -v
           echo "----------------------------------------"
 
@@ -83,7 +78,6 @@ jobs:
                           if match:
                               cleaned_lines.append(match.group(1))
                       else:
-                          # 剥离可能存在的 DOMAIN/DOMAIN-SUFFIX 前缀，保留域名主体
                           line = re.sub(r'^(DOMAIN-SUFFIX|DOMAIN|DOMAIN-KEYWORD)[,.\s]*', '', line, flags=re.IGNORECASE)
                           line = line.lstrip('+')
                           if re.match(r'^\.?[a-z0-9][-a-z0-9]*(\.[a-z0-9][-a-z0-9]*)*$', line, re.IGNORECASE):
@@ -99,9 +93,24 @@ jobs:
               print(f"   ✅ 清洗完成。有效规则: {len(cleaned_lines)} 条。")
               print("-" * 40)
 
-      - name: Batch Compile Rules via Mihomo CLI Sandbox
+      - name: Batch Compile Rules via Mihomo CLI Sandbox (No-Port Block)
         run: |
-          echo "🚀 启动稳定版内核进行二进制压制..."
+          echo "🚀 创建极其微型的临时假配置，强制将所有可能阻塞的网络端口彻底禁用..."
+          
+          # 核心技巧：通过显式指定这四个端口为 0 并在配置文件里关掉 mixed-port，
+          # 彻底向系统声明“我不占用/不监听任何网络端口”，从而强行打破 Actions 的网络阻塞大坑！
+          cat <<EOF > dummy-config.yaml
+          mode: rule
+          port: 0
+          socks-port: 0
+          redir-port: 0
+          mixed-port: 0
+          tproxy-port: 0
+          allow-lan: false
+          log-level: silent
+          EOF
+
+          echo "🚀 启动稳定版内核进行二进制安全压制..."
           shopt -s nullglob
           CLEAN_FILES=(rules/*.clean.list)
           
@@ -117,18 +126,17 @@ jobs:
             
             echo "⚡ 编译中: $TEMP_FILE -> $OUTPUT_FILE"
             
-            # 【核心死锁隔离】v1.18.3 唯一正确的独立工具调用语法。不带任何 --type 长参数。
-            # 加上 cli 前缀强制进入沙箱区，编译完成绝对在 0.1 秒内主动关闭进程！
-            if ./mihomo cli rule-set compile "$RULE_TYPE" "$TEMP_FILE" "$OUTPUT_FILE"; then
+            # 【终极一击】加上 -c dummy-config.yaml 喂给内核，告诉它不准监听任何物理端口！
+            if ./mihomo -c dummy-config.yaml cli rule-set compile "$RULE_TYPE" "$TEMP_FILE" "$OUTPUT_FILE"; then
               echo "   🎉 成功生成二进制 MRS 文件!"
             else
               echo "   ❌ 失败: 编译过程中出错！"
-              rm -f rules/*.clean.list
+              rm -f rules/*.clean.list dummy-config.yaml
               exit 1
             fi
           done
           
-          rm -f rules/*.clean.list
+          rm -f rules/*.clean.list dummy-config.yaml
           echo "----------------------------------------"
 
       - name: Auto Commit and Push MRS Files
