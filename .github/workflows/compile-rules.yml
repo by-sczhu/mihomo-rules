@@ -25,22 +25,24 @@ jobs:
           fetch-depth: 1
 
       - name: Set Up Alpha Mihomo Core (With Compiler Engine)
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          echo "🚀 正在通过 GitHub CLI 动态下载官方包含编译引擎的最新 Alpha 内核..."
+          echo "🚀 正在通过 API 动态解析官方最新 Alpha 编译器内核直链..."
           
-          # 使用 gh 命令行工具，精准抓取 meta-alpha 分支下符合 linux-amd64 且是 .gz 格式的最新动态内核包
-          gh release download meta-alpha \
-            --repo MetaCubeX/mihomo \
-            --pattern "mihomo-linux-amd64-alpha-*.gz" \
-            --output mihomo.gz
+          # 使用 curl 直接请求官方的 meta-alpha 标签详情，使用 jq 动态提取最新符合 linux-amd64 规范的 .gz 包直链
+          DOWNLOAD_URL=$(curl -s "https://api.github.com/repos/MetaCubeX/mihomo/releases/tags/meta-alpha" | \
+            jq -r '.assets[] | select(.name | test("mihomo-linux-amd64-alpha-.*\\.gz$")) | .browser_download_url' | head -n 1)
           
-          if [ ! -f "mihomo.gz" ]; then
-            echo "⚠️ 兜底策略：未找到匹配的动态哈希包，尝试下载标准 Alpha 基础包..."
-            gh release download meta-alpha --repo MetaCubeX/mihomo --pattern "mihomo-linux-amd64.gz" --output mihomo.gz
+          # 如果动态哈希包由于特殊原因没提取到，执行兜底提取基础 Alpha 包
+          if [ -z "$DOWNLOAD_URL" ] || [ "$DOWNLOAD_URL" = "null" ]; then
+            echo "⚠️ 动态哈希包解析未命中，执行兜底策略提取标准 Alpha 包..."
+            DOWNLOAD_URL=$(curl -s "https://api.github.com/repos/MetaCubeX/mihomo/releases/tags/meta-alpha" | \
+              jq -r '.assets[] | select(.name == "mihomo-linux-amd64.gz") | .browser_download_url')
           fi
           
+          echo "🌐 成功锁定内核下载直链: $DOWNLOAD_URL"
+          
+          # 执行稳定流式下载与解压
+          curl -L -o mihomo.gz "$DOWNLOAD_URL"
           gunzip -f mihomo.gz
           mv mihomo-linux-amd64* mihomo 2>/dev/null || true
           chmod +x mihomo
@@ -122,7 +124,7 @@ jobs:
             
             echo "⚡ 编译中: $TEMP_FILE -> $OUTPUT_FILE"
             
-            # 使用 Alpha 内核的标准编译语法
+            # 调度包含了编译器代码的 Alpha 内核执行高性能转换
             if ./mihomo rule-set compile --type "$RULE_TYPE" "$TEMP_FILE" "$OUTPUT_FILE"; then
               echo "   🎉 成功生成二进制 MRS 文件!"
             else
