@@ -17,7 +17,7 @@ permissions:
   contents: write
 
 concurrency:
-  group: mrs-build
+  group: build-mrs
   cancel-in-progress: true
 
 jobs:
@@ -30,36 +30,47 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v5
 
-      - name: Install tools
+      - name: Install Dependencies
         run: |
           sudo apt-get update
-          sudo apt-get install -y curl jq
+          sudo apt-get install -y jq curl
 
-      - name: Download Latest Mihomo Alpha
+      - name: Download Mihomo Alpha
         run: |
           set -e
 
           RELEASE_JSON=$(curl -s \
-            https://api.github.com/repos/MetaCubeX/mihomo/releases)
+            https://api.github.com/repos/MetaCubeX/mihomo/releases/tags/Prerelease-Alpha)
 
           DOWNLOAD_URL=$(echo "$RELEASE_JSON" | jq -r '
-            map(select(.prerelease == true))[0]
             .assets[]
-            | select(.name | test("linux-amd64.*\\.gz$"))
+            | select(
+                .name
+                | test("^mihomo-linux-amd64-alpha-.*\\.gz$")
+              )
             | .browser_download_url
-          ')
+          ' | head -n1)
 
+          if [ -z "$DOWNLOAD_URL" ] || [ "$DOWNLOAD_URL" = "null" ]; then
+            echo "Failed to find mihomo amd64 alpha package"
+            exit 1
+          fi
+
+          echo "Download:"
           echo "$DOWNLOAD_URL"
 
           curl -L "$DOWNLOAD_URL" -o mihomo.gz
 
           gunzip -f mihomo.gz
 
-          mv mihomo-linux-amd64* mihomo
+          BIN=$(find . -maxdepth 1 -type f -name "mihomo-linux-amd64*" | head -n1)
+
+          mv "$BIN" mihomo
 
           chmod +x mihomo
 
-          ./mihomo -v
+          ./mihomo version || true
+          ./mihomo -h || true
 
       - name: Compile Rules
         shell: bash
@@ -67,17 +78,15 @@ jobs:
           set -e
 
           mapfile -t FILES < <(
-            find rules \
-              -type f \
-              -name "*.list"
+            find rules -type f -name "*.list"
           )
 
           if [ ${#FILES[@]} -eq 0 ]; then
-            echo "No rules found"
+            echo "No .list files found"
             exit 0
           fi
 
-          echo "Found ${#FILES[@]} files"
+          echo "Found ${#FILES[@]} rule files"
 
           for INPUT in "${FILES[@]}"
           do
@@ -88,7 +97,7 @@ jobs:
             OUTPUT="${DIR}/${NAME}.mrs"
 
             echo "================================"
-            echo "Processing $INPUT"
+            echo "Processing: $INPUT"
 
             if [[ "${NAME,,}" =~ (ip|cidr) ]]
             then
@@ -119,41 +128,52 @@ jobs:
               }' "$INPUT" > "$CLEAN"
             fi
 
-            if [ ! -s "$CLEAN" ]
-            then
-              echo "Empty after cleanup"
+            if [ ! -s "$CLEAN" ]; then
+              echo "Skip empty file"
               rm -f "$CLEAN"
               continue
             fi
 
-            echo "Convert => ${TYPE}"
+            echo "Compile type: $TYPE"
 
-            ./mihomo convert-ruleset \
-              "${TYPE}" \
-              text \
-              "$CLEAN" \
-              "$OUTPUT"
+            if ./mihomo convert-ruleset \
+                "$TYPE" \
+                text \
+                "$CLEAN" \
+                "$OUTPUT"
+            then
+              echo "Success"
+            else
+              echo "Compile failed"
+
+              echo "========== Mihomo Help =========="
+              ./mihomo -h || true
+
+              echo "========== Convert Help =========="
+              ./mihomo convert-ruleset -h || true
+
+              exit 1
+            fi
 
             rm -f "$CLEAN"
 
             ls -lh "$OUTPUT"
           done
 
-      - name: Commit
+      - name: Commit MRS
         run: |
           if [ -z "$(git status --porcelain)" ]; then
             echo "No changes"
             exit 0
           fi
 
-          git config user.name github-actions[bot]
+          git config user.name "github-actions[bot]"
           git config user.email \
-            41898282+github-actions[bot]@users.noreply.github.com
+            "41898282+github-actions[bot]@users.noreply.github.com"
 
-          git add rules/*.mrs
-          git add rules/**/*.mrs
+          git add .
 
-          git commit -m "chore: update mrs"
+          git commit -m "chore: update mrs files"
 
           git pull --rebase origin "${GITHUB_REF_NAME}"
 
