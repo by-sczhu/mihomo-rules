@@ -24,18 +24,29 @@ jobs:
         with:
           fetch-depth: 1
 
-      - name: Set Up Latest Stable Mihomo Core
+      - name: Set Up Alpha Mihomo Core (With Compiler Engine)
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          echo "🚀 正在下载最新稳定版的 Mihomo 内核..."
-          DOWNLOAD_URL="https://github.com/MetaCubeX/mihomo/releases/download/v1.19.26/mihomo-linux-amd64-v1.19.26.gz"
+          echo "🚀 正在通过 GitHub CLI 动态下载官方包含编译引擎的最新 Alpha 内核..."
           
-          curl -L -o mihomo.gz "$DOWNLOAD_URL"
+          # 使用 gh 命令行工具，精准抓取 meta-alpha 分支下符合 linux-amd64 且是 .gz 格式的最新动态内核包
+          gh release download meta-alpha \
+            --repo MetaCubeX/mihomo \
+            --pattern "mihomo-linux-amd64-alpha-*.gz" \
+            --output mihomo.gz
+          
+          if [ ! -f "mihomo.gz" ]; then
+            echo "⚠️ 兜底策略：未找到匹配的动态哈希包，尝试下载标准 Alpha 基础包..."
+            gh release download meta-alpha --repo MetaCubeX/mihomo --pattern "mihomo-linux-amd64.gz" --output mihomo.gz
+          fi
+          
           gunzip -f mihomo.gz
           mv mihomo-linux-amd64* mihomo 2>/dev/null || true
           chmod +x mihomo
           
           echo "----------------------------------------"
-          echo "验证 Mihomo 内核是否工作正常："
+          echo "验证包含内核编译器的 Alpha 版本："
           ./mihomo -v
           echo "----------------------------------------"
 
@@ -48,10 +59,8 @@ jobs:
           print("🔍 正在启动 Python 安全清洗矩阵...")
           rules_dir = "rules"
           if not os.path.exists(rules_dir):
-              print("ℹ️ 未找到 rules 目录，正在创建...")
               os.makedirs(rules_dir)
 
-          # 扫描 rules/ 下的所有标准 .list 文件
           files = [os.path.join(rules_dir, f) for f in os.listdir(rules_dir) if f.endswith('.list') and not f.endswith('.clean.list')]
           
           if not files:
@@ -72,39 +81,32 @@ jobs:
               with open(input_file, 'r', encoding='utf-8', errors='ignore') as f:
                   for line in f:
                       line = line.strip()
-                      # 跳过空行和注释行
                       if not line or line.startswith('#'):
                           continue
                       
                       if is_ip_rule:
-                          # IP 规则清洗：提取标准的 CIDR (支持 IPv4/IPv6)
                           match = re.search(r'([0-9a-fA-F:\.]+/[0-9]+)', line)
                           if match:
                               cleaned_lines.append(match.group(1))
                       else:
-                          # 域名规则清洗：彻底剥离 DOMAIN / DOMAIN-SUFFIX 等前缀和空格
-                          # 移除类似 DOMAIN-SUFFIX, .google.com 里的逗号、空格、前缀
                           line = re.sub(r'^(DOMAIN-SUFFIX|DOMAIN|DOMAIN-KEYWORD)[,.\s]*', '', line, flags=re.IGNORECASE)
-                          line = line.lstrip('+') # 移除开头的 + 号
-                          
-                          # 严苛的合法全域名正则（保留域名开头代表 SUFFIX 的点号）
+                          line = line.lstrip('+')
                           if re.match(r'^\.?[a-z0-9][-a-z0-9]*(\.[a-z0-9][-a-z0-9]*)*$', line, re.IGNORECASE):
                               cleaned_lines.append(line.lower())
 
               if not cleaned_lines:
-                  print(f"   ⚠️ 警告: {base_name} 清洗后没有合法规则，跳过编译。")
+                  print(f"   ⚠️ 警告: {base_name} 清洗后没有合法规则，跳过。")
                   continue
 
-              # 将清洗好的纯净数据写入临时文件
               with open(temp_file, 'w', encoding='utf-8') as f:
                   f.write('\n'.join(cleaned_lines) + '\n')
               
               print(f"   ✅ 清洗完成。有效规则: {len(cleaned_lines)} 条。")
               print("-" * 40)
 
-      - name: Batch Compile Rules via Mihomo
+      - name: Batch Compile Rules via Mihomo Alpha
         run: |
-          echo "🚀 启动 Mihomo 内核进行二进制压制..."
+          echo "🚀 启动真正的 Mihomo Alpha 内核进行二进制压制..."
           shopt -s nullglob
           CLEAN_FILES=(rules/*.clean.list)
           
@@ -120,8 +122,8 @@ jobs:
             
             echo "⚡ 编译中: $TEMP_FILE -> $OUTPUT_FILE"
             
-            # 使用经过官方验证最稳固的旧版 cli 命令安全隔离区，强迫内核在编译完毕后立即退出！
-            if ./mihomo cli rule-set compile "$RULE_TYPE" "$TEMP_FILE" "$OUTPUT_FILE"; then
+            # 使用 Alpha 内核的标准编译语法
+            if ./mihomo rule-set compile --type "$RULE_TYPE" "$TEMP_FILE" "$OUTPUT_FILE"; then
               echo "   🎉 成功生成二进制 MRS 文件!"
             else
               echo "   ❌ 失败: 编译过程中出错！"
@@ -130,7 +132,6 @@ jobs:
             fi
           done
           
-          # 清理所有的临时清洗文件
           rm -f rules/*.clean.list
           echo "----------------------------------------"
 
