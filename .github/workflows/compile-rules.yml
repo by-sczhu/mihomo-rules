@@ -1,165 +1,152 @@
-name: Build Mihomo MRS
+name: Compile All Mihomo Rules to MRS
 
 on:
-workflow_dispatch:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+      - master
+    paths:
+      - 'rules/*.list'
 
-push:
-branches:
-- main
-- master
-paths:
-- 'rules/**/*.list'
-- 'rules/*.list'
-
-schedule:
-- cron: '0 20 * * *'
-
-permissions:
-contents: write
-
-concurrency:
-group: build-mrs
-cancel-in-progress: true
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
 
 jobs:
-build:
-if: github.actor != 'github-actions[bot]'
-runs-on: ubuntu-latest
+  compile:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
 
-```
-steps:
-  - name: Checkout
-    uses: actions/checkout@v5
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
 
-  - name: Install Dependencies
-    run: |
-      sudo apt-get update
-      sudo apt-get install -y curl jq
+      - name: Set Up Latest Stable Mihomo Core
+        run: |
+          echo "🚀 正在下载最新稳定版的 Mihomo 内核..."
+          DOWNLOAD_URL="https://github.com/MetaCubeX/mihomo/releases/download/v1.19.26/mihomo-linux-amd64-v1.19.26.gz"
+          
+          curl -L -o mihomo.gz "$DOWNLOAD_URL"
+          gunzip -f mihomo.gz
+          mv mihomo-linux-amd64* mihomo 2>/dev/null || true
+          chmod +x mihomo
+          
+          echo "----------------------------------------"
+          echo "验证 Mihomo 内核是否工作正常："
+          ./mihomo -v
+          echo "----------------------------------------"
 
-  - name: Download Mihomo Alpha
-    run: |
-      set -e
+      - name: Preprocess Rules via Python (Zero-Escape Safe Mode)
+        shell: python
+        run: |
+          import os
+          import re
 
-      DOWNLOAD_URL=$(
-        curl -s \
-        https://api.github.com/repos/MetaCubeX/mihomo/releases/tags/Prerelease-Alpha |
-        jq -r '
-          .assets[]
-          | select(.name | test("^mihomo-linux-amd64-alpha-.*\\.gz$"))
-          | .browser_download_url
-        ' | head -n1
-      )
+          print("🔍 正在启动 Python 安全清洗矩阵...")
+          rules_dir = "rules"
+          if not os.path.exists(rules_dir):
+              print("ℹ️ 未找到 rules 目录，正在创建...")
+              os.makedirs(rules_dir)
 
-      echo "Download URL:"
-      echo "$DOWNLOAD_URL"
+          # 扫描 rules/ 下的所有标准 .list 文件
+          files = [os.path.join(rules_dir, f) for f in os.listdir(rules_dir) if f.endswith('.list') and not f.endswith('.clean.list')]
+          
+          if not files:
+              print("ℹ️ rules/ 目录下未找到任何需要转换的 .list 文件。")
+              exit(0)
 
-      [ -n "$DOWNLOAD_URL" ]
+          print(f"✅ 找到 {len(files)} 个目标规则文件，启动严格清洗...")
+          print("-" * 40)
 
-      FILE_NAME=$(basename "$DOWNLOAD_URL")
-      BIN_NAME="${FILE_NAME%.gz}"
+          for input_file in files:
+              base_name = os.path.splitext(os.path.basename(input_file))[0]
+              temp_file = os.path.join(rules_dir, f"{base_name}.clean.list")
+              
+              print(f"📁 正在处理: {input_file}")
+              is_ip_rule = "ip" in base_name.lower()
+              cleaned_lines = []
 
-      curl -L "$DOWNLOAD_URL" -o "$FILE_NAME"
+              with open(input_file, 'r', encoding='utf-8', errors='ignore') as f:
+                  for line in f:
+                      line = line.strip()
+                      # 跳过空行和注释行
+                      if not line or line.startswith('#'):
+                          continue
+                      
+                      if is_ip_rule:
+                          # IP 规则清洗：提取标准的 CIDR (支持 IPv4/IPv6)
+                          match = re.search(r'([0-9a-fA-F:\.]+/[0-9]+)', line)
+                          if match:
+                              cleaned_lines.append(match.group(1))
+                      else:
+                          # 域名规则清洗：彻底剥离 DOMAIN / DOMAIN-SUFFIX 等前缀和空格
+                          # 移除类似 DOMAIN-SUFFIX, .google.com 里的逗号、空格、前缀
+                          line = re.sub(r'^(DOMAIN-SUFFIX|DOMAIN|DOMAIN-KEYWORD)[,.\s]*', '', line, flags=re.IGNORECASE)
+                          line = line.lstrip('+') # 移除开头的 + 号
+                          
+                          # 严苛的合法全域名正则（保留域名开头代表 SUFFIX 的点号）
+                          if re.match(r'^\.?[a-z0-9][-a-z0-9]*(\.[a-z0-9][-a-z0-9]*)*$', line, re.IGNORECASE):
+                              cleaned_lines.append(line.lower())
 
-      gunzip -f "$FILE_NAME"
+              if not cleaned_lines:
+                  print(f"   ⚠️ 警告: {base_name} 清洗后没有合法规则，跳过编译。")
+                  continue
 
-      chmod +x "$BIN_NAME"
+              # 将清洗好的纯净数据写入临时文件
+              with open(temp_file, 'w', encoding='utf-8') as f:
+                  f.write('\n'.join(cleaned_lines) + '\n')
+              
+              print(f"   ✅ 清洗完成。有效规则: {len(cleaned_lines)} 条。")
+              print("-" * 40)
 
-      mv "$BIN_NAME" mihomo
+      - name: Batch Compile Rules via Mihomo
+        run: |
+          echo "🚀 启动 Mihomo 内核进行二进制压制..."
+          shopt -s nullglob
+          CLEAN_FILES=(rules/*.clean.list)
+          
+          for TEMP_FILE in "${CLEAN_FILES[@]}"; do
+            BASE_NAME=$(basename "$TEMP_FILE" .clean.list)
+            OUTPUT_FILE="rules/$BASE_NAME.mrs"
+            
+            if [[ "${BASE_NAME,,}" == *"ip"* ]]; then
+              RULE_TYPE="ipcidr"
+            else
+              RULE_TYPE="domain"
+            fi
+            
+            echo "⚡ 编译中: $TEMP_FILE -> $OUTPUT_FILE"
+            
+            # 使用经过官方验证最稳固的旧版 cli 命令安全隔离区，强迫内核在编译完毕后立即退出！
+            if ./mihomo cli rule-set compile "$RULE_TYPE" "$TEMP_FILE" "$OUTPUT_FILE"; then
+              echo "   🎉 成功生成二进制 MRS 文件!"
+            else
+              echo "   ❌ 失败: 编译过程中出错！"
+              rm -f rules/*.clean.list
+              exit 1
+            fi
+          done
+          
+          # 清理所有的临时清洗文件
+          rm -f rules/*.clean.list
+          echo "----------------------------------------"
 
-      echo "========== VERSION =========="
-      ./mihomo version || ./mihomo -v || true
-
-      echo "========== HELP =========="
-      ./mihomo -h || true
-
-  - name: Compile Rules
-    shell: bash
-    run: |
-      set -e
-
-      mapfile -t FILES < <(
-        find rules -type f -name "*.list"
-      )
-
-      if [ ${#FILES[@]} -eq 0 ]; then
-        echo "No .list files found"
-        exit 0
-      fi
-
-      echo "Found ${#FILES[@]} files"
-
-      for INPUT in "${FILES[@]}"
-      do
-        NAME=$(basename "$INPUT" .list)
-        DIR=$(dirname "$INPUT")
-
-        CLEAN="${DIR}/${NAME}.clean"
-        OUTPUT="${DIR}/${NAME}.mrs"
-
-        echo "================================"
-        echo "Processing: $INPUT"
-
-        if [[ "${NAME,,}" =~ (ip|cidr) ]]; then
-          TYPE="ipcidr"
-
-          awk '
-          NF && !/^#/ {
-            gsub(/\r/,"")
-            gsub(/^[ \t]+/,"")
-            print
-          }' "$INPUT" > "$CLEAN"
-
-        else
-          TYPE="domain"
-
-          awk '
-          NF && !/^#/ {
-            gsub(/\r/,"")
-
-            sub(/^DOMAIN-SUFFIX,/,"")
-            sub(/^DOMAIN,/,"")
-            sub(/^DOMAIN-KEYWORD,/,"")
-            sub(/^\+/,"")
-
-            if(length($0)>0)
-              print
-          }' "$INPUT" > "$CLEAN"
-        fi
-
-        if [ ! -s "$CLEAN" ]; then
-          echo "Skip empty file"
-          rm -f "$CLEAN"
-          continue
-        fi
-
-        echo "Compiling type: $TYPE"
-
-        ./mihomo convert-ruleset \
-          "$TYPE" \
-          text \
-          "$CLEAN" \
-          "$OUTPUT"
-
-        rm -f "$CLEAN"
-
-        ls -lh "$OUTPUT"
-      done
-
-  - name: Commit Changes
-    run: |
-      if [ -z "$(git status --porcelain)" ]; then
-        echo "No changes"
-        exit 0
-      fi
-
-      git config user.name "github-actions[bot]"
-      git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-
-      git add .
-
-      git commit -m "chore: update mrs files"
-
-      git pull --rebase origin "${GITHUB_REF_NAME}"
-
-      git push origin "${GITHUB_REF_NAME}"
-```
+      - name: Auto Commit and Push MRS Files
+        run: |
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+          
+          if [ -n "$(git status --porcelain rules/*.mrs)" ]; then
+            git add rules/*.mrs
+            git commit -m "chore: auto-compile rules to mrs [skip ci]"
+            
+            CURRENT_BRANCH=$(git branch --show-current)
+            git pull --rebase origin "$CURRENT_BRANCH"
+            git push origin "$CURRENT_BRANCH"
+            echo "🚀 所有 MRS 二进制规则文件已成功推送到仓库！"
+          else
+            echo "ℹ️ 没有检测到 MRS 文件变动，跳过推送。"
+          fi
