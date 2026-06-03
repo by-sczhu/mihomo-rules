@@ -1,180 +1,165 @@
 name: Build Mihomo MRS
 
 on:
-  workflow_dispatch:
+workflow_dispatch:
 
-  push:
-    branches:
-      - main
-      - master
-    paths:
-      - 'rules/**/*.list'
+push:
+branches:
+- main
+- master
+paths:
+- 'rules/**/*.list'
+- 'rules/*.list'
 
-  schedule:
-    - cron: '0 20 * * *'
+schedule:
+- cron: '0 20 * * *'
 
 permissions:
-  contents: write
+contents: write
 
 concurrency:
-  group: build-mrs
-  cancel-in-progress: true
+group: build-mrs
+cancel-in-progress: true
 
 jobs:
-  build:
-    if: github.actor != 'github-actions[bot]'
+build:
+if: github.actor != 'github-actions[bot]'
+runs-on: ubuntu-latest
 
-    runs-on: ubuntu-latest
+```
+steps:
+  - name: Checkout
+    uses: actions/checkout@v5
 
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v5
+  - name: Install Dependencies
+    run: |
+      sudo apt-get update
+      sudo apt-get install -y curl jq
 
-      - name: Install Dependencies
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y jq curl
+  - name: Download Mihomo Alpha
+    run: |
+      set -e
 
-      - name: Download Mihomo Alpha
-        run: |
-          set -e
+      DOWNLOAD_URL=$(
+        curl -s \
+        https://api.github.com/repos/MetaCubeX/mihomo/releases/tags/Prerelease-Alpha |
+        jq -r '
+          .assets[]
+          | select(.name | test("^mihomo-linux-amd64-alpha-.*\\.gz$"))
+          | .browser_download_url
+        ' | head -n1
+      )
 
-          RELEASE_JSON=$(curl -s \
-            https://api.github.com/repos/MetaCubeX/mihomo/releases/tags/Prerelease-Alpha)
+      echo "Download URL:"
+      echo "$DOWNLOAD_URL"
 
-          DOWNLOAD_URL=$(echo "$RELEASE_JSON" | jq -r '
-            .assets[]
-            | select(
-                .name
-                | test("^mihomo-linux-amd64-alpha-.*\\.gz$")
-              )
-            | .browser_download_url
-          ' | head -n1)
+      [ -n "$DOWNLOAD_URL" ]
 
-          if [ -z "$DOWNLOAD_URL" ] || [ "$DOWNLOAD_URL" = "null" ]; then
-            echo "Failed to find mihomo amd64 alpha package"
-            exit 1
-          fi
+      FILE_NAME=$(basename "$DOWNLOAD_URL")
+      BIN_NAME="${FILE_NAME%.gz}"
 
-          echo "Download:"
-          echo "$DOWNLOAD_URL"
+      curl -L "$DOWNLOAD_URL" -o "$FILE_NAME"
 
-          curl -L "$DOWNLOAD_URL" -o mihomo.gz
+      gunzip -f "$FILE_NAME"
 
-          gunzip -f mihomo.gz
+      chmod +x "$BIN_NAME"
 
-          BIN=$(find . -maxdepth 1 -type f -name "mihomo-linux-amd64*" | head -n1)
+      mv "$BIN_NAME" mihomo
 
-          mv "$BIN" mihomo
+      echo "========== VERSION =========="
+      ./mihomo version || ./mihomo -v || true
 
-          chmod +x mihomo
+      echo "========== HELP =========="
+      ./mihomo -h || true
 
-          ./mihomo version || true
-          ./mihomo -h || true
+  - name: Compile Rules
+    shell: bash
+    run: |
+      set -e
 
-      - name: Compile Rules
-        shell: bash
-        run: |
-          set -e
+      mapfile -t FILES < <(
+        find rules -type f -name "*.list"
+      )
 
-          mapfile -t FILES < <(
-            find rules -type f -name "*.list"
-          )
+      if [ ${#FILES[@]} -eq 0 ]; then
+        echo "No .list files found"
+        exit 0
+      fi
 
-          if [ ${#FILES[@]} -eq 0 ]; then
-            echo "No .list files found"
-            exit 0
-          fi
+      echo "Found ${#FILES[@]} files"
 
-          echo "Found ${#FILES[@]} rule files"
+      for INPUT in "${FILES[@]}"
+      do
+        NAME=$(basename "$INPUT" .list)
+        DIR=$(dirname "$INPUT")
 
-          for INPUT in "${FILES[@]}"
-          do
-            NAME=$(basename "$INPUT" .list)
-            DIR=$(dirname "$INPUT")
+        CLEAN="${DIR}/${NAME}.clean"
+        OUTPUT="${DIR}/${NAME}.mrs"
 
-            CLEAN="${DIR}/${NAME}.clean"
-            OUTPUT="${DIR}/${NAME}.mrs"
+        echo "================================"
+        echo "Processing: $INPUT"
 
-            echo "================================"
-            echo "Processing: $INPUT"
+        if [[ "${NAME,,}" =~ (ip|cidr) ]]; then
+          TYPE="ipcidr"
 
-            if [[ "${NAME,,}" =~ (ip|cidr) ]]
-            then
-              TYPE="ipcidr"
+          awk '
+          NF && !/^#/ {
+            gsub(/\r/,"")
+            gsub(/^[ \t]+/,"")
+            print
+          }' "$INPUT" > "$CLEAN"
 
-              awk '
-              NF && !/^#/ {
-                gsub(/\r/,"")
-                gsub(/^[ \t]+/,"")
-                print
-              }' "$INPUT" > "$CLEAN"
+        else
+          TYPE="domain"
 
-            else
-              TYPE="domain"
+          awk '
+          NF && !/^#/ {
+            gsub(/\r/,"")
 
-              awk '
-              NF && !/^#/ {
-                gsub(/\r/,"")
+            sub(/^DOMAIN-SUFFIX,/,"")
+            sub(/^DOMAIN,/,"")
+            sub(/^DOMAIN-KEYWORD,/,"")
+            sub(/^\+/,"")
 
-                sub(/^DOMAIN-SUFFIX,/,"")
-                sub(/^DOMAIN,/,"")
-                sub(/^DOMAIN-KEYWORD,/,"")
+            if(length($0)>0)
+              print
+          }' "$INPUT" > "$CLEAN"
+        fi
 
-                sub(/^\+/,"")
+        if [ ! -s "$CLEAN" ]; then
+          echo "Skip empty file"
+          rm -f "$CLEAN"
+          continue
+        fi
 
-                if(length($0)>0)
-                  print
-              }' "$INPUT" > "$CLEAN"
-            fi
+        echo "Compiling type: $TYPE"
 
-            if [ ! -s "$CLEAN" ]; then
-              echo "Skip empty file"
-              rm -f "$CLEAN"
-              continue
-            fi
+        ./mihomo convert-ruleset \
+          "$TYPE" \
+          text \
+          "$CLEAN" \
+          "$OUTPUT"
 
-            echo "Compile type: $TYPE"
+        rm -f "$CLEAN"
 
-            if ./mihomo convert-ruleset \
-                "$TYPE" \
-                text \
-                "$CLEAN" \
-                "$OUTPUT"
-            then
-              echo "Success"
-            else
-              echo "Compile failed"
+        ls -lh "$OUTPUT"
+      done
 
-              echo "========== Mihomo Help =========="
-              ./mihomo -h || true
+  - name: Commit Changes
+    run: |
+      if [ -z "$(git status --porcelain)" ]; then
+        echo "No changes"
+        exit 0
+      fi
 
-              echo "========== Convert Help =========="
-              ./mihomo convert-ruleset -h || true
+      git config user.name "github-actions[bot]"
+      git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
 
-              exit 1
-            fi
+      git add .
 
-            rm -f "$CLEAN"
+      git commit -m "chore: update mrs files"
 
-            ls -lh "$OUTPUT"
-          done
+      git pull --rebase origin "${GITHUB_REF_NAME}"
 
-      - name: Commit MRS
-        run: |
-          if [ -z "$(git status --porcelain)" ]; then
-            echo "No changes"
-            exit 0
-          fi
-
-          git config user.name "github-actions[bot]"
-          git config user.email \
-            "41898282+github-actions[bot]@users.noreply.github.com"
-
-          git add .
-
-          git commit -m "chore: update mrs files"
-
-          git pull --rebase origin "${GITHUB_REF_NAME}"
-
-          git push origin "${GITHUB_REF_NAME}"
+      git push origin "${GITHUB_REF_NAME}"
+```
