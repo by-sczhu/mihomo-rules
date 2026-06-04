@@ -16,7 +16,7 @@ jobs:
     steps:
       - uses: actions/checkout@v5
 
-      - name: Build MRS
+      - name: Build SELF TO MRS
         run: |
           docker run --rm \
             -v ${{ github.workspace }}/rules:/rules \
