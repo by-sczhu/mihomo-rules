@@ -1,53 +1,56 @@
-name: Build category-pt.mrs
+name: Convert Ruleset to MRS
 
 on:
-  workflow_dispatch:
   push:
+    branches:
+      - main
     paths:
-      - "rules/category-pt.txt"
-
-permissions:
-  contents: write
+      - 'rules/category-pt.txt' # 仅当该 .txt 文件发生变动时才触发自动转换
+  workflow_dispatch: # 允许在 GitHub Actions 页面手动点击运行
 
 jobs:
-  build:
+  build-and-convert:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v5
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # 确保获取完整历史记录以支持推送
 
-      - name: Download Mihomo
+      - name: Install Mihomo (Clash Meta)
         run: |
-          URL=$(curl -s https://api.github.com/repos/MetaCubeX/mihomo/releases/tags/Prerelease-Alpha \
-            | grep browser_download_url \
-            | grep linux-amd64-compatible.gz \
-            | head -1 \
-            | cut -d '"' -f4)
-
-          wget -O mihomo.gz "$URL"
+          echo "正在获取 Mihomo 最新版本..."
+          MIHOMO_VERSION=$(curl -s "https://api.github.com/repos/MetaCubeX/mihomo/releases/latest" | grep '"tag_name":' | sed -E 's/.*"([^"]+)".*/\1/')
+          echo "最新内核版本: $MIHOMO_VERSION"
+          
+          # 下载 Linux amd64 版本的内核
+          curl -sSL "https://github.com/MetaCubeX/mihomo/releases/download/${MIHOMO_VERSION}/mihomo-linux-amd64-${MIHOMO_VERSION}.gz" -o mihomo.gz
           gunzip mihomo.gz
-
           chmod +x mihomo
-          sudo mv mihomo /usr/local/bin/mihomo
+          
+          # 验证内核是否可用
+          ./mihomo -v
 
-          mihomo -v
-
-      - name: Build MRS
+      - name: Compile TXT to MRS
         run: |
-          mihomo convert-ruleset \
-            domain \
-            text \
-            rules/category-pt.txt \
-            rules/category-pt.mrs
+          echo "正在编译规则集..."
+          # 将 rules/category-pt.txt 转换为 rules/category-pt.mrs
+          # 这里的输入格式仍然指定为 text，因为 Mihomo 的 ruleset 转换器中，纯文本按行读取的格式统一称为 text
+          ./mihomo convert ruleset text rules/category-pt.txt rules/category-pt.mrs
+          echo "编译完成！"
 
-      - name: Commit Changes
+      - name: Commit and Push Changes
         run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-
-          git add rules/category-pt.mrs
-
-          if ! git diff --cached --quiet; then
-            git commit -m "Update category-pt.mrs"
-            git push
+          # 检查生成的 .mrs 文件是否有变化，避免无意义的重复提交
+          if [ -n "$(git status --porcelain rules/category-pt.mrs)" ]; then
+            git config --local user.email "github-actions[bot]@users.noreply.github.com"
+            git config --local user.name "github-actions[bot]"
+            
+            git add rules/category-pt.mrs
+            git commit -m "chore: 自动将 category-pt.txt 转换为二进制 mrs 规则集"
+            git push origin main
+            echo "成功将最新的 .mrs 文件推送至 main 分支。"
+          else
+            echo "文件内容无变化，跳过提交。"
           fi
