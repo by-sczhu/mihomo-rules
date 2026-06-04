@@ -16,25 +16,37 @@ jobs:
     steps:
       - uses: actions/checkout@v5
 
-      - name: Build All TO MRS
+      - name: Build MRS
         run: |
-          docker run --rm \
-            -v ${{ github.workspace }}/rules:/rules \
-            metacubex/mihomo:latest \
-            convert-ruleset \
-            domain \
-            text \
-            /rules/*.txt \
-            /rules/*.mrs
+          # 遍历当前工作区 rules 目录下的所有 txt 文件
+          for file in ${{ github.workspace }}/rules/*.txt; do
+            # 确保文件确实存在，防止因目录为空导致循环报错
+            [ -e "$file" ] || continue
+            
+            # 提取纯文件名（例如从 "/path/to/rules/direct.txt" 提取出 "direct"）
+            filename=$(basename "$file" .txt)
+            
+            echo "正在转换: $filename.txt -> $filename.mrs"
+            
+            # 执行 Docker 容器内的转换命令
+            docker run --rm \
+              -v ${{ github.workspace }}/rules:/rules \
+              metacubex/mihomo:latest \
+              mihomo convert-ruleset domain text /rules/$filename.txt /rules/$filename.mrs
+          done
 
       - name: Commit
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
 
+          # 暂存所有生成的 mrs 文件
           git add rules/*.mrs
 
+          # 检查是否有文件变动，如果有则提交并推送
           if ! git diff --cached --quiet; then
-            git commit -m "Update *.mrs"
+            git commit -m "Automated update of binary rulesets (*.mrs)"
             git push
+          else
+            echo "未检测到规则文件变动，跳过提交。"
           fi
