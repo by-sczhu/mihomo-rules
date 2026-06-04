@@ -1,0 +1,56 @@
+name: Convert Ruleset to MRS
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'rules/category-pt.list' # 仅当该文件发生变动时才触发自动转换
+  workflow_dispatch: # 允许在 GitHub 页面手动点击运行
+
+jobs:
+  build-and-convert:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+        with:
+          # 使用 fetch-depth: 0 确保可以推送回仓库
+          fetch-depth: 0 
+
+      - name: Install Mihomo (Clash Meta)
+        run: |
+          echo "正在获取 Mihomo 最新版本..."
+          MIHOMO_VERSION=$(curl -s "https://api.github.com/repos/MetaCubeX/mihomo/releases/latest" | grep '"tag_name":' | sed -E 's/.*"([^"]+)".*/\1/')
+          echo "最新内核版本: $MIHOMO_VERSION"
+          
+          # 下载 Linux amd64 版本的内核
+          curl -sSL "https://github.com/MetaCubeX/mihomo/releases/download/${MIHOMO_VERSION}/mihomo-linux-amd64-${MIHOMO_VERSION}.gz" -o mihomo.gz
+          gunzip mihomo.gz
+          chmod +x mihomo
+          
+          # 验证内核是否可用
+          ./mihomo -v
+
+      - name: Compile List to MRS
+        run: |
+          echo "正在编译规则集..."
+          # 将 rules/category-pt.list 转换为 rules/category-pt.mrs
+          ./mihomo convert ruleset text rules/category-pt.list rules/category-pt.mrs
+          echo "编译完成！"
+
+      - name: Commit and Push Changes
+        run: |
+          # 检查文件是否有变化，避免无意义的提交
+          if [ -n "$(git status --porcelain rules/category-pt.mrs)" ]; then
+            git config --local user.email "github-actions[bot]@users.noreply.github.com"
+            git config --local user.name "github-actions[bot]"
+            
+            git add rules/category-pt.mrs
+            git commit -m "chore: 自动更新 category-pt.mrs 二进制规则集"
+            git push origin main
+            echo "成功将最新的 .mrs 文件推送至仓库。"
+          else
+            echo "文件内容无变化，跳过提交。"
+          fi
