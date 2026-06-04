@@ -1,56 +1,54 @@
-name: Build All TO MRS
+name: Build TXT TO MRS
 
 on:
-  workflow_dispatch:
-  push:
-    paths:
-      - "rules/*.txt"
+workflow_dispatch:
+push:
+paths:
+- "rules/*.txt"
 
 permissions:
-  contents: write
+contents: write
 
 jobs:
-  build:
-    runs-on: ubuntu-latest
+build:
+runs-on: ubuntu-latest
 
-    steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v5
+```
+steps:
+  - uses: actions/checkout@v5
 
-      - name: Build MRS
-        run: |
-          # 遍历当前工作区 rules 目录下的所有 txt 文件
-          for file in ${{ github.workspace }}/rules/*.txt; do
-            # 确保文件确实存在，防止因目录为空或匹配不到导致循环报错
-            [ -e "$file" ] || continue
-            
-            # 提取纯文件名（例如从 "/path/to/rules/category-pt.txt" 提取出 "category-pt"）
-            filename=$(basename "$file" .txt)
-            
-            echo "--------------------------------------------------"
-            echo "正在转换: $filename.txt -> $filename.mrs"
-            echo "--------------------------------------------------"
-            
-            # 使用 --entrypoint 覆盖容器默认启动行为，使其作为纯工具命令运行
-            docker run --rm \
-              -v ${{ github.workspace }}/rules:/rules \
-              --entrypoint /mihomo \
-              metacubex/mihomo:latest \
-              convert-ruleset domain text /rules/$filename.txt /rules/$filename.mrs
-          done
+  - name: Convert all TXT to MRS
+    run: |
+      set -e
 
-      - name: Commit and Push
-        run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+      for file in rules/*.txt; do
+        [ -f "$file" ] || continue
 
-          # 暂存所有生成的二进制 mrs 文件
-          git add rules/*.mrs
+        name=$(basename "$file" .txt)
 
-          # 检查是否有文件变动，如果有则提交并推送
-          if ! git diff --cached --quiet; then
-            git commit -m "Automated update of binary rulesets (*.mrs)"
-            git push
-          else
-            echo "未检测到规则文件变动，跳过自动提交。"
-          fi
+        echo "Converting $file -> rules/${name}.mrs"
+
+        docker run --rm \
+          -v "${{ github.workspace }}/rules:/rules" \
+          metacubex/mihomo:latest \
+          convert-ruleset \
+          domain \
+          text \
+          "/rules/${name}.txt" \
+          "/rules/${name}.mrs"
+      done
+
+  - name: Commit changes
+    run: |
+      git config user.name "github-actions[bot]"
+      git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+      git add rules/*.mrs
+
+      if ! git diff --cached --quiet; then
+        git commit -m "Update MRS rules"
+        git push
+      else
+        echo "No changes"
+      fi
+```
