@@ -1,57 +1,60 @@
 name: Build All MRS
 
 on:
-workflow_dispatch:
-push:
-paths:
-- "rules/*.txt"
+  workflow_dispatch:
+  push:
+    paths:
+    - 'rules/*.txt'
 
 permissions:
-contents: write
+  contents: write
 
 jobs:
-build:
-runs-on: ubuntu-latest
+  build:
+    runs-on: ubuntu-latest
 
-```
-steps:
-  - name: Checkout
-    uses: actions/checkout@v5
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+    
+      - name: Download Mihomo
+        run: |
+          wget -qO mihomo.gz \
+            https://github.com/MetaCubeX/mihomo/releases/latest/download/mihomo-linux-amd64-compatible.gz
+    
+          gunzip -f mihomo.gz
+          chmod +x mihomo
+    
+          ./mihomo -v || true
+    
+      - name: Convert TXT to MRS
+        run: |
+          set -e
+    
+          for file in rules/*.txt; do
+            [ -f "$file" ] || continue
+    
+            output="${file%.txt}.mrs"
+    
+            echo "Converting $file -> $output"
+    
+            ./mihomo convert-ruleset \
+              domain \
+              text \
+              "$file" \
+              "$output"
+          done
 
-  - name: Download Mihomo
-    run: |
-      wget -q \
-        https://github.com/MetaCubeX/mihomo/releases/latest/download/mihomo-linux-amd64-compatible.gz \
-        -O mihomo.gz
-
-      gunzip -f mihomo.gz
-      chmod +x mihomo
-
-  - name: Build MRS
-    run: |
-      set -e
-
-      for file in rules/*.txt; do
-        [ -f "$file" ] || continue
-
-        output="${file%.txt}.mrs"
-
-        echo "Converting $file -> $output"
-
-        ./mihomo convert-ruleset domain text "$file" "$output"
-      done
-
-  - name: Commit
-    run: |
-      git config user.name "github-actions[bot]"
-      git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-
-      git add rules/*.mrs
-
-      if git diff --cached --quiet; then
-        echo "No changes"
-      else
-        git commit -m "Auto build mrs"
-        git push
-      fi
-```
+      - name: Commit Changes
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+    
+          git add rules/*.mrs
+    
+          if git diff --cached --quiet; then
+            echo "No changes"
+          else
+            git commit -m "Auto build mrs"
+            git push
+          fi
