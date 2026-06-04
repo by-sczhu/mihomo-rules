@@ -1,4 +1,4 @@
-name: Build MRS
+name: Build PT TO MRS
 
 on:
   workflow_dispatch:
