@@ -1,4 +1,4 @@
-name: Build all MRS
+name: Build PT TO MRS
 
 on:
   workflow_dispatch:
@@ -16,29 +16,18 @@ jobs:
     steps:
       - uses: actions/checkout@v5
 
-      - name: Build MRS (batch safe)
+      - name: Build MRS
         run: |
-          set -e
+          docker run --rm \
+            -v ${{ github.workspace }}/rules:/rules \
+            metacubex/mihomo:latest \
+            convert-ruleset \
+            domain \
+            text \
+            /rules/*.txt \
+            /rules/*.mrs
 
-          for file in rules/*.txt; do
-            [ -e "$file" ] || continue
-
-            out="${file%.txt}.mrs"
-
-            echo "Converting $file → $out"
-
-            docker run --rm \
-              -v ${{ github.workspace }}/rules:/rules \
-              metacubex/mihomo:latest \
-              convert-ruleset \
-              domain \
-              text \
-              "/$file" \
-              "/${out#rules/}"
-
-          done
-
-      - name: Commit changes
+      - name: Commit
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
@@ -46,6 +35,6 @@ jobs:
           git add rules/*.mrs
 
           if ! git diff --cached --quiet; then
-            git commit -m "auto: update mrs rules"
+            git commit -m "Update *.mrs"
             git push
           fi
