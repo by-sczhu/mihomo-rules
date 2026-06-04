@@ -1,13 +1,13 @@
 name: Build All TO MRS
 
 on:
-  workflow_dispatch: # 允许手动触发
+  workflow_dispatch:
   push:
     paths:
-      - "rules/*.txt" # 只要 rules 目录下的任意 txt 文件有变动就触发
+      - "rules/*.txt"
 
 permissions:
-  contents: write # 赋予工作流向仓库推送代码的权限
+  contents: write
 
 jobs:
   build:
@@ -21,17 +21,27 @@ jobs:
         run: |
           # 遍历当前工作区 rules 目录下的所有 txt 文件
           for file in ${{ github.workspace }}/rules/*.txt; do
-            # 确保文件确实存在，防止因目录为空或匹配不到导致循环报错
+            # 确保文件确实存在
             [ -e "$file" ] || continue
             
-            # 提取纯文件名（例如从 "/path/to/rules/self-built.txt" 提取出 "self-built"）
             filename=$(basename "$file" .txt)
             
             echo "=================================================="
-            echo "正在转换: $filename.txt -> $filename.mrs"
+            echo "正在检查并转换: $filename.txt"
             echo "=================================================="
             
-            # 使用 --entrypoint 覆盖容器默认启动行为，使其作为纯工具命令运行
+            # 过滤掉注释行（# 或 //）以及纯空格/空行，统计有效规则行数
+            valid_lines=$(grep -v -E '^(#|\/\/|\s*$)' "$file" | wc -l)
+            
+            if [ "$valid_lines" -eq 0 ]; then
+              echo "⚠️ 警告: $filename.txt 中未检测到有效规则行（可能为空或全是注释）。"
+              echo "为了防止 Mihomo 内核崩溃 (panic: empty rule)，将跳过此文件的转换。"
+              continue
+            fi
+            
+            echo "有效规则行数: $valid_lines 行，开始转换..."
+            
+            # 使用 --entrypoint 覆盖容器默认启动行为
             docker run --rm \
               -v ${{ github.workspace }}/rules:/rules \
               --entrypoint /mihomo \
