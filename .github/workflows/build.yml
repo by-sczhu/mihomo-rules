@@ -1,60 +1,56 @@
-name: Build All MRS
+name: Build All TO MRS
 
 on:
-  workflow_dispatch:
+  workflow_dispatch: # 允许手动触发
   push:
     paths:
-    - 'rules/*.txt'
+      - "rules/*.txt" # 只要 rules 目录下的任意 txt 文件有变动就触发
 
 permissions:
-  contents: write
+  contents: write # 赋予工作流向仓库推送代码的权限
 
 jobs:
   build:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout
+      - name: Checkout Repository
         uses: actions/checkout@v5
-    
-      - name: Download Mihomo
+
+      - name: Build MRS
         run: |
-          wget -qO mihomo.gz \
-            https://github.com/MetaCubeX/mihomo/releases/latest/download/mihomo-linux-amd64-compatible.gz
-    
-          gunzip -f mihomo.gz
-          chmod +x mihomo
-    
-          ./mihomo -v || true
-    
-      - name: Convert TXT to MRS
-        run: |
-          set -e
-    
-          for file in rules/*.txt; do
-            [ -f "$file" ] || continue
-    
-            output="${file%.txt}.mrs"
-    
-            echo "Converting $file -> $output"
-    
-            ./mihomo convert-ruleset \
-              domain \
-              text \
-              "$file" \
-              "$output"
+          # 遍历当前工作区 rules 目录下的所有 txt 文件
+          for file in ${{ github.workspace }}/rules/*.txt; do
+            # 确保文件确实存在，防止因目录为空或匹配不到导致循环报错
+            [ -e "$file" ] || continue
+            
+            # 提取纯文件名（例如从 "/path/to/rules/self-built.txt" 提取出 "self-built"）
+            filename=$(basename "$file" .txt)
+            
+            echo "=================================================="
+            echo "正在转换: $filename.txt -> $filename.mrs"
+            echo "=================================================="
+            
+            # 使用 --entrypoint 覆盖容器默认启动行为，使其作为纯工具命令运行
+            docker run --rm \
+              -v ${{ github.workspace }}/rules:/rules \
+              --entrypoint /mihomo \
+              metacubex/mihomo:latest \
+              convert-ruleset domain text /rules/$filename.txt /rules/$filename.mrs
           done
 
-      - name: Commit Changes
+      - name: Commit and Push
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-    
+
+          # 暂存所有新生成的二进制 mrs 文件
           git add rules/*.mrs
-    
-          if git diff --cached --quiet; then
-            echo "No changes"
-          else
-            git commit -m "Auto build mrs"
+
+          # 检查是否有文件变动，如果有则提交并推送
+          if ! git diff --cached --quiet; then
+            git commit -m "Automated update of all binary rulesets (*.mrs)"
             git push
+          else
+            echo "未检测到规则文件变动，跳过自动提交。"
           fi
