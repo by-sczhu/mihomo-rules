@@ -61,6 +61,7 @@ dmhy.org
 discord.heihachi.pw
 dxdhd.com
 eastgame.org
+pt.eastgame.org
 empornium.me
 et8.org
 evan.im
@@ -179,6 +180,7 @@ opentracker.io
 oppaiti.me
 orpheus.network
 oshen.win
+www.oshen.win
 ourbits.club
 p4p.arenabg.com
 pandapt.net
@@ -194,6 +196,7 @@ pterclub.net
 ptfans.cc
 pthome.net
 ptsbao.club
+www.pttime.org
 pttime.org
 pttime.top
 ptvicomo.net
@@ -219,6 +222,7 @@ sjtu.edu.cn
 skyeysnow.com
 skyey2.com
 soulvoice.club
+pt.soulvoice.club
 springsunday.net
 t.213891.xyz
 t.jaekr.sh
