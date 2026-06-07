@@ -1,3 +1,4 @@
++.0ff.cc
 +.1ptba.com
 +.52pt.site
 +.audiences.me
@@ -66,6 +67,7 @@
 +.keepfrds.com
 +.kufei.com
 +.kufei.org
++.kame.gay
 +.leaves.red
 +.lemonhd.club
 +.lemonhd.net
@@ -97,11 +99,13 @@
 +.ptfans.cc
 +.pthome.net
 +.ptsbao.club
++.pttime.fun
 +.pttime.org
 +.pttime.top
 +.ptvicomo.net
 +.rainbowisland.co
 +.rousi.zip
++.share.ilolicon.com
 +.sharkpt.net
 +.sjtu.edu.cn
 +.skyey2.com
