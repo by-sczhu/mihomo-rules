@@ -70,7 +70,7 @@ IPcidrMrs: &IPcidrMrs {type: http, interval: 86400, behavior: ipcidr, format: mr
 # ======================================  - 机场订阅配置 - ================================
 # 机场订阅链接
 proxy-providers:
-  MC: {<<: *DProviders, url: 'http://10.0.0.6:3001/CKg2abstVnOeRpm1aB4G/download/collection/MC', override: {additional-prefix: '[MC] '}}
+  MC: {<<: *DProviders, url: 'http://10.0.0.6:3001/***/MC', override: {additional-prefix: '[MC] '}}
 
 # ======================================  -  域名策略组 - =================================
 proxy-groups:
