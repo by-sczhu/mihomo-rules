@@ -1,1 +1,274 @@
+# =================================================
+#                 Magic Catling2 优化配置
+#                               -- Mihomo v1.19.20+ 
+# =================================================
 
+# ====================全局配置模块==================
+port: 7890
+proxies:
+
+# ==================== 锚点配置 ====================
+# 锚点 -  代理提供者模板 - 订阅源基础配置
+BasePD: &BasePD {type: http, interval: 86400, proxy: DIRECT, health-check: {enable: true, url: 'https://www.google.com/generate_204', interval: 300}, filter: '^(?!.*(群|邀请|返利|循环|官网|客服|网站|网址|获取|订阅|流量|到期|机场|下次|版本|官址|备用|过期|已用|联系|邮箱|工单|贩卖|通知|倒卖|防止|国内|地址|频道|无法|说明|使用|提示|特别|访问|支持|教程|关注|更新|作者|加入|USE|USED|TOTAL|EXPIRE|EMAIL|Panel|Channel|Author))'}
+
+# 锚点- 自动测速策略组基础配置
+BaseUT: &BaseUT {type: url-test, interval: 60, tolerance: 20, lazy: true, url: 'http://www.apple.com/library/test/success.html', disable-udp: false, timeout: 2000, max-failed-times: 3, hidden: true, include-all: true}
+# 锚点 - 故障转移策略组基础配置
+BaseFB: &BaseFB {type: fallback, interval: 60, lazy: true, url: 'http://www.apple.com/library/test/success.html', disable-udp: false, timeout: 2000, max-failed-times: 3, hidden: false}
+# 锚点 - 负载均衡策略组基础配置
+BaseCH: &BaseCH {type: load-balance, interval: 60, lazy: true, url: 'http://www.apple.com/library/test/success.html', disable-udp: false, strategy: consistent-hashing, timeout: 2000, max-failed-times: 3, hidden: true, include-all: true}
+# 锚点 - 负载均衡策略组基础配置
+BaseCR: &BaseCR {type: load-balance, interval: 60, lazy: true, url: 'http://www.apple.com/library/test/success.html', disable-udp: false, strategy: round-robin, timeout: 2000, max-failed-times: 3, hidden: true, include-all: true}
+
+# 锚点 -  节点筛选正则表达式 - 基于地理位置和关键词过滤
+FilterHK: &FilterHK '^(?=.*(?i)(港|🇭🇰|HK|Hong|HKG))(?!.*(排除1|排除2|5x)).*$'
+FilterTW: &FilterTW '^(?=.*(?i)(台|🇼🇸|🇹🇼|TW|tai|TPE|TSA|KHH))(?!.*(排除1|排除2|5x)).*$'
+FilterSG: &FilterSG '^(?=.*(?i)(坡|🇸🇬|SG|Sing|SIN|XSP))(?!.*(排除1|排除2|5x)).*$'
+FilterJP: &FilterJP '^(?=.*(?i)(日|🇯🇵|JP|Japan|NRT|HND|KIX|CTS|FUK))(?!.*(排除1|排除2|5x)).*$'
+FilterUS: &FilterUS '^(?=.*(?i)(美|🇺🇸|US|USA|SJC|JFK|LAX|ORD|ATL|DFW|SFO|MIA|SEA|IAD))(?!.*(排除1|排除2|5x)).*$'
+FilterOT: &FilterOT '^(?!.*(DIRECT|直接连接|美|港|坡|台|新|日|韩|奥|比|保|克罗地亚|塞|捷|丹|爱沙|芬|法|德|希|匈|爱尔|意|拉|立|卢|马其它|荷|波|葡|罗|斯洛伐|斯洛文|西|瑞|英|🇭🇰|🇼🇸|🇹🇼|🇸🇬|🇯🇵|🇰🇷|🇺🇸|🇬🇧|🇦🇹|🇧🇪|🇨🇿|🇩🇰|🇫🇮|🇫🇷|🇩🇪|🇮🇪|🇮🇹|🇱🇹|🇱🇺|🇳🇱|🇵🇱|🇸🇪|HK|TW|SG|JP|KR|US|GB|CDG|FRA|AMS|MAD|BCN|FCO|MUC|BRU|HKG|TPE|TSA|KHH|SIN|XSP|NRT|HND|KIX|CTS|FUK|JFK|LAX|ORD|ATL|DFW|SFO|MIA|SEA|IAD|LHR|LGW))'
+FilterAL: &FilterAL '^(?!.*(DIRECT|直接连接|群|邀请|返利|循环|官网|客服|网站|网址|获取|订阅|流量|到期|机场|下次|版本|官址|备用|过期|已用|联系|邮箱|工单|贩卖|通知|倒卖|防止|国内|地址|频道|无法|说明|使用|提示|特别|访问|支持|教程|关注|更新|作者|加入|USE|USED|TOTAL|EXPIRE|EMAIL|Panel|Channel|Author))'
+
+# 锚点 -  策略组代理列表模板 - 预定义的代理节点优先级排序
+SelectDC: &SelectDC {type: select, proxies: [DIRECT, 默认代理]}
+SelectFN: &SelectFN {type: select, proxies: [默认代理, 其它自选, DIRECT]}
+SelectFB: &SelectFB {type: select, proxies: [故障转移, 智能故转, 香港策略, 台湾策略, 新加坡策略, 日本策略, 美国策略, 其它自选, DIRECT]}
+SelectAI: &SelectAI {type: select, proxies: [智能故转, 默认代理, 故障转移, 香港策略, 台湾策略, 新加坡策略, 日本策略, 美国策略, 其它自选, DIRECT]}
+SelectPY: &SelectPY {type: select, proxies: [默认代理, 故障转移, 智能故转, 香港策略, 台湾策略, 新加坡策略, 日本策略, 美国策略, 其它自选, DIRECT]}
+
+# 锚点 - 规则集行为模板
+DomainMrs: &DomainMrs {type: http, interval: 86400, behavior: domain, format: mrs}
+IPcidrMrs: &IPcidrMrs {type: http, interval: 86400, behavior: ipcidr, format: mrs}
+# ==================== 锚点配置结束 ==================
+
+# ==================== 代理提供者 ====================
+# 注意：请提供您的机场订阅链接，每个链接一行，并为每个机场命名，末尾的[MC][BK]为每个节点添加机场名称前缀，可自定义
+proxy-providers:
+  # 主订阅源 - 节点集合，使用时请修改
+  MC: {<<: *BasePD, url: 'http://10.0.0.6:3001/***/collection/MC', override: {additional-prefix: '[MC] '}}
+  # 备用订阅源 - 次优节点集合，使用时请修改
+  BK: {<<: *BasePD, url: 'http://10.0.0.6:3001/***/collection/BK', override: {additional-prefix: '[BK] '}}
+
+# ==================== 代理策略组 ====================
+proxy-groups:
+  # ==================== 主要策略组 ====================
+  # 主要分组策略
+  - {name: 默认代理,      <<: *SelectFB, icon: https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Proxy.png}
+  - {name: 故障转移,      <<: *BaseFB, proxies: [香港自动, 台湾自动, 新加坡自动, 日本自动, 美国自动], icon: https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/ULB.png}
+  # 区域分组策略
+  - {name: 国内直连,      <<: *SelectDC, icon: https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/China.png}
+  - {name: 国外代理,      <<: *SelectPY, icon: https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/United_Nations.png}
+  # 故转聚合分组策略
+  - {name: 智能故转,      <<: *BaseFB, proxies: [新加坡自动, 日本自动, 美国自动], icon: https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Star_2.png}  
+  # 漏网之鱼策略 
+  - {name: 漏网之鱼,      <<: *SelectFN, icon: https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Final.png}
+  
+  # ==================== 分组策略组 ====================  
+  # 开发测试服务策略
+  - {name: 网络测试,      <<: *SelectPY, icon: https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Speedtest.png}
+  - {name: Github,       <<: *SelectPY, icon: https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/GitHub.png}  
+  # AI策略
+  - {name: Gemini,       <<: *SelectAI, icon: https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/AI.png}   
+  - {name: ChatGPT,      <<: *SelectAI, icon: https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/ChatGPT.png} 
+  # 企业服务策略
+  - {name: Apple,        <<: *SelectPY, icon: https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Apple.png}
+  - {name: Cloudflare,   <<: *SelectPY, icon: https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Cloudflare.png}
+  - {name: Microsoft,    <<: *SelectPY, icon: https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Microsoft.png}
+  # 谷歌服务策略
+  - {name: YouTube,      <<: *SelectPY, icon: https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/YouTube.png}
+  - {name: Google,       <<: *SelectPY, icon: https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Google_Search.png}
+  # Facebook服务策略
+  - { name: Instagram,   <<: *SelectPY, icon: https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Instagram.png }
+  - { name: Facebook,    <<: *SelectPY, icon: https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Facebook.png }
+  # 社交平台策略
+  - {name: Telegram,     <<: *SelectPY, icon: https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Telegram_X.png}
+  - {name: Twitter,      <<: *SelectPY, icon: https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Twitter.png}
+  - {name: Social,       <<: *SelectPY, icon: https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/WeChat.png}
+  # 音视频策略
+  - {name: Spotify,      <<: *SelectPY, icon: https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Spotify.png}
+  - {name: Netflix,      <<: *SelectPY, icon: https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Netflix.png}
+  - {name: Disney,       <<: *SelectPY, icon: https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Disney.png}
+  - {name: HBO,          <<: *SelectPY, icon: https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/HBO_Max.png}
+  - {name: Porn,         <<: *SelectPY, icon: https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Pornhub.png}  
+  - {name: Media,        <<: *SelectPY, icon: https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/YouTube_Music.png}
+  # 游戏服务策略
+  - {name: Steam,        <<: *SelectPY, icon: https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Steam.png} 
+  - {name: Playstation,  <<: *SelectPY, icon: https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/PlayStation.png}
+
+  # ==================== 地区策略组 ====================
+  - {name: 香港策略,   type: select, proxies: [香港自动, 香港均衡-散列, 香港均衡-轮询], include-all: true, filter: *FilterHK, icon: https://github.com/Koolson/Qure/raw/master/IconSet/Color/Hong_Kong.png}
+  - {name: 台湾策略,   type: select, proxies: [台湾自动, 台湾均衡-散列, 台湾均衡-轮询], include-all: true, filter: *FilterTW, icon: https://github.com/Koolson/Qure/raw/master/IconSet/Color/Taiwan.png}
+  - {name: 新加坡策略, type: select, proxies: [新加坡自动, 新加坡均衡-散列, 新加坡均衡-轮询], include-all: true, filter: *FilterSG, icon: https://github.com/Koolson/Qure/raw/master/IconSet/Color/Singapore.png}
+  - {name: 日本策略,   type: select, proxies: [日本自动, 日本均衡-散列, 日本均衡-轮询], include-all: true, filter: *FilterJP, icon: https://github.com/Koolson/Qure/raw/master/IconSet/Color/Japan.png}
+  - {name: 美国策略,   type: select, proxies: [美国自动, 美国均衡-散列, 美国均衡-轮询], include-all: true, filter: *FilterUS, icon: https://github.com/Koolson/Qure/raw/master/IconSet/Color/United_States.png}
+
+  # ==================== 其他策略组 ====================
+  - {name: 其它自选,  type: select, include-all: true, filter: *FilterOT, icon: https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Rainbow_1.png}
+  - {name: 全球手动,  type: select, include-all: true, filter: *FilterAL, icon: https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Thailand.png}
+  
+  # ==================== 自动测速组 ====================
+  - {name: 香港自动,       <<: *BaseUT, include-all: true, filter: *FilterHK, icon: https://github.com/Koolson/Qure/raw/master/IconSet/Color/Auto.png}
+  - {name: 台湾自动,       <<: *BaseUT, include-all: true, filter: *FilterTW, icon: https://github.com/Koolson/Qure/raw/master/IconSet/Color/Auto.png}
+  - {name: 新加坡自动,     <<: *BaseUT, include-all: true, filter: *FilterSG, icon: https://github.com/Koolson/Qure/raw/master/IconSet/Color/Auto.png}
+  - {name: 日本自动,       <<: *BaseUT, include-all: true, filter: *FilterJP, icon: https://github.com/Koolson/Qure/raw/master/IconSet/Color/Auto.png}
+  - {name: 美国自动,       <<: *BaseUT, include-all: true, filter: *FilterUS, icon: https://github.com/Koolson/Qure/raw/master/IconSet/Color/Auto.png}
+
+  # ==================== 负载均衡-散列 ====================
+  - {name: 香港均衡-散列,   <<: *BaseCH, include-all: true, filter: *FilterHK, icon: https://github.com/Koolson/Qure/raw/master/IconSet/Color/Round_Robin_1.png}
+  - {name: 台湾均衡-散列,   <<: *BaseCH, include-all: true, filter: *FilterTW, icon: https://github.com/Koolson/Qure/raw/master/IconSet/Color/Round_Robin_1.png}
+  - {name: 新加坡均衡-散列, <<: *BaseCH, include-all: true, filter: *FilterSG, icon: https://github.com/Koolson/Qure/raw/master/IconSet/Color/Round_Robin_1.png}
+  - {name: 日本均衡-散列,   <<: *BaseCH, include-all: true, filter: *FilterJP, icon: https://github.com/Koolson/Qure/raw/master/IconSet/Color/Round_Robin_1.png}
+  - {name: 美国均衡-散列,   <<: *BaseCH, include-all: true, filter: *FilterUS, icon: https://github.com/Koolson/Qure/raw/master/IconSet/Color/Round_Robin_1.png}
+
+  # ==================== 负载均衡-轮询 ====================
+  - {name: 香港均衡-轮询,   <<: *BaseCR, include-all: true, filter: *FilterHK, icon: https://github.com/Koolson/Qure/raw/master/IconSet/Color/Round_Robin.png}
+  - {name: 台湾均衡-轮询,   <<: *BaseCR, include-all: true, filter: *FilterTW, icon: https://github.com/Koolson/Qure/raw/master/IconSet/Color/Round_Robin.png}
+  - {name: 新加坡均衡-轮询, <<: *BaseCR, include-all: true, filter: *FilterSG, icon: https://github.com/Koolson/Qure/raw/master/IconSet/Color/Round_Robin.png}
+  - {name: 日本均衡-轮询,   <<: *BaseCR, include-all: true, filter: *FilterJP, icon: https://github.com/Koolson/Qure/raw/master/IconSet/Color/Round_Robin.png}
+  - {name: 美国均衡-轮询,   <<: *BaseCR, include-all: true, filter: *FilterUS, icon: https://github.com/Koolson/Qure/raw/master/IconSet/Color/Round_Robin.png}
+
+# ==================== 规则集 ============================
+rule-providers: 
+# 域名规则集
+  # 广告域名规则集
+  category-ads-all:          {<<: *DomainMrs, url: https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/category-ads-all.mrs}
+  # 内网规则集
+  private:                   {<<: *DomainMrs, url: https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/private.mrs}
+  # 国内域名规则集
+  # PT/BT规则集
+  category-pt:               {<<: *DomainMrs, url: https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/category-pt.mrs}
+  tracker:                   {<<: *DomainMrs, url: https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/tracker.mrs}
+  # 开发域名规则集
+  github:                    {<<: *DomainMrs, url: https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/github.mrs}
+  # AI域名规则集
+  gemini:                    {<<: *DomainMrs, url: https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/google-gemini.mrs}
+  openai:                    {<<: *DomainMrs, url: https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/openai.mrs}
+  category-ai-!cn:           {<<: *DomainMrs, url: https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/category-ai-!cn.mrs}
+  # Apple服务域名规则集 
+  apple-cn:                  {<<: *DomainMrs, url: https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/apple@cn.mrs}
+  apple:                     {<<: *DomainMrs, url: https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/apple.mrs}
+  # Cloudflare服务域名规则集
+  cloudflare-cn:             {<<: *DomainMrs, url: https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/cloudflare@cn.mrs}
+  cloudflare:                {<<: *DomainMrs, url: https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/cloudflare.mrs}   
+  # Google服务域名规则集  
+  youtube:                   {<<: *DomainMrs, url: https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/youtube.mrs}
+  google:                    {<<: *DomainMrs, url: https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/google.mrs}
+  # Microsoft 服务域名规则集  
+  microsoft-cn:              {<<: *DomainMrs, url: https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/microsoft@cn.mrs}
+  microsoft:                 {<<: *DomainMrs, url: https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/microsoft.mrs} 
+  # Facebook服务规则集   
+  instagram:                 {<<: *DomainMrs, url: https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/instagram.mrs}
+  facebook:                  {<<: *DomainMrs, url: https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/facebook.mrs}
+  # Social域名规则集
+  telegram:                  {<<: *DomainMrs, url: https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/telegram.mrs}
+  twitter:                   {<<: *DomainMrs, url: https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/twitter.mrs}
+  category-social-media-!cn: {<<: *DomainMrs, url: https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/category-social-media-!cn.mrs}
+  # Media域名规则集
+  spotify:                   {<<: *DomainMrs, url: https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/spotify.mrs}
+  netflix:                   {<<: *DomainMrs, url: https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/netflix.mrs}
+  disney:                    {<<: *DomainMrs, url: https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/disney.mrs}
+  hbo:                       {<<: *DomainMrs, url: https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/hbo.mrs}
+  porn:                      {<<: *DomainMrs, url: https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/porn.mrs}  
+  category-media:            {<<: *DomainMrs, url: https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/category-media.mrs}
+  # Game域名规则集 
+  steam-cn:                  {<<: *DomainMrs, url: https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/steam@cn.mrs}
+  steam:                     {<<: *DomainMrs, url: https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/steam.mrs}
+  playstation:               {<<: *DomainMrs, url: https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/playstation.mrs}
+  # Speed测试规则集
+  speedtest:                 {<<: *DomainMrs, url: https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/speedtest.mrs}
+  # External域名规则集
+  geolocation-!cn:           {<<: *DomainMrs, url: https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/geolocation-!cn.mrs}
+  # 国内域名规则集
+  cn:                        {<<: *DomainMrs, url: https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/cn.mrs}
+
+#  IP规则集
+  # 广告IP规则集
+  ad_ip:                     {<<: *IPcidrMrs, url: https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geoip/ad.mrs}
+  # 内网IP规则集  
+  private_ip:                {<<: *IPcidrMrs, url: https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo-lite/geoip/private.mrs}
+  # 企业规则集
+  ai_ip:                     {<<: *IPcidrMrs, url: https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geoip/ai.mrs}
+  apple_ip:                  {<<: *IPcidrMrs, url: https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo-lite/geoip/apple.mrs}
+  telegram_ip:               {<<: *IPcidrMrs, url: https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo-lite/geoip/telegram.mrs}
+  cloudflare_ip:             {<<: *IPcidrMrs, url: https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo-lite/geoip/cloudflare.mrs}
+  google_ip:                 {<<: *IPcidrMrs, url: https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geoip/google.mrs}
+  twitter_ip:                {<<: *IPcidrMrs, url: https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo-lite/geoip/twitter.mrs}
+  # 国内IP规则集
+  cn_ip:                     {<<: *IPcidrMrs, url: https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo-lite/geoip/cn.mrs}
+
+# ==================== 规则路由 ========================
+rules: 
+# 内网路由集
+  # 本地直连
+  - SRC-IP-CIDR,10.0.0.2/32,DIRECT
+  - DST-PORT,123,DIRECT
+  # 内网直连
+  - RULE-SET,private_ip,DIRECT,no-resolve
+  - RULE-SET,private,DIRECT
+# 域名路由集
+  # 广告/恶意请求拦截
+  - RULE-SET,category-ads-all,REJECT
+  - RULE-SET,ad_ip,REJECT,no-resolve
+  # PT/BT直连
+  - RULE-SET,tracker,DIRECT,no-resolve
+  - RULE-SET,category-pt,DIRECT,no-resolve
+  # 限制特定QUIC流量（UDP 443/8443）
+  - AND,((NETWORK,UDP),(OR,(DST-PORT,443),(DST-PORT,8443)),(NOT,((RULE-SET,cn)))),REJECT
+  # 网速测试
+  - RULE-SET,speedtest,网络测试
+  # Github开发
+  - RULE-SET,github,Github
+  # AI
+  - RULE-SET,gemini,Gemini
+  - RULE-SET,openai,ChatGPT
+  - RULE-SET,category-ai-!cn,ChatGPT
+  # Apple服务
+  - RULE-SET,apple-cn,DIRECT
+  - RULE-SET,apple,Apple
+  # Cloudflare服务   
+  - RULE-SET,cloudflare-cn,DIRECT
+  - RULE-SET,cloudflare,Cloudflare
+  # Google服务  
+  - RULE-SET,youtube,YouTube
+  - RULE-SET,google,Google 
+  # Microsoft服务 
+  - RULE-SET,microsoft-cn,DIRECT
+  - RULE-SET,microsoft,Microsoft
+  # Facebook服务
+  - RULE-SET,instagram,Instagram
+  - RULE-SET,facebook,Facebook
+  # 社交平台
+  - RULE-SET,telegram,Telegram
+  - RULE-SET,twitter,Twitter
+  - RULE-SET,category-social-media-!cn,Social
+  # 国际媒体
+  - RULE-SET,spotify,Spotify
+  - RULE-SET,netflix,Netflix
+  - RULE-SET,disney,Disney
+  - RULE-SET,porn,Porn
+  - RULE-SET,hbo,HBO  
+  - RULE-SET,category-media,Media
+  # 游戏平台
+  - RULE-SET,steam-cn,DIRECT
+  - RULE-SET,steam,Steam
+  - RULE-SET,playstation,Playstation
+  # 国外域名
+  - RULE-SET,geolocation-!cn,国外代理  
+
+# IP路由集
+  # 国外IP规则  
+  - RULE-SET,ai_ip,ChatGPT,no-resolve
+  - RULE-SET,apple_ip,Apple,no-resolve  
+  - RULE-SET,cloudflare_ip,Cloudflare,no-resolve
+  - RULE-SET,google_ip,Google,no-resolve
+  - RULE-SET,telegram_ip,Telegram,no-resolve
+  - RULE-SET,twitter_ip,Twitter,no-resolve
+
+# 国内全量直连
+  # 国内直连
+  - RULE-SET,cn,DIRECT
+  - RULE-SET,cn_ip,DIRECT,no-resolve
+
+# 漏网之鱼
+  - MATCH,漏网之鱼
+# ==================== EOF ========================
