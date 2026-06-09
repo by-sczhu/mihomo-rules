@@ -12,6 +12,7 @@ dns:
     - RULE-SET,self-built,real-ip
     - RULE-SET,apple-cn,real-ip
     - RULE-SET,category-pt,real-ip
+    - RULE-SET,cloudflare-cn,real-ip
     - RULE-SET,microsoft-cn,real-ip
     - RULE-SET,cn,real-ip
   default-nameserver:
