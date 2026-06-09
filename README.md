@@ -22,6 +22,7 @@
 在您的 Mihomo 配置文件中，引入本仓库 Raw 规则集的标准写法如下：
 
 rule-providers:
+
   category-pt:
     type: http
     behavior: domain
@@ -35,6 +36,6 @@ rule-providers:
     interval: 86400
 
 rules:
-  # 优先处理 PT 和 Tracker 流量
+  # 优先处理 PT 和 self-built 流量
   - RULE-SET,category-pt,DIRECT
   - RULE-SET,self-built,DIRECT
