@@ -6,8 +6,8 @@
 ## 🚀 特性
 
 - **极速直连**：全面采用 GitHub Raw 直连地址，适合配合各类加速代理或定时更新任务。
-- **精细化 PT/BT 分流**：
-  - 针对常见 PT（Private Tracker）站点与公网 BT Tracker 进行精准拦截/直连配置。
+- **精细化 PT 分流**：
+  - 针对常见 PT（Private Tracker）站点与公网 PT Tracker 进行精准拦截/直连配置。
   - **DNS 与 NTP 优化**：针对时间同步等高频且敏感的域名进行特殊直连优化，建议配合 `fake-ip-filter` 使用。
 
 ## 📂 规则集订阅列表
@@ -21,7 +21,6 @@
 
 在您的 Mihomo 配置文件中，引入本仓库 Raw 规则集的标准写法如下：
 
-```yaml
 rule-providers:
   category-pt:
     type: http
@@ -29,7 +28,7 @@ rule-providers:
     url: "https://raw.githubusercontent.com/by-sczhu/mihomo-rules/main/category-pt.mrs"
     interval: 86400
 
-  tracker:
+  self-built:
     type: http
     behavior: domain
     url: "https://raw.githubusercontent.com/by-sczhu/mihomo-rules/main/self-built.mrs"
