@@ -1,2 +1,3 @@
 +.asuswrt-merlin.net
 +.kejiwanjia.net
++.copilot.com
