@@ -51,3 +51,4 @@ time.xtracloud.net
 +.aliapp.org
 +.picgo.net
 +.deepwiki.com
++.jsdelivr.com
