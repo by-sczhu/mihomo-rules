@@ -50,3 +50,5 @@ time.xtracloud.net
 +.asusgo.com
 +.aliapp.org
 +.picgo.net
++.microsoft.com
++.office.com
