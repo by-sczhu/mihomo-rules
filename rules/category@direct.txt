@@ -45,3 +45,6 @@ time.xtracloud.net
 +.icloud.com
 +.icloud.com.cn
 +.apple.com
+
+# Add Yourself
++.asusgo.com
