@@ -48,3 +48,4 @@ time.xtracloud.net
 
 # Add Yourself
 +.asusgo.com
++.aliapp.org
