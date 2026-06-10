@@ -1,1 +1,47 @@
+#  NTP Server
+clock.isc.org
+cn.ntp.org.cn
+cn.pool.ntp.org
+debian.pool.ntp.org
+edu.ntp.org.cn
+hk.ntp.org.cn
+ntp.aliyun.com
+ntp.asus.com
+ntp.cloud.aliyuncs.com
+ntp.h3c.com
+ntp.huawei.com
+ntp.neu.edu.cn
+ntp.ntsc.ac.cn
+ntp.org.cn
+ntp.sjtu.edu.cn
+ntp.tencent.com
+ntp.ubuntu.com
+ntp.xiaomi.com
+pool.ntp.org
+time.amazonaws.com
+time.amazonaws.cn
+time.android.com
+time.apple.com
+time.asia.apple.com
+time.aws.com
+time.cloudflare.com
+time.euro.apple.com
+time.google.com
+time.h3c.com
+time.pool.aliyun.com
+time.samsungcloudplatform.com
+time.se
+time.vmware.com
+time.windows.com
+izattime.qcomgeo2.com
+xtratime.qcomgeo2.com
+time.izatcloud.net
+time.xtracloud.net
 
+# Apple Store
++.apple-dns.net
++.mzstatic.com
++.itunes.apple.com
++.icloud.com
++.icloud.com.cn
++.apple.com
