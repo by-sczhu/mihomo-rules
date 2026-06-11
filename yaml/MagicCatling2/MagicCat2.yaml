@@ -43,9 +43,9 @@ IPcidrMrs: &IPcidrMrs {type: http, interval: 86400, behavior: ipcidr, format: mr
 # 注意：请提供您的机场订阅链接，每个链接一行，并为每个机场命名，末尾的[MC][BK]为每个节点添加机场名称前缀，可自定义
 proxy-providers:
   # 主订阅源 - 节点集合，使用时请修改
-  MC: {<<: *BasePD, url: 'http://10.0.0.6:3001/CKg2abstVnOeRpm1aB4G/download/collection/MC', override: {additional-prefix: '[MC] '}}
+  MC: {<<: *BasePD, url: 'http://10.0.0.6:3001/***/download/collection/MC', override: {additional-prefix: '[MC] '}}
   # 备用订阅源 - 次优节点集合，使用时请修改
-  BK: {<<: *BasePD, url: 'http://10.0.0.6:3001/CKg2abstVnOeRpm1aB4G/download/collection/BK', override: {additional-prefix: '[BK] '}}
+  BK: {<<: *BasePD, url: 'http://10.0.0.6:3001/***/download/collection/BK', override: {additional-prefix: '[BK] '}}
 
 # ==================== 代理策略组 ====================
 proxy-groups:
