@@ -18,6 +18,7 @@
 +.chdbits.xyz
 +.chddiy.xyz
 +.cinemaz.to
++.cinefiles.info
 +.crabpt.vip
 +.cyanbug.net
 +.dicmusic.com
@@ -69,6 +70,7 @@
 +.kufei.org
 +.kame.gay
 +.leaves.red
++.leniter.org
 +.lemonhd.club
 +.lemonhd.net
 +.lemonhd.org
@@ -98,6 +100,7 @@
 +.pterclub.net
 +.ptfans.cc
 +.pthome.net
++.pthome.org
 +.ptsbao.club
 +.pttime.fun
 +.pttime.org
