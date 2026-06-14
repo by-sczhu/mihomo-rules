@@ -1,0 +1,4 @@
+payload:
+  - DOMAIN-SUFFIX,example.com
+  - DOMAIN-KEYWORD,google
+  - DOMAIN,api.github.com
