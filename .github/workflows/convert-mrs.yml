@@ -1,0 +1,47 @@
+name: Convert Rules to MRS
+
+on:
+  push:
+    paths:
+      - 'rules/rules.yaml'      # 仅当 rules.yaml 变更时触发
+    branches: [ main, master, meta ]
+  workflow_dispatch:            # 支持手动触发
+
+jobs:
+  convert:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Install mihomo (latest)
+        run: |
+          # 下载最新 mihomo Linux 版本
+          MIHOMO_URL=$(curl -s https://api.github.com/repos/MetaCubeX/mihomo/releases/latest | grep "browser_download_url.*mihomo-linux-amd64" | cut -d '"' -f 4)
+          curl -L -o mihomo.gz "$MIHOMO_URL"
+          gzip -d mihomo.gz
+          chmod +x mihomo
+          sudo mv mihomo /usr/local/bin/mihomo
+
+      - name: Convert YAML to MRS
+        run: |
+          mkdir -p ruleset
+          mihomo convert-ruleset domain yaml rules/rules.yaml ruleset/rules.mrs
+          echo "✅ Conversion completed: ruleset/rules.mrs"
+
+      - name: Commit and Push changes
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          
+          if git diff --quiet ruleset/rules.mrs; then
+            echo "No changes to commit."
+          else
+            git add ruleset/rules.mrs
+            git commit -m "chore: update rules.mrs via GitHub Actions [$(date +'%Y-%m-%d %H:%M')]"
+            git push
+            echo "✅ rules.mrs updated and pushed."
+          fi
