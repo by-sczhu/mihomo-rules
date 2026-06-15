@@ -46,7 +46,12 @@ time.xtracloud.net
 +.applestore.cn
 +.applestore.com.cn
 +.apple-appstore.cn
++.apple-dns.cn
++.apple-dns.com.cn
++.akadns.net
 +.apple-dns.net
++.appledns.cn
++.appledns.com.cn
 +.apzones.com
 +.apple-itunes.cn
 +.cdn-apple.com
