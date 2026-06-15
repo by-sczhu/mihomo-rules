@@ -67,13 +67,6 @@ time.xtracloud.net
 +.itunesradio.com.cn
 +.push.apple.com
 +.mzstatic.com
-mesu.apple.com
-swcdn.apple.com
-idmsa.apple.com
-cds.apple.com
-apps.apple.com
-appleid.cdn-apple.com
-cdn.apple-mapkit.com
 
 # Add Yourself
 +.asusgo.com
