@@ -74,5 +74,13 @@ time.xtracloud.net
 +.picgo.net
 +.deepwiki.com
 +.jsdelivr.com
-+.office.com
++.microsoft.com.cn
++.microsoftstore.com
++.microsoftstore.com.cn
++.msftncsi.com
 +.microsoft.com
++.windowsupdate.com
++.xboxlive.cn
++.office.com
++.office.net
++.officeplus.cn
