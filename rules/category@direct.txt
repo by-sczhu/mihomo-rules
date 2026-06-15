@@ -39,12 +39,36 @@ time.izatcloud.net
 time.xtracloud.net
 
 # Apple Store
++.apple.cn
++.apple.com
++.apple.com.cn
++.apple-store.cn
++.applestore.cn
++.applestore.com.cn
++.apple-appstore.cn
 +.apple-dns.net
++.apzones.com
++.apple-itunes.cn
++.cdn-apple.com
++.icloud.cn
++.icloud.com.cn
++.icloud.net.cn
++.icloudapple.cn
 +.mzstatic.com
 +.itunes.apple.com
-+.icloud.com
-+.icloud.com.cn
-+.apple.com
++.itunes-apple.cn
++.itunesapple.cn
++.itunesradio.cn
++.itunesradio.com.cn
++.push.apple.com
++.mzstatic.com
+mesu.apple.com
+swcdn.apple.com
+idmsa.apple.com
+cds.apple.com
+apps.apple.com
+appleid.cdn-apple.com
+cdn.apple-mapkit.com
 
 # Add Yourself
 +.asusgo.com
