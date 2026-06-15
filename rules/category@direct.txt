@@ -52,3 +52,5 @@ time.xtracloud.net
 +.picgo.net
 +.deepwiki.com
 +.jsdelivr.com
++.office.com
++.microsoft.com
