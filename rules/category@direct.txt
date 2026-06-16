@@ -69,12 +69,7 @@ time.xtracloud.net
 +.push.apple.com
 +.mzstatic.com
 
-# Add Yourself
-+.asusgo.com
-+.aliapp.org
-+.picgo.net
-+.deepwiki.com
-+.jsdelivr.com
+#microsoft Store
 +.microsoft.com.cn
 +.microsoftstore.com
 +.microsoftstore.com.cn
@@ -85,3 +80,11 @@ time.xtracloud.net
 +.office.com
 +.office.net
 +.officeplus.cn
+
+# Add Yourself
++.asusgo.com
++.aliapp.org
++.picgo.net
++.deepwiki.com
++.jsdelivr.com
++.afdian.com
