@@ -2,3 +2,4 @@
 +.kejiwanjia.net
 +.dockerproxy.com
 +.dockerproxy.com
++.docker.io
