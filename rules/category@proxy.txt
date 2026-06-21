@@ -1,5 +1,5 @@
 +.asuswrt-merlin.net
 +.kejiwanjia.net
 +.dockerproxy.com
-+.dockerproxy.com
++.dockerproxy.net
 +.docker.io
