@@ -3,3 +3,6 @@
 +.dockerproxy.com
 +.dockerproxy.net
 +.docker.io
++.zstarzzz.cc
++.66jc.top
++.良心云.com
