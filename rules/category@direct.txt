@@ -106,3 +106,4 @@ stun.cloudflare.com
 +.umengcloud.com
 +.tpns.sh.tencent.com
 +.xg.qq.com
++.geisign.com
