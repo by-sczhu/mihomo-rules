@@ -93,3 +93,16 @@ stun4.l.google.com
 stun.services.mozilla.com
 stun.discord.com
 stun.cloudflare.com
+
+# 个推核心家族（建议 DIRECT 直连）
++.gepush.com
++.getui.com
++.igexin.com
++.getui.net
++.jpush.cn
++.jiguang.cn
++.jpush.io
++.umeng.com
++.umengcloud.com
++.tpns.sh.tencent.com
++.xg.qq.com
