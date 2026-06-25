@@ -1,9 +1,7 @@
 #  NTP Server
-cn.ntp.org.cn
-cn.pool.ntp.org
-debian.pool.ntp.org
-edu.ntp.org.cn
-hk.ntp.org.cn
+DOMAIN-SUFFIX,pool.ntp.org
+DOMAIN-SUFFIX,ntp.org.cn
+
 ntp.aliyun.com
 ntp.asus.com
 ntp.cloud.aliyuncs.com
@@ -16,7 +14,6 @@ ntp.sjtu.edu.cn
 ntp.tencent.com
 ntp.ubuntu.com
 ntp.xiaomi.com
-pool.ntp.org
 time.amazonaws.com
 time.amazonaws.cn
 time.android.com
@@ -59,7 +56,6 @@ time.xtracloud.net
 +.icloud.com.cn
 +.icloud.net.cn
 +.icloudapple.cn
-+.mzstatic.com
 +.itunes.apple.com
 +.itunes-apple.cn
 +.itunesapple.cn
