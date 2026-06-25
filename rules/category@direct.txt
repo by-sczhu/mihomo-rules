@@ -1,18 +1,22 @@
 #  NTP Server
-DOMAIN-SUFFIX,ntp.org
-DOMAIN-SUFFIX,ntp.org.cn
-DOMAIN-SUFFIX,pool.ntp.org
-DOMAIN-SUFFIX,ntsc.ac.cn
+cn.ntp.org.cn
+cn.pool.ntp.org
+debian.pool.ntp.org
+edu.ntp.org.cn
+hk.ntp.org.cn
 ntp.aliyun.com
 ntp.asus.com
 ntp.cloud.aliyuncs.com
 ntp.h3c.com
 ntp.huawei.com
 ntp.neu.edu.cn
+ntp.ntsc.ac.cn
+ntp.org.cn
 ntp.sjtu.edu.cn
 ntp.tencent.com
 ntp.ubuntu.com
 ntp.xiaomi.com
+pool.ntp.org
 time.amazonaws.com
 time.amazonaws.cn
 time.android.com
@@ -32,6 +36,7 @@ izattime.qcomgeo2.com
 xtratime.qcomgeo2.com
 time.izatcloud.net
 time.xtracloud.net
+
 # Apple Store
 +.apple.cn
 +.apple.com
