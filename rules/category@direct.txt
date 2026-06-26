@@ -109,3 +109,9 @@ controlplane.tailscale.com
 +.tpns.sh.tencent.com
 +.xg.qq.com
 +.geisign.com
+
+# debian/mirrors
++.ustc.edu.cn
++.tsinghua.edu.cn
++.huaweicloud.com
++.cloud.tencent.com
