@@ -93,6 +93,7 @@ stun4.l.google.com
 stun.services.mozilla.com
 stun.discord.com
 stun.cloudflare.com
++.ts.net
 +.tailscale.com
 controlplane.tailscale.com
 
