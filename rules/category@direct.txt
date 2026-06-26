@@ -93,6 +93,8 @@ stun4.l.google.com
 stun.services.mozilla.com
 stun.discord.com
 stun.cloudflare.com
++.tailscale.com
+controlplane.tailscale.com
 
 # 个推核心家族（建议 DIRECT 直连）
 +.gepush.com
