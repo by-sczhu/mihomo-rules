@@ -1,4 +1,3 @@
-payload:
   # ===== NTP / 时间服务 =====
   - DOMAIN-SUFFIX,nim.ac.cn
   - DOMAIN-SUFFIX,ntp.org.cn
