@@ -1,109 +1,85 @@
-  # ===== NTP / 时间服务 =====
-  - DOMAIN-SUFFIX,nim.ac.cn
-  - DOMAIN-SUFFIX,ntp.org.cn
-  - DOMAIN-SUFFIX,ntsc.ac.cn
-  - DOMAIN,cn.ntp.org.cn
+DOMAIN-SUFFIX,nim.ac.cn
+DOMAIN-SUFFIX,ntp.org.cn
+DOMAIN-SUFFIX,ntsc.ac.cn
+cn.ntp.org.cn
+DOMAIN-SUFFIX,pool.ntp.org
+ntp.aliyun.com
+ntp.tencent.com
+ntp.cloud.tencent.com
+ntp.baidu.com
+ntp.sjtu.edu.cn
+time.edu.cn
+time.apple.com
+time.asia.apple.com
+time.windows.com
+time.nist.gov
+time.android.com
+time.cloudflare.com
 
-  - DOMAIN-SUFFIX,pool.ntp.org
-  - DOMAIN,0.cn.pool.ntp.org
-  - DOMAIN,1.cn.pool.ntp.org
-  - DOMAIN,2.cn.pool.ntp.org
-  - DOMAIN,3.cn.pool.ntp.org
-  - DOMAIN,0.asia.pool.ntp.org
-  - DOMAIN,1.asia.pool.ntp.org
-  - DOMAIN,2.asia.pool.ntp.org
-  - DOMAIN,3.asia.pool.ntp.org
+# L1: Apple
+DOMAIN-SUFFIX,aaplimg.com
+DOMAIN-SUFFIX,apple.com
+DOMAIN-SUFFIX,apple.cn
+DOMAIN-SUFFIX,apple.com.cn
+DOMAIN-SUFFIX,itunes.com
+DOMAIN-SUFFIX,mzstatic.com
+DOMAIN-SUFFIX,shazam.com
+DOMAIN-SUFFIX,cdn-apple.com
+DOMAIN-SUFFIX,me.com
+push.apple.com
+DOMAIN-SUFFIX,icloud.com
+DOMAIN-SUFFIX,icloud.cn
+DOMAIN-SUFFIX,icloud.com.cn
+DOMAIN-SUFFIX,icloud-content.com
+DOMAIN-SUFFIX,icloud.net.cn
 
-  - DOMAIN,ntp.aliyun.com
-  - DOMAIN,ntp1.aliyun.com
-  - DOMAIN,ntp2.aliyun.com
-  - DOMAIN,ntp3.aliyun.com
-  - DOMAIN,ntp4.aliyun.com
-  - DOMAIN,ntp5.aliyun.com
-  - DOMAIN,ntp6.aliyun.com
-  - DOMAIN,ntp7.aliyun.com
+# L1: Microsoft
+DOMAIN-SUFFIX,live.com
+DOMAIN-SUFFIX,live.net
+DOMAIN-SUFFIX,microsoft.com
+DOMAIN-SUFFIX,microsoft.com.cn
+DOMAIN-SUFFIX,windows.com
+DOMAIN-SUFFIX,windows.net
+DOMAIN-SUFFIX,windowsupdate.com
+DOMAIN-SUFFIX,office.com
+DOMAIN-SUFFIX,office.net
+DOMAIN-SUFFIX,office365.com
+DOMAIN-SUFFIX,msftauth.net
+DOMAIN-SUFFIX,msftconnecttest.com
+DOMAIN-SUFFIX,msn.com
 
-  - DOMAIN,ntp.tencent.com
-  - DOMAIN,ntp1.tencent.com
-  - DOMAIN,ntp2.tencent.com
-  - DOMAIN,ntp3.tencent.com
-  - DOMAIN,ntp.cloud.tencent.com
-  - DOMAIN,ntp.baidu.com
-  - DOMAIN,ntp.sjtu.edu.cn
-  - DOMAIN,time.edu.cn
+# L1: GitHub / CDN
+DOMAIN-SUFFIX,githubusercontent.com
+DOMAIN-SUFFIX,githubassets.com
+DOMAIN-SUFFIX,jsdelivr.com
+DOMAIN-SUFFIX,jsdelivr.net
+DOMAIN-SUFFIX,fastly.net
 
-  - DOMAIN,time.apple.com
-  - DOMAIN,time1.apple.com
-  - DOMAIN,time2.apple.com
-  - DOMAIN,time3.apple.com
-  - DOMAIN,time4.apple.com
-  - DOMAIN,time5.apple.com
-  - DOMAIN,time6.apple.com
-  - DOMAIN,time7.apple.com
-  - DOMAIN,time.asia.apple.com
-  - DOMAIN,time.windows.com
-  - DOMAIN,time.nist.gov
-  - DOMAIN,time.android.com
+# L1: Tailscale
+DOMAIN-SUFFIX,tailscale.com
+DOMAIN-SUFFIX,tailscale.io
+DOMAIN-SUFFIX,ts.net
 
-  - DOMAIN,time.cloudflare.com
+# L1: STUN / RTC
+stun.l.google.com
+stun.services.mozilla.com
+DOMAIN-SUFFIX,stunprotocol.org
 
-  # ===== Apple =====
-  - DOMAIN-SUFFIX,aaplimg.com
-  - DOMAIN-SUFFIX,apple.com
-  - DOMAIN-SUFFIX,apple.cn
-  - DOMAIN-SUFFIX,apple.com.cn
-  - DOMAIN-SUFFIX,itunes.com
-  - DOMAIN-SUFFIX,mzstatic.com
-  - DOMAIN-SUFFIX,shazam.com
+# L1: Cloudflare
+DOMAIN-SUFFIX,cloudflare.com
+DOMAIN-SUFFIX,cloudflare-dns.com
+cdnjs.cloudflare.com
+DOMAIN-SUFFIX,cloudflareinsights.com
 
-  - DOMAIN-SUFFIX,cdn-apple.com
-  - DOMAIN-SUFFIX,me.com
-  - DOMAIN-SUFFIX,push.apple.com
+# L1: ASUS
+DOMAIN-SUFFIX,asusgo.com
 
-  - DOMAIN-SUFFIX,icloud.com
-  - DOMAIN-SUFFIX,icloud.cn
-  - DOMAIN-SUFFIX,icloud.com.cn
-  - DOMAIN-SUFFIX,icloud-content.com
-  - DOMAIN-SUFFIX,icloud.net.cn
-
-  # ===== Microsoft =====
-  - DOMAIN-SUFFIX,live.com
-  - DOMAIN-SUFFIX,live.net
-  - DOMAIN-SUFFIX,microsoft.com
-  - DOMAIN-SUFFIX,microsoft.com.cn
-  - DOMAIN-SUFFIX,windows.com
-  - DOMAIN-SUFFIX,windows.net
-  - DOMAIN-SUFFIX,windowsupdate.com
-  - DOMAIN-SUFFIX,office.com
-  - DOMAIN-SUFFIX,office.net
-  - DOMAIN-SUFFIX,office365.com
-
-  - DOMAIN-SUFFIX,msftauth.net
-  - DOMAIN-SUFFIX,msftconnecttest.com
-  - DOMAIN-SUFFIX,msn.com
-
-  # ===== GitHub / CDN =====
-  - DOMAIN-SUFFIX,githubusercontent.com
-  - DOMAIN-SUFFIX,githubassets.com
-  - DOMAIN-SUFFIX,jsdelivr.com
-  - DOMAIN-SUFFIX,jsdelivr.net
-  - DOMAIN-SUFFIX,fastly.net
-
-  # ===== Tailscale =====
-  - DOMAIN-SUFFIX,tailscale.com
-  - DOMAIN-SUFFIX,tailscale.io
-  - DOMAIN-SUFFIX,ts.net
-
-  # ===== STUN / RTC =====
-  - DOMAIN-SUFFIX,stun.l.google.com
-  - DOMAIN-SUFFIX,stun.services.mozilla.com
-  - DOMAIN-SUFFIX,stunprotocol.org
-
-  # ===== Cloudflare =====
-  - DOMAIN-SUFFIX,cloudflare.com
-  - DOMAIN-SUFFIX,cloudflare-dns.com
-  - DOMAIN-SUFFIX,cdnjs.cloudflare.com
-  - DOMAIN-SUFFIX,cloudflareinsights.com
-
-  # ===== ASUS =====
-  - DOMAIN-SUFFIX,asusgo.com
+# L2: +. wildcard 兜底层（关键补漏）
++.asusgo.com
++.apple.com
++.icloud.com
++.microsoft.com
++.windows.com
++.cloudflare.com
++.ntp.org.cn
++.pool.ntp.org
