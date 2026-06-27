@@ -1,3 +1,22 @@
++.ntsc.ac.cn
++.ntp.org.cn
++.aliyun.com
++.pool.aliyun.com
++.tencent.com
+ntp.tencent.com
++.cloud.tencent.com
+ntp.cloud.tencent.com
++.pool.ntp.org
+ntp.sjtu.edu.cn
+ntp.tuna.tsinghua.edu.cn
+ntp.ustc.edu.cn
+time.edu.cn
+time.windows.com
+time.apple.com
+time.android.com
+time.nist.gov
+time.cloudflare.com
+
 # === 1. 苹果核心服务与国内官网 (Core & Marketing) ===
 +.aaplimg.com
 +.apple
