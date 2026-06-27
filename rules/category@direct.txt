@@ -17,15 +17,12 @@ time.android.com
 time.nist.gov
 time.cloudflare.com
 
-# === 1. 苹果核心服务与国内官网 (Core & Marketing) ===
+# 苹果核心服务与国内官网
 +.aaplimg.com
 +.apple
 +.apple.cn
 +.apple.com
 +.apple.com.cn
-
-# === 2. 媒体内容与应用商店 (App Store, Music, TV, Podcasts) ===
-# 负责 App 下载加速、音视频流媒体分发和图片、字体等静态资源加载
 +.apple-itunes.cn
 +.itunes-apple.cn
 +.itunes.com
@@ -34,27 +31,16 @@ time.cloudflare.com
 +.itunesradio.com.cn
 +.mzstatic.com
 +.shazam.com
-
-# === 3. 苹果官方防抢注及国内商店变体域名 (Store Aliases) ===
 +.apple-appstore.cn
 +.apple-store.cn
 +.applestore.cn
 +.applestore.com.cn
-
-# === 4. 核心系统基础架构 (Infrastructure & Push & Security) ===
-# 负责系统 OTA 更新、静默资产下发、APNs 推送通知、证书合规性与 OCSP 校验
 +.cdn-apple.com
 +.me.com
 +.push.apple.com
-
-# === 5. 苹果本土化地图、天气与轻应用 (Location & Weather & App Clips) ===
-# 负责国内高德数据源的地图打洞、实时天气服务以及无需安装的小程序组件
 +.apple-mapkit.com
 +.apzones.com
 +.weatherkit.apple.com
-
-# === 6. 苹果专用的全球 CDN 基础设施调度 (Apple Traffic Traffic Routing) ===
-# 苹果依赖的 Akamai 等顶级 CDN 调度别名，直连能确保分配到离你最近的国内三大运营商边缘节点
 +.akadns.net
 +.apple-dns.cn
 +.apple-dns.com.cn
@@ -62,9 +48,6 @@ time.cloudflare.com
 +.appledns.cn
 +.appledns.com.cn
 +.edgekey.net
-
-# === 7. 国内 iCloud 核心与全线生态同步 (iCloud Service - 云上贵州) ===
-# ⚠️ 注意：仅适用于主力为国区 Apple ID 的设备；若为主力外区账号，请将此段最后一条「icloud.com」改走代理
 +.icloud.cn
 +.icloud.com.cn
 +.icloud-content.com
@@ -72,7 +55,7 @@ time.cloudflare.com
 +.icloudapple.cn
 +.icloud.com
 
-# --- Windows 系统、商店与系统更新 (Windows Update) ---
+# Windows 系统、商店与系统更新
 +.live.com
 +.microsoft.com
 +.microsoft.com.cn
@@ -85,13 +68,9 @@ time.cloudflare.com
 +.windows.com
 +.windows.net
 +.windowsupdate.com
-
-# --- Office 365 / Microsoft 365 核心组件 ---
 +.office.com
 +.office.net
 +.office365.com
-
-# --- 微软公共 CDN、静态资源与前端加速 ---
 +.aspnetcdn.com
 +.azureedge.net
 +.microsoft-realm.cn
@@ -99,40 +78,31 @@ time.cloudflare.com
 +.msauth.net
 +.msedge.net
 +.s-microsoft.com
-
-# --- 微软账户、认证与安全同步 (Xbox、Outlook 基础登录) ---
 +.live.net
 +.microsoft-tst.com
 +.passport.net
 
-# --- Tailscale 内网穿透与控制面 ---
+# Tailscale 内网穿透与控制
 +.tailscale.com
 +.tailscale.io
 +.tailscale.net
 +.ts.net
 
-# --- WebRTC / STUN / TURN 公共公共打洞服务器 ---
-# 注：这些是国内外各大大厂提供的公共 STUN（P2P 打洞）服务域名，直连才能获取准确的国内本地公网 IP
+# WebRTC / STUN / TURN 公共公共打洞服务器
 +.stun.services.mozilla.com
 +.stun.stunprotocol.org
 +.stunprotocol.org
-# --- 国内主流音视频/WebRTC 厂商核心域名（打洞与边缘节点调度） ---
-# 声网（大量 App 的 WebRTC 基础底层）
 +.agora.io
 +.agoraio.cn
-# 腾讯云音视频与实时通信（TRTC）
 +.rtc.qq.com
 +.qcloud.com
-# 阿里云音视频通信（GRTN）
 +.alicdn.com
 +.aliyuncs.com
-# --- 开源社区与浏览器大厂公共 STUN (必须直连) ---
 +.stunprotocol.org
 +.stun.stunprotocol.org
 +.stun.services.mozilla.com
 +.stun.l.google.com
 +.mixnet.org
-# --- 国内主流音视频、大厂公用 STUN 调度（常用于 P2P 联机和各类 App 视频） ---
 +.agora.io
 +.agoraio.cn
 +.rtc.qq.com
@@ -140,18 +110,16 @@ time.cloudflare.com
 +.alicdn.com
 +.aliyuncs.com
 
-# --- Debian 官方国内镜像与全球 CDN 调度 ---
+# Debian 官方国内镜像与全球 CDN 调度
 +.debian.org
 +.debian.net
 +.fastly.debian.net
-# --- 国内顶级大厂（阿里云、腾讯云、华为云、百度云）开源镜像源 ---
 +.aliyun.com
 +.aliyuncs.com
 +.tencentcloudapi.com
 +.myqcloud.com
 +.huaweicloud.com
 +.baidubce.com
-# --- 国内主流高校与科研院所开源镜像源（Debian 官方推荐） ---
 +.tsinghua.edu.cn
 +.ustc.edu.cn
 +.sjtu.edu.cn
@@ -159,10 +127,8 @@ time.cloudflare.com
 +.lzu.edu.cn
 +.iscas.ac.cn
 
-# =================================================================
-# 1. 【Cloudflare 官方核心基础设施与国内专用生态】
-# 包含官方测速、国内特许 BGP 节点授权、时间同步以及官方中国区业务
-# =================================================================
+
+# Cloudflare 官方核心基础设施与国内专用生态
 +.cloudflare.cn
 +.cloudflarechina.com
 +.cloudflare-cn.com
@@ -170,30 +136,26 @@ time.cloudflare.com
 +.cloudflare-dns.com
 +.speed.cloudflare.com
 +.cdnjs.cloudflare.com
-# --- 官方公共时间同步服务器（国内三大运营商骨干网全速直连） ---
 +.time.cloudflare.com
-# =================================================================
-# 2. 【2026 核心补充：国内企业级与备案网站特许直连节点】
-# Cloudflare 与国内大厂（百度云、京东云）深度合作的中国大陆境内节点（China Network）
-# 承载了大量跨国企业、国内合规备案网站的就近接入加速，必须锁定直连
-# =================================================================
 +.cdnhwc1.com
 +.cdnhwc2.com
 +.jcloud-cdn.com
 +.baidubce.com
 +.cloudflare.net.cn
-# =================================================================
-# 3. 【国内开发者与大厂高频引用的 CF 开源前端静态资源库】
-# 国内大量网页、App 异步冷启动时必须加载的顶级前端公共库（含有国内优质全速 CDN 节点）
-# =================================================================
 +.cdnjs.com
 +.cdnjs.net
 +.staticfile.org
 +.staticfile.net
-# =================================================================
-# 4. 【网络工程特化：CF 优选 IP 与泛自建反代生态】
-# 国内大批博主、极客利用 Cloudflare 优选 IP（如移动/联通特定精品路由）搭建的反代节点
-# =================================================================
 +.cf-ipfs.com
 +.cloudflare-ipfs.com
 +.workers.dev.cn
+
+# 推送域名
++.getui.com
++.gepush.com
++.getui.net
++.igexin.com
+
+# 个信化添加
++.openos.org
++.asusgo.com
