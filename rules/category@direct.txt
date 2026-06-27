@@ -280,5 +280,6 @@ DOMAIN-SUFFIX,workers.dev.cn
 # 个性化自主添加（根据自己情况）
 DOMAIN-SUFFIX,afdian.com
 DOMAIN-SUFFIX,aliapp.org
-DOMAIN-SUFFIX,asusgo.com
 DOMAIN-SUFFIX,openos.org
+DOMAIN-SUFFIX,asusgo.com
++.asusgo.com
