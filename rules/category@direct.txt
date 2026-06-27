@@ -1,285 +1,110 @@
-# 核心公共与国家级授时中心
-DOMAIN-SUFFIX,nim.ac.cn
-DOMAIN-SUFFIX,ntp.org.cn
-DOMAIN-SUFFIX,ntsc.ac.cn
-DOMAIN,cn.ntp.org.cn
+payload:
+  # ===== NTP / 时间服务 =====
+  - DOMAIN-SUFFIX,nim.ac.cn
+  - DOMAIN-SUFFIX,ntp.org.cn
+  - DOMAIN-SUFFIX,ntsc.ac.cn
+  - DOMAIN,cn.ntp.org.cn
 
-# 全球公共 NTP 池（Linux 发行版及各类固件默认调度）
-DOMAIN-SUFFIX,pool.ntp.org
-DOMAIN,0.cn.pool.ntp.org
-DOMAIN,1.cn.pool.ntp.org
-DOMAIN,2.cn.pool.ntp.org
-DOMAIN,3.cn.pool.ntp.org
-DOMAIN,0.asia.pool.ntp.org
-DOMAIN,1.asia.pool.ntp.org
-DOMAIN,2.asia.pool.ntp.org
-DOMAIN,3.asia.pool.ntp.org
+  - DOMAIN-SUFFIX,pool.ntp.org
+  - DOMAIN,0.cn.pool.ntp.org
+  - DOMAIN,1.cn.pool.ntp.org
+  - DOMAIN,2.cn.pool.ntp.org
+  - DOMAIN,3.cn.pool.ntp.org
+  - DOMAIN,0.asia.pool.ntp.org
+  - DOMAIN,1.asia.pool.ntp.org
+  - DOMAIN,2.asia.pool.ntp.org
+  - DOMAIN,3.asia.pool.ntp.org
 
-# 阿里云公共 NTP 家族
-DOMAIN,ntp.aliyun.com
-DOMAIN,ntp1.aliyun.com
-DOMAIN,ntp2.aliyun.com
-DOMAIN,ntp3.aliyun.com
-DOMAIN,ntp4.aliyun.com
-DOMAIN,ntp5.aliyun.com
-DOMAIN,ntp6.aliyun.com
-DOMAIN,ntp7.aliyun.com
+  - DOMAIN,ntp.aliyun.com
+  - DOMAIN,ntp1.aliyun.com
+  - DOMAIN,ntp2.aliyun.com
+  - DOMAIN,ntp3.aliyun.com
+  - DOMAIN,ntp4.aliyun.com
+  - DOMAIN,ntp5.aliyun.com
+  - DOMAIN,ntp6.aliyun.com
+  - DOMAIN,ntp7.aliyun.com
 
-# 腾讯云与各大互联网大厂公共 NTP
-DOMAIN,ntp.tencent.com
-DOMAIN,ntp1.tencent.com
-DOMAIN,ntp2.tencent.com
-DOMAIN,ntp3.tencent.com
-DOMAIN,ntp.cloud.tencent.com
-DOMAIN,ntp.baidu.com
-DOMAIN,ntp.sjtu.edu.cn
-DOMAIN,time.edu.cn
+  - DOMAIN,ntp.tencent.com
+  - DOMAIN,ntp1.tencent.com
+  - DOMAIN,ntp2.tencent.com
+  - DOMAIN,ntp3.tencent.com
+  - DOMAIN,ntp.cloud.tencent.com
+  - DOMAIN,ntp.baidu.com
+  - DOMAIN,ntp.sjtu.edu.cn
+  - DOMAIN,time.edu.cn
 
-# 终端设备厂商硬编码内置（Apple, Windows, Android）
-DOMAIN,time.apple.com
-DOMAIN,time1.apple.com
-DOMAIN,time2.apple.com
-DOMAIN,time3.apple.com
-DOMAIN,time4.apple.com
-DOMAIN,time5.apple.com
-DOMAIN,time6.apple.com
-DOMAIN,time7.apple.com
-DOMAIN,time.asia.apple.com
-DOMAIN,time.windows.com
-DOMAIN,time.nist.gov
-DOMAIN,time.android.com
+  - DOMAIN,time.apple.com
+  - DOMAIN,time1.apple.com
+  - DOMAIN,time2.apple.com
+  - DOMAIN,time3.apple.com
+  - DOMAIN,time4.apple.com
+  - DOMAIN,time5.apple.com
+  - DOMAIN,time6.apple.com
+  - DOMAIN,time7.apple.com
+  - DOMAIN,time.asia.apple.com
+  - DOMAIN,time.windows.com
+  - DOMAIN,time.nist.gov
+  - DOMAIN,time.android.com
 
-# 苹果核心服务与国内官网 (Core & Marketing)
-DOMAIN-SUFFIX,aaplimg.com
-DOMAIN-SUFFIX,apple
-DOMAIN-SUFFIX,apple.cn
-DOMAIN-SUFFIX,apple.com
-DOMAIN-SUFFIX,apple.com.cn
+  - DOMAIN,time.cloudflare.com
 
-# 媒体内容与应用商店 (App Store, Music, TV, Podcasts) 
-DOMAIN-SUFFIX,apple-itunes.cn
-DOMAIN-SUFFIX,itunes-apple.cn
-DOMAIN-SUFFIX,itunes.com
-DOMAIN-SUFFIX,itunesapple.cn
-DOMAIN-SUFFIX,itunesradio.cn
-DOMAIN-SUFFIX,itunesradio.com.cn
-DOMAIN-SUFFIX,mzstatic.com
-DOMAIN-SUFFIX,shazam.com
+  # ===== Apple =====
+  - DOMAIN-SUFFIX,aaplimg.com
+  - DOMAIN-SUFFIX,apple.com
+  - DOMAIN-SUFFIX,apple.cn
+  - DOMAIN-SUFFIX,apple.com.cn
+  - DOMAIN-SUFFIX,itunes.com
+  - DOMAIN-SUFFIX,mzstatic.com
+  - DOMAIN-SUFFIX,shazam.com
 
-# 苹果官方防抢注及国内商店变体域名 (Store Aliases) 
-DOMAIN-SUFFIX,apple-appstore.cn
-DOMAIN-SUFFIX,apple-store.cn
-DOMAIN-SUFFIX,applestore.cn
-DOMAIN-SUFFIX,applestore.com.cn
+  - DOMAIN-SUFFIX,cdn-apple.com
+  - DOMAIN-SUFFIX,me.com
+  - DOMAIN-SUFFIX,push.apple.com
 
-# 核心系统基础架构 (Infrastructure & Push & Security) 
-DOMAIN-SUFFIX,cdn-apple.com
-DOMAIN-SUFFIX,me.com
-DOMAIN-SUFFIX,push.apple.com
+  - DOMAIN-SUFFIX,icloud.com
+  - DOMAIN-SUFFIX,icloud.cn
+  - DOMAIN-SUFFIX,icloud.com.cn
+  - DOMAIN-SUFFIX,icloud-content.com
+  - DOMAIN-SUFFIX,icloud.net.cn
 
-# 苹果本土化地图、天气与轻应用 (Location & Weather & App Clips) 
-DOMAIN-SUFFIX,apple-mapkit.com
-DOMAIN-SUFFIX,apzones.com
-DOMAIN-SUFFIX,weatherkit.apple.com
+  # ===== Microsoft =====
+  - DOMAIN-SUFFIX,live.com
+  - DOMAIN-SUFFIX,live.net
+  - DOMAIN-SUFFIX,microsoft.com
+  - DOMAIN-SUFFIX,microsoft.com.cn
+  - DOMAIN-SUFFIX,windows.com
+  - DOMAIN-SUFFIX,windows.net
+  - DOMAIN-SUFFIX,windowsupdate.com
+  - DOMAIN-SUFFIX,office.com
+  - DOMAIN-SUFFIX,office.net
+  - DOMAIN-SUFFIX,office365.com
 
-# 苹果专用的全球 CDN 基础设施调度 (Apple Traffic Traffic Routing) 
-DOMAIN-SUFFIX,akadns.net
-DOMAIN-SUFFIX,apple-dns.cn
-DOMAIN-SUFFIX,apple-dns.com.cn
-DOMAIN-SUFFIX,apple-dns.net
-DOMAIN-SUFFIX,appledns.cn
-DOMAIN-SUFFIX,appledns.com.cn
-DOMAIN-SUFFIX,edgekey.net
+  - DOMAIN-SUFFIX,msftauth.net
+  - DOMAIN-SUFFIX,msftconnecttest.com
+  - DOMAIN-SUFFIX,msn.com
 
-# 国内 iCloud 核心与全线生态同步 (iCloud Service - 云上贵州) 
-DOMAIN-SUFFIX,icloud.cn
-DOMAIN-SUFFIX,icloud.com.cn
-DOMAIN-SUFFIX,icloud-content.com
-DOMAIN-SUFFIX,icloud.net.cn
-DOMAIN-SUFFIX,icloudapple.cn
-DOMAIN-SUFFIX,icloud.com
+  # ===== GitHub / CDN =====
+  - DOMAIN-SUFFIX,githubusercontent.com
+  - DOMAIN-SUFFIX,githubassets.com
+  - DOMAIN-SUFFIX,jsdelivr.com
+  - DOMAIN-SUFFIX,jsdelivr.net
+  - DOMAIN-SUFFIX,fastly.net
 
-# Windows 系统、商店与系统更新 (Windows Update) 
-DOMAIN-SUFFIX,live.com
-DOMAIN-SUFFIX,microsoft.com
-DOMAIN-SUFFIX,microsoft.com.cn
-DOMAIN-SUFFIX,microsoftstore.com.cn
-DOMAIN-SUFFIX,msftauth.net
-DOMAIN-SUFFIX,msftconnecttest.com
-DOMAIN-SUFFIX,msftidentity.com
-DOMAIN-SUFFIX,msn.com
-DOMAIN-SUFFIX,msn.com.cn
-DOMAIN-SUFFIX,windows.com
-DOMAIN-SUFFIX,windows.net
-DOMAIN-SUFFIX,windowsupdate.com
+  # ===== Tailscale =====
+  - DOMAIN-SUFFIX,tailscale.com
+  - DOMAIN-SUFFIX,tailscale.io
+  - DOMAIN-SUFFIX,ts.net
 
-# Office 365 / Microsoft 365 核心组件 
-DOMAIN-SUFFIX,office.com
-DOMAIN-SUFFIX,office.net
-DOMAIN-SUFFIX,office365.com
+  # ===== STUN / RTC =====
+  - DOMAIN-SUFFIX,stun.l.google.com
+  - DOMAIN-SUFFIX,stun.services.mozilla.com
+  - DOMAIN-SUFFIX,stunprotocol.org
 
-# 微软公共 CDN、静态资源与前端加速
-DOMAIN-SUFFIX,aspnetcdn.com
-DOMAIN-SUFFIX,azureedge.net
-DOMAIN-SUFFIX,microsoft-realm.cn
-DOMAIN-SUFFIX,microsoftonline.com
-DOMAIN-SUFFIX,msauth.net
-DOMAIN-SUFFIX,msedge.net
-DOMAIN-SUFFIX,s-microsoft.com
+  # ===== Cloudflare =====
+  - DOMAIN-SUFFIX,cloudflare.com
+  - DOMAIN-SUFFIX,cloudflare-dns.com
+  - DOMAIN-SUFFIX,cdnjs.cloudflare.com
+  - DOMAIN-SUFFIX,cloudflareinsights.com
 
-# 微软账户、认证与安全同步 (Xbox、Outlook 基础登录)
-DOMAIN-SUFFIX,live.net
-DOMAIN-SUFFIX,microsoft-tst.com
-DOMAIN-SUFFIX,passport.net
-
-# GitHub 官方在国内有优质 CDN/边缘节点调度的原生域名
-DOMAIN-SUFFIX,githubusercontent.com
-DOMAIN-SUFFIX,githubassets.com
-
-# GitHub 免翻墙镜像与加速
-DOMAIN-SUFFIX,gitmirror.com
-DOMAIN-SUFFIX,ghproxy.com
-DOMAIN-SUFFIX,ghproxy.net
-DOMAIN-SUFFIX,gh-proxy.com
-
-# GitHub 专用于前端、NPM 以及 Release 产物加速的公共 CDN
-DOMAIN-SUFFIX,jsdelivr.com
-DOMAIN-SUFFIX,jsdelivr.net
-DOMAIN-SUFFIX,fastly.net
-
-# Tailscale 控制面、官网与 MagicDNS
-DOMAIN-SUFFIX,tailscale.com
-DOMAIN-SUFFIX,tailscale.io
-DOMAIN-SUFFIX,tailscale.net
-DOMAIN-SUFFIX,ts.net
-
-# Tailscale Funnel (内网穿透公网暴露服务)
-DOMAIN-SUFFIX,tailscale.fun
-
-# 节点证书、更新与后台服务依赖
-DOMAIN-SUFFIX,tailscale.dev
-DOMAIN-SUFFIX,log.tailscale.io
-
-# WebAuthn / OIDC 身份认证安全重定向
-DOMAIN-SUFFIX,tailscale-key-exchange.net
-
-# 开源社区与浏览器大厂公共 STUN (必须直连)
-DOMAIN-SUFFIX,stunprotocol.org
-DOMAIN-SUFFIX,stun.stunprotocol.org
-DOMAIN-SUFFIX,stun.services.mozilla.com
-DOMAIN-SUFFIX,stun.l.google.com
-DOMAIN-SUFFIX,mixnet.org
-
-# 国内主流音视频、大厂公用 STUN 调度（常用于 P2P 联机和各类 App 视频）
-DOMAIN-SUFFIX,agora.io
-DOMAIN-SUFFIX,agoraio.cn
-DOMAIN-SUFFIX,rtc.qq.com
-DOMAIN-SUFFIX,qcloud.com
-DOMAIN-SUFFIX,alicdn.com
-DOMAIN-SUFFIX,aliyuncs.com
-
-# Debian 官方国内镜像与全球 CDN 调度
-DOMAIN-SUFFIX,debian.org
-DOMAIN-SUFFIX,debian.net
-DOMAIN-SUFFIX,fastly.debian.net
-
-# 国内顶级大厂（阿里云、腾讯云、华为云、百度云）开源镜像源
-DOMAIN-SUFFIX,aliyun.com
-DOMAIN-SUFFIX,aliyuncs.com
-DOMAIN-SUFFIX,tencentcloudapi.com
-DOMAIN-SUFFIX,myqcloud.com
-DOMAIN-SUFFIX,huaweicloud.com
-DOMAIN-SUFFIX,baidubce.com
-
-# 国内主流高校与科研院所开源镜像源
-DOMAIN-SUFFIX,tsinghua.edu.cn
-DOMAIN-SUFFIX,ustc.edu.cn
-DOMAIN-SUFFIX,sjtu.edu.cn
-DOMAIN-SUFFIX,pku.edu.cn
-DOMAIN-SUFFIX,lzu.edu.cn
-DOMAIN-SUFFIX,iscas.ac.cn
-
-# docker核心主力商用/公益加速源
-DOMAIN-SUFFIX,xuanyuan.me
-DOMAIN-SUFFIX,xuanyuan.cloud
-DOMAIN-SUFFIX,1ms.run
-DOMAIN-SUFFIX,daocloud.io
-
-# docker依然存活的第三方/公益加速镜像
-DOMAIN-SUFFIX,unsee.tech
-DOMAIN-SUFFIX,rat.dev
-DOMAIN-SUFFIX,wanpeng.top
-DOMAIN-SUFFIX,atomhub.openatom.cn
-
-# docker阿里云/腾讯云（含云服务器内网专用分流）
-DOMAIN-SUFFIX,aliyuncs.com
-DOMAIN-SUFFIX,tencentyun.com
-
-# 个推 / 个信 / 个安 家族 (每日互动 - Getui / Igexin)
-DOMAIN-SUFFIX,gepush.com
-DOMAIN-SUFFIX,getui.com
-DOMAIN-SUFFIX,getui.net
-DOMAIN-SUFFIX,igexin.com
-DOMAIN-SUFFIX,geisign.com
-# 家族隐藏与衍生补充域名
-DOMAIN-SUFFIX,getuicdn.com
-DOMAIN-SUFFIX,gtimg.cn
-
-# 极光推送 家族 (极光云 / 极光大数据 - JPush / Jiguang)
-DOMAIN-SUFFIX,jpush.cn
-DOMAIN-SUFFIX,jpush.io
-DOMAIN-SUFFIX,jiguang.cn
-# 家族隐藏与衍生补充域名
-DOMAIN-SUFFIX,jmops.com
-DOMAIN-SUFFIX,jcore.cn
-DOMAIN-SUFFIX,engagelab.cc
-
-
-# 友盟 家族 (阿里旗下 / 统一移动推送平台 - Umeng)
-DOMAIN-SUFFIX,umeng.com
-DOMAIN-SUFFIX,umengcloud.com
-DOMAIN-SUFFIX,umsns.com
-DOMAIN-SUFFIX,ucwls.com
-DOMAIN-SUFFIX,umtrack.com
-
-
-# 腾讯系移动推送服务 (TPNS / 信鸽推送 - Tencent Push)
-DOMAIN-SUFFIX,xg.qq.com
-DOMAIN-SUFFIX,tencent.com
-
-# Cloudflare 官方核心基础设施与国内专用生态
-DOMAIN-SUFFIX,cloudflare.cn
-DOMAIN-SUFFIX,cloudflarechina.com
-DOMAIN-SUFFIX,cloudflare-cn.com
-DOMAIN-SUFFIX,cloudflareinsights.com
-DOMAIN-SUFFIX,cloudflare-dns.com
-DOMAIN-SUFFIX,speed.cloudflare.com
-DOMAIN-SUFFIX,cdnjs.cloudflare.com
-DOMAIN-SUFFIX,time.cloudflare.com
-
-
-# 2026 核心补充：国内企业级与备案网站特许直连节点
-DOMAIN-SUFFIX,cdnhwc1.com
-DOMAIN-SUFFIX,cdnhwc2.com
-DOMAIN-SUFFIX,jcloud-cdn.com
-DOMAIN-SUFFIX,baidubce.com
-DOMAIN-SUFFIX,cloudflare.net.cn
-
-# 国内开发者与大厂高频引用的 CF 开源前端静态资源库
-DOMAIN-SUFFIX,cdnjs.com
-DOMAIN-SUFFIX,cdnjs.net
-DOMAIN-SUFFIX,staticfile.org
-DOMAIN-SUFFIX,staticfile.net
-
-
-# 网络工程特化：CF 优选 IP 与泛自建反代生态
-DOMAIN-SUFFIX,cf-ipfs.com
-DOMAIN-SUFFIX,cloudflare-ipfs.com
-DOMAIN-SUFFIX,workers.dev.cn
-
-# 个性化自主添加（根据自己情况）
-DOMAIN-SUFFIX,afdian.com
-DOMAIN-SUFFIX,aliapp.org
-DOMAIN-SUFFIX,openos.org
-DOMAIN-SUFFIX,asusgo.com
-+.asusgo.com
+  # ===== ASUS =====
+  - DOMAIN-SUFFIX,asusgo.com
