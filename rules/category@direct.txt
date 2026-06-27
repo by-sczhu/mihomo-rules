@@ -270,6 +270,48 @@ DOMAIN-SUFFIX,xg.qq.com
 # 注：原「tpns.sh.tencent.com」已被下面这条更宽泛的高级大厂规则完美覆盖
 DOMAIN-SUFFIX,tencent.com
 
+# =================================================================
+# 1. 【Cloudflare 官方核心基础设施与国内专用生态】
+# 包含官方测速、国内特许 BGP 节点授权、时间同步以及官方中国区业务
+# =================================================================
+DOMAIN-SUFFIX,cloudflare.cn
+DOMAIN-SUFFIX,cloudflarechina.com
+DOMAIN-SUFFIX,cloudflare-cn.com
+DOMAIN-SUFFIX,cloudflareinsights.com
+DOMAIN-SUFFIX,cloudflare-dns.com
+DOMAIN-SUFFIX,speed.cloudflare.com
+DOMAIN-SUFFIX,cdnjs.cloudflare.com
+# --- 官方公共时间同步服务器（国内三大运营商骨干网全速直连） ---
+DOMAIN-SUFFIX,time.cloudflare.com
+
+# =================================================================
+# 2. 【2026 核心补充：国内企业级与备案网站特许直连节点】
+# Cloudflare 与国内大厂（百度云、京东云）深度合作的中国大陆境内节点（China Network）
+# 承载了大量跨国企业、国内合规备案网站的就近接入加速，必须锁定直连
+# =================================================================
+DOMAIN-SUFFIX,cdnhwc1.com
+DOMAIN-SUFFIX,cdnhwc2.com
+DOMAIN-SUFFIX,jcloud-cdn.com
+DOMAIN-SUFFIX,baidubce.com
+DOMAIN-SUFFIX,cloudflare.net.cn
+
+# =================================================================
+# 3. 【国内开发者与大厂高频引用的 CF 开源前端静态资源库】
+# 国内大量网页、App 异步冷启动时必须加载的顶级前端公共库（含有国内优质全速 CDN 节点）
+# =================================================================
+DOMAIN-SUFFIX,cdnjs.com
+DOMAIN-SUFFIX,cdnjs.net
+DOMAIN-SUFFIX,staticfile.org
+DOMAIN-SUFFIX,staticfile.net
+
+# =================================================================
+# 4. 【网络工程特化：CF 优选 IP 与泛自建反代生态】
+# 国内大批博主、极客利用 Cloudflare 优选 IP（如移动/联通特定精品路由）搭建的反代节点
+# =================================================================
+DOMAIN-SUFFIX,cf-ipfs.com
+DOMAIN-SUFFIX,cloudflare-ipfs.com
+DOMAIN-SUFFIX,workers.dev.cn
+
 # --- 个性化自主添加（根据自己情况） ---
 DOMAIN-SUFFIX,afdian.com
 DOMAIN-SUFFIX,aliapp.org
