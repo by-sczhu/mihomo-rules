@@ -1,3 +1,4 @@
+# NTP Server
 +.ntsc.ac.cn
 +.ntp.org.cn
 +.aliyun.com
