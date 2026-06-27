@@ -1,4 +1,7 @@
-# === 1. 国内顶级主流 PT 综合/影视站 ===
+# =================================================================
+# 1. 【核心一线与综合影视大站】 (Core & Mainstream PT Stations)
+# 承载国内 90% 以上高清影视、4K HDR 资源的顶级站点，Tracker 必须全速直连
+# =================================================================
 DOMAIN-SUFFIX,0ff.cc
 DOMAIN-SUFFIX,1ptba.com
 DOMAIN-SUFFIX,52pt.site
@@ -27,6 +30,7 @@ DOMAIN-SUFFIX,hdmayi.com
 DOMAIN-SUFFIX,hdpt.xyz
 DOMAIN-SUFFIX,hdsky.me
 DOMAIN-SUFFIX,hdtime.org
+DOMAIN-SUFFIX,hdupt.com
 DOMAIN-SUFFIX,hdvideo.one
 DOMAIN-SUFFIX,hdvideo.top
 DOMAIN-SUFFIX,hdzone.me
@@ -76,7 +80,45 @@ DOMAIN-SUFFIX,wintersakura.net
 DOMAIN-SUFFIX,zhuque.in
 DOMAIN-SUFFIX,zmpt.cc
 
-# === 2. 华语动漫/音乐/垂直领域特色站 ===
+# =================================================================
+# 2. 【2024-2026 补充补全：新兴与特色垂直小众站】 (Niche & Emerging)
+# 近两年活跃度极高、补充辅种拼图必不可少的国内影视/小语种/纪录片站点
+# =================================================================
+DOMAIN-SUFFIX,allpt.cc
+DOMAIN-SUFFIX,amazg.top
+DOMAIN-SUFFIX,automall.club
+DOMAIN-SUFFIX,banyungong.net
+DOMAIN-SUFFIX,discfan.net
+DOMAIN-SUFFIX,earthhd.me
+DOMAIN-SUFFIX,fishpt.top
+DOMAIN-SUFFIX,fsm.name
+DOMAIN-SUFFIX,giga-pt.cc
+DOMAIN-SUFFIX,guanyin.club
+DOMAIN-SUFFIX,hares.top
+DOMAIN-SUFFIX,hdai.club
+DOMAIN-SUFFIX,hdfans.club
+DOMAIN-SUFFIX,hdking.com
+DOMAIN-SUFFIX,hdpost.top
+DOMAIN-SUFFIX,hdspace.club
+DOMAIN-SUFFIX,hdroute.org
+DOMAIN-SUFFIX,hdsing.org
+DOMAIN-SUFFIX,hdsp.xyz
+DOMAIN-SUFFIX,j99.info
+DOMAIN-SUFFIX,joyhd.net
+DOMAIN-SUFFIX,links.top
+DOMAIN-SUFFIX,mgstage.club
+DOMAIN-SUFFIX,ptbest.net
+DOMAIN-SUFFIX,ptls.club
+DOMAIN-SUFFIX,qhpt.org
+DOMAIN-SUFFIX,redleaves.tech
+DOMAIN-SUFFIX,rosre.org
+DOMAIN-SUFFIX,tianfu.club
+DOMAIN-SUFFIX,ubits.me
+
+# =================================================================
+# 3. 【动漫/二次元/音乐/文学特化类站点】 (ACG, Music & Books)
+# 针对动漫、无损音乐、有声书等特殊资产的高频直连通道
+# =================================================================
 DOMAIN-SUFFIX,cyanbug.net
 DOMAIN-SUFFIX,dicmusic.com
 DOMAIN-SUFFIX,dmhy.best
@@ -88,8 +130,12 @@ DOMAIN-SUFFIX,kame.gay
 DOMAIN-SUFFIX,leaves.red
 DOMAIN-SUFFIX,rainbowisland.co
 DOMAIN-SUFFIX,skyeysnow.com
+DOMAIN-SUFFIX,u2.dmhy.org
 
-# === 3. 国内各大高校 IPv6 校园网 PT 站 ===
+# =================================================================
+# 4. 【国内高校教育网 IPv6 顶级神站系列】 (CERNET / University PT)
+# 校园网/教育网内部极速互传主钟，校外访问同样需要通过国内直连解析
+# =================================================================
 DOMAIN-SUFFIX,byr.cn
 DOMAIN-SUFFIX,byr.pt
 DOMAIN-SUFFIX,hitpt.com
@@ -103,3 +149,13 @@ DOMAIN-SUFFIX,sjtu.edu.cn
 DOMAIN-SUFFIX,tju.pt
 DOMAIN-SUFFIX,tjupt.org
 DOMAIN-SUFFIX,xauat.edu.cn
+
+# =================================================================
+# 5. 【PT 生态周边工具与自动刷流公共配套基础设施】 (PT Infrastructure)
+# 包含自动刷流、微信/Telegram通知推送、辅种数据校验及公共 API 接口
+# =================================================================
+DOMAIN-SUFFIX,iyuu.cn
+DOMAIN-SUFFIX,mikanani.me
+DOMAIN-SUFFIX,tmdb.org
+DOMAIN-SUFFIX,themoviedb.org
+DOMAIN-SUFFIX,tvdb.info
