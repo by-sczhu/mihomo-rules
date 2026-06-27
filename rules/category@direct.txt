@@ -132,17 +132,17 @@ DOMAIN-SUFFIX,live.net
 DOMAIN-SUFFIX,microsoft-tst.com
 DOMAIN-SUFFIX,passport.net
 
-# 官方在国内有优质 CDN/边缘节点调度的原生域名
+# GitHub 官方在国内有优质 CDN/边缘节点调度的原生域名
 DOMAIN-SUFFIX,githubusercontent.com
 DOMAIN-SUFFIX,githubassets.com
 
-# 国内外顶级大厂及开源社区提供的免翻墙 GitHub 镜像与加速
+# GitHub 免翻墙镜像与加速
 DOMAIN-SUFFIX,gitmirror.com
 DOMAIN-SUFFIX,ghproxy.com
 DOMAIN-SUFFIX,ghproxy.net
 DOMAIN-SUFFIX,gh-proxy.com
 
-# 专用于前端、NPM 以及 Release 产物加速的公共 CDN
+# GitHub 专用于前端、NPM 以及 Release 产物加速的公共 CDN
 DOMAIN-SUFFIX,jsdelivr.com
 DOMAIN-SUFFIX,jsdelivr.net
 DOMAIN-SUFFIX,fastly.net
