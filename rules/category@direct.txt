@@ -104,6 +104,7 @@ swcdn.apple.com
 +.iscas.ac.cn
 
 # Cloudflare 官方核心基础设施与国内专用生态
+challenges.cloudflare.com
 +.cloudflare.cn
 +.cloudflarechina.com
 +.cloudflare-cn.com
