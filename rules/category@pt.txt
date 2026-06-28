@@ -156,3 +156,4 @@ app.piggo.me
 +.douban.com
 +.doubanio.com
 +.doubaninfo.com
++.pixhost.to
