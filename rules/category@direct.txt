@@ -163,5 +163,3 @@ challenges.cloudflare.com
 +.openos.org
 +.asusgo.com
 +.skk.moe
-+.doubaninfo.com
-+.doubanio.com
