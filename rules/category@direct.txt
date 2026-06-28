@@ -103,6 +103,13 @@ swcdn.apple.com
 +.lzu.edu.cn
 +.iscas.ac.cn
 
+# FCM 推送核心
++.googleapis.com
++.gstatic.com
++.googleusercontent.com
++.mtalk.google.com
++.alt-mtalk.google.com
+
 # Cloudflare 官方核心基础设施与国内专用生态
 challenges.cloudflare.com
 +.cloudflare.cn
