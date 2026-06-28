@@ -57,9 +57,6 @@ swcdn.apple.com
 +.live.com
 +.passport.net
 +.xboxlive.com
-+.digicert.com
-+.symcd.com
-+.omniroot.com
 
 # Tailscale 内网穿透与控制
 +.tailscale.com
@@ -154,6 +151,12 @@ swcdn.apple.com
 +.igexin.com
 +.gepush.com
 +.mobileservice.cn
+
+# 全球顶级安全证书验签
++.digicert.com
++.entrust.net
++.symcd.com
++.omniroot.com
 
 # 个信化添加
 +.openos.org
