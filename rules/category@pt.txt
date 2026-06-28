@@ -152,3 +152,6 @@
 +.tmdb.org
 +.themoviedb.org
 +.tvdb.info
++.douban.com
++.doubanio.com
++.doubaninfo.com
