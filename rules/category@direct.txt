@@ -158,6 +158,6 @@ swcdn.apple.com
 +.symcd.com
 +.omniroot.com
 
-# 个信化添加
+# 个性化自建域名添加
 +.openos.org
 +.asusgo.com
