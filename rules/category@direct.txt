@@ -161,3 +161,4 @@ swcdn.apple.com
 # 个性化自建域名添加
 +.openos.org
 +.asusgo.com
++.skk.moe
