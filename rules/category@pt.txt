@@ -1,7 +1,4 @@
-# =================================================================
-# 1. 【核心一线与综合影视大站】 (Core & Mainstream PT Stations)
-# 承载国内 90% 以上高清影视、4K HDR 资源的顶级站点，Tracker 必须全速直连
-# =================================================================
+# 核心一线与综合影视大站
 +.0ff.cc
 +.1ptba.com
 +.52pt.site
@@ -9,11 +6,13 @@
 +.beitai.pt
 +.btschool.club
 +.carpt.net
++.crabpt.vip
 +.ccfbits.org
 +.chdbits.co
 +.chdbits.xyz
 +.chddiy.xyz
 +.crabpt.vip
++.cinefiles.info
 +.greatposterwall.com
 +.haidan.cc
 +.haidan.video
@@ -29,6 +28,8 @@
 +.hdmayi.com
 +.hdpt.xyz
 +.hdsky.me
++.hdkyl.in
++.hdkylin.top
 +.hdtime.org
 +.hdupt.com
 +.hdvideo.one
@@ -37,8 +38,10 @@
 +.hhan.club
 +.hhanclub.net
 +.hhanclub.top
++.hitpt.com
 +.icc2022.com
 +.ilovelemonhd.me
++.kame.gay
 +.kamept.com
 +.keepfrds.com
 +.kufei.com
@@ -46,6 +49,7 @@
 +.lemonhd.club
 +.lemonhd.net
 +.lemonhd.org
++.leniter.org
 +.m-team.cc
 +.m-team.io
 +.mt.cc
@@ -69,6 +73,7 @@
 +.pttime.top
 +.ptvicomo.net
 +.rousi.zip
++.rainbowisland.co
 +.sharkpt.net
 +.skyey2.com
 +.soulvoice.club
@@ -80,10 +85,7 @@
 +.zhuque.in
 +.zmpt.cc
 
-# =================================================================
-# 2. 【2024-2026 补充补全：新兴与特色垂直小众站】 (Niche & Emerging)
-# 近两年活跃度极高、补充辅种拼图必不可少的国内影视/小语种/纪录片站点
-# =================================================================
+# 新兴与特色垂直小众站
 +.allpt.cc
 +.amazg.top
 +.automall.club
@@ -115,10 +117,7 @@
 +.tianfu.club
 +.ubits.me
 
-# =================================================================
-# 3. 【动漫/二次元/音乐/文学特化类站点】 (ACG, Music & Books)
-# 针对动漫、无损音乐、有声书等特殊资产的高频直连通道
-# =================================================================
+# 动漫/二次元/音乐/文学特化类站点
 +.cyanbug.net
 +.dicmusic.com
 +.dmhy.best
@@ -132,10 +131,7 @@
 +.skyeysnow.com
 +.u2.dmhy.org
 
-# =================================================================
-# 4. 【国内高校教育网 IPv6 顶级神站系列】 (CERNET / University PT)
-# 校园网/教育网内部极速互传主钟，校外访问同样需要通过国内直连解析
-# =================================================================
+# 国内高校教育网 IPv6 顶级神站系列
 +.byr.cn
 +.byr.pt
 +.hitpt.com
@@ -150,10 +146,7 @@
 +.tjupt.org
 +.xauat.edu.cn
 
-# =================================================================
-# 5. 【PT 生态周边工具与自动刷流公共配套基础设施】 (PT Infrastructure)
-# 包含自动刷流、微信/Telegram通知推送、辅种数据校验及公共 API 接口
-# =================================================================
+# PT 生态周边工具与自动刷流公共配套基础设施
 +.iyuu.cn
 +.mikanani.me
 +.tmdb.org
