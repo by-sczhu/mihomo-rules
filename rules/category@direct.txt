@@ -1,16 +1,18 @@
 # NTP Server
++.ntp.org
 +.ntsc.ac.cn
 +.ntp.org.cn
-+.aliyun.com
 +.pool.aliyun.com
-+.tencent.com
-ntp.tencent.com
-+.cloud.tencent.com
-ntp.cloud.tencent.com
 +.pool.ntp.org
++.cloud.tencent.com
+ntp.tencent.com
+ntp.cloud.tencent.com
 ntp.sjtu.edu.cn
 ntp.tuna.tsinghua.edu.cn
 ntp.ustc.edu.cn
+ntp.edu.cn
+ntp.asus.com
+time.asus.com
 time.edu.cn
 time.windows.com
 time.apple.com
@@ -19,69 +21,45 @@ time.nist.gov
 time.cloudflare.com
 
 # 苹果核心服务与国内官网
-+.aaplimg.com
-+.apple
 +.apple.cn
 +.apple.com
 +.apple.com.cn
-+.apple-itunes.cn
-+.itunes-apple.cn
-+.itunes.com
-+.itunesapple.cn
-+.itunesradio.cn
-+.itunesradio.com.cn
-+.mzstatic.com
-+.shazam.com
-+.apple-appstore.cn
-+.apple-store.cn
-+.applestore.cn
-+.applestore.com.cn
-+.cdn-apple.com
-+.me.com
-+.push.apple.com
-+.apple-mapkit.com
-+.apzones.com
-+.weatherkit.apple.com
-+.akadns.net
-+.apple-dns.cn
-+.apple-dns.com.cn
-+.apple-dns.net
-+.appledns.cn
-+.appledns.com.cn
-+.edgekey.net
-+.icloud.cn
++.icloud.com
 +.icloud.com.cn
 +.icloud-content.com
-+.icloud.net.cn
-+.icloudapple.cn
-+.icloud.com
++.apple-cloudkit.com
++.apple-dns.net
++.me.com
++.mzstatic.com
++.aaplimg.com
++.cdn-apple.com
++.appstore.com 
++.itunes.com
++.push.apple.com
++.digicert.com
++.entrust.net
++.push.apple.com
++.digicert.com
++.entrust.net
+swcdn.apple.com
 
 # Windows 系统、商店与系统更新
-+.live.com
-+.microsoft.com
-+.microsoft.com.cn
-+.microsoftstore.com.cn
-+.msftauth.net
-+.msftconnecttest.com
-+.msftidentity.com
-+.msn.com
-+.msn.com.cn
-+.windows.com
-+.windows.net
-+.windowsupdate.com
++.cloud.microsoft
 +.office.com
-+.office.net
 +.office365.com
-+.aspnetcdn.com
-+.azureedge.net
-+.microsoft-realm.cn
-+.microsoftonline.com
-+.msauth.net
-+.msedge.net
-+.s-microsoft.com
-+.live.net
-+.microsoft-tst.com
++.onedrive.com
++.sharepoint.com
++.officeapps.live.com
++.outlook.com
++.microsoft.com
++.windows.com
++.windowsupdate.com
++.live.com
 +.passport.net
++.xboxlive.com
++.digicert.com
++.symcd.com
++.omniroot.com
 
 # Tailscale 内网穿透与控制
 +.tailscale.com
@@ -128,7 +106,6 @@ time.cloudflare.com
 +.lzu.edu.cn
 +.iscas.ac.cn
 
-
 # Cloudflare 官方核心基础设施与国内专用生态
 +.cloudflare.cn
 +.cloudflarechina.com
@@ -150,12 +127,33 @@ time.cloudflare.com
 +.cf-ipfs.com
 +.cloudflare-ipfs.com
 +.workers.dev.cn
++.cloudflare.com
++.cloudflare.net
++.cloudflareimages.com
++.one.one.one.one
++.1dot1dot1dot1.cloudflare-dns.com
 
-# 推送域名
+# GitHub 国内加速域名及镜像站直连域名
++.ghproxy.com
++.ghproxy.net
++.gh-proxy.com
++.gh-proxy.org
++.fastgit.org
++.kgithub.com
++.kkgithub.com
++.bgithub.xyz
++.gitclone.com
++.jsdelivr.net
++.cdn.jsdelivr.net
++.fastly.net
++.npmmirror.com
+
+# 统一推送联盟（TUPN）
 +.getui.com
-+.gepush.com
 +.getui.net
 +.igexin.com
++.gepush.com
++.mobileservice.cn
 
 # 个信化添加
 +.openos.org
