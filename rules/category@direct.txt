@@ -6,7 +6,9 @@
 +.pool.ntp.org
 +.cloud.tencent.com
 ntp.tencent.com
-ntp.cloud.tencent.com
++.cloud.tencent.com
+ntp.aliyun.com
++.pool.aliyun.com
 ntp.sjtu.edu.cn
 ntp.tuna.tsinghua.edu.cn
 ntp.ustc.edu.cn
@@ -16,6 +18,7 @@ time.asus.com
 time.edu.cn
 time.windows.com
 time.apple.com
+time.asia.apple.com
 time.android.com
 time.nist.gov
 time.cloudflare.com
@@ -65,21 +68,9 @@ swcdn.apple.com
 +.ts.net
 
 # Debian 官方国内镜像与全球 CDN 调度
++.cn.debian.org
 +.debian.org
 +.debian.net
-+.fastly.debian.net
-+.aliyun.com
-+.aliyuncs.com
-+.tencentcloudapi.com
-+.myqcloud.com
-+.huaweicloud.com
-+.baidubce.com
-+.tsinghua.edu.cn
-+.ustc.edu.cn
-+.sjtu.edu.cn
-+.pku.edu.cn
-+.lzu.edu.cn
-+.iscas.ac.cn
 
 # Cloudflare 官方核心基础设施与国内专用生态
 challenges.cloudflare.com
