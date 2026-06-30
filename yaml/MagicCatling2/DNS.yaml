@@ -2,6 +2,29 @@
 dns:
   enable: true
   listen: :23453
+  ipv6: true
+  cache-algorithm: arc
+  enhanced-mode: fake-ip
+  fake-ip-range: 198.18.0.1/16
+  fake-ip-range6: fd6c:91f3:2b7a::/48
+  fake-ip-filter-mode: rule
+  fake-ip-filter:
+    - RULE-SET,private,real-ip
+    - RULE-SET,apple-cn,real-ip
+    - RULE-SET,category-direct,real-ip
+    - RULE-SET,category-pt,real-ip
+    - RULE-SET,cn,real-ip
+  proxy-server-nameserver:
+    - https://223.5.5.5/dns-query
+    - https://119.29.29.29/dns-query
+  nameserver:
+    - https://223.5.5.5/dns-query
+    - https://119.29.29.29/dns-query
+
+# Fake ip --1
+dns:
+  enable: true
+  listen: :23453
   ipv6: false
   cache-algorithm: arc
   enhanced-mode: fake-ip
