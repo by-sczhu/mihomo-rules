@@ -64,28 +64,6 @@ swcdn.apple.com
 +.tailscale.net
 +.ts.net
 
-# WebRTC / STUN / TURN 公共公共打洞服务器
-+.stun.services.mozilla.com
-+.stun.stunprotocol.org
-+.stunprotocol.org
-+.agora.io
-+.agoraio.cn
-+.rtc.qq.com
-+.qcloud.com
-+.alicdn.com
-+.aliyuncs.com
-+.stunprotocol.org
-+.stun.stunprotocol.org
-+.stun.services.mozilla.com
-+.stun.l.google.com
-+.mixnet.org
-+.agora.io
-+.agoraio.cn
-+.rtc.qq.com
-+.qcloud.com
-+.alicdn.com
-+.aliyuncs.com
-
 # Debian 官方国内镜像与全球 CDN 调度
 +.debian.org
 +.debian.net
@@ -128,18 +106,12 @@ challenges.cloudflare.com
 +.cloudflare.com
 +.cloudflare.net
 +.cloudflareimages.com
-+.one.one.one.one
-+.1dot1dot1dot1.cloudflare-dns.com
 
 # GitHub 国内加速域名及镜像站直连域名
 +.ghproxy.com
 +.ghproxy.net
 +.gh-proxy.com
 +.gh-proxy.org
-+.fastgit.org
-+.kgithub.com
-+.kkgithub.com
-+.bgithub.xyz
 +.gitclone.com
 +.jsdelivr.net
 +.cdn.jsdelivr.net
