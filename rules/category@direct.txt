@@ -1,64 +1,73 @@
-# NTP Server
-+.ntp.org
-+.ntsc.ac.cn
-+.ntp.org.cn
-+.pool.aliyun.com
-+.pool.ntp.org
-+.cloud.tencent.com
-ntp.tencent.com
-+.cloud.tencent.com
-ntp.aliyun.com
-+.pool.aliyun.com
-ntp.sjtu.edu.cn
-ntp.tuna.tsinghua.edu.cn
-ntp.ustc.edu.cn
-ntp.edu.cn
-ntp.asus.com
-time.asus.com
-time.edu.cn
-time.windows.com
-time.apple.com
-time.asia.apple.com
-time.android.com
-time.nist.gov
-time.cloudflare.com
+# 个性化自建域名添加
+DOMAIN-SUFFIX,asusgo.com
+DOMAIN-SUFFIX,openos.org
+DOMAIN-SUFFIX,skk.moe
+
+# 主流 NTP
+DOMAIN-SUFFIX,ntp.org
+DOMAIN-SUFFIX,pool.ntp.org
+# 阿里云 NTP
+DOMAIN-SUFFIX,pool.aliyun.com
+DOMAIN-SUFFIX,time.pool.aliyun.com
+DOMAIN-SUFFIX,ntp.aliyun.com
+DOMAIN-SUFFIX,ntp.cloud.aliyuncs.com
+# 国内公共 NTP
+DOMAIN-SUFFIX,ntsc.ac.cn
+DOMAIN-SUFFIX,ntp.org.cn
+DOMAIN-SUFFIX,cn.ntp.org.cn
+DOMAIN-SUFFIX,edu.ntp.org.cn
+# 腾讯 NTP
+DOMAIN-SUFFIX,ntp.tencent.com
+DOMAIN-SUFFIX,ntp.cloud.tencent.com
+# 高校 NTP
+DOMAIN-SUFFIX,ntp.sjtu.edu.cn
+DOMAIN-SUFFIX,ntp.tuna.tsinghua.edu.cn
+DOMAIN-SUFFIX,ntp.ustc.edu.cn
+DOMAIN-SUFFIX,ntp.edu.cn
+# ASUS 时间服务
+DOMAIN-SUFFIX,time.asus.com
+# Apple 时间服务
+DOMAIN-SUFFIX,time.apple.com
+DOMAIN-SUFFIX,time.asia.apple.com
+# Microsoft / Android
+DOMAIN-SUFFIX,time.windows.com
+DOMAIN-SUFFIX,time.android.com
+# 教育网时间
+DOMAIN-SUFFIX,time.edu.cn
+# 其他权威时间源
+DOMAIN-SUFFIX,time.cloudflare.com
 
 # Tailscale 内网穿透与控制
-+.tailscale.com
-+.tailscale.io
-+.tailscale.net
-+.ts.net
+DOMAIN-SUFFIX,tailscale.com
+DOMAIN-SUFFIX,tailscale.io
+DOMAIN-SUFFIX,tailscale.net
+DOMAIN-SUFFIX,ts.net
 
 # Debian 官方国内镜像与全球 CDN 调度
-+.cn.debian.org
-+.debian.org
-+.debian.net
+DOMAIN-SUFFIX,cn.debian.org
+DOMAIN-SUFFIX,debian.org
+DOMAIN-SUFFIX,debian.net
 
 # GitHub 国内加速域名及镜像站直连域名
-+.ghproxy.com
-+.ghproxy.net
-+.gh-proxy.com
-+.gh-proxy.org
-+.gitclone.com
-+.jsdelivr.net
-+.cdn.jsdelivr.net
-+.fastly.net
-+.npmmirror.com
+DOMAIN-SUFFIX,ghproxy.com
+DOMAIN-SUFFIX,ghproxy.net
+DOMAIN-SUFFIX,gh-proxy.com
+DOMAIN-SUFFIX,gh-proxy.org
+DOMAIN-SUFFIX,gitclone.com
+DOMAIN-SUFFIX,jsdelivr.net
+DOMAIN-SUFFIX,cdn.jsdelivr.net
+DOMAIN-SUFFIX,fastly.net
+DOMAIN-SUFFIX,npmmirror.com
 
 # 统一推送联盟（TUPN）
-+.getui.com
-+.getui.net
-+.igexin.com
-+.gepush.com
-+.mobileservice.cn
+DOMAIN-SUFFIX,getui.com
+DOMAIN-SUFFIX,getui.net
+DOMAIN-SUFFIX,igexin.com
+DOMAIN-SUFFIX,gepush.com
+DOMAIN-SUFFIX,mobileservice.cn
 
 # 全球顶级安全证书验签
-+.digicert.com
-+.entrust.net
-+.symcd.com
-+.omniroot.com
-
-# 个性化自建域名添加
-+.openos.org
-+.asusgo.com
-+.skk.moe
+DOMAIN-SUFFIX,digicert.com
+DOMAIN-SUFFIX,entrust.net
+DOMAIN-SUFFIX,symcd.com
+DOMAIN-SUFFIX,omniroot.com
