@@ -25,6 +25,7 @@
 +.hdhome.org
 +.hdmayi.com
 +.hdpt.xyz
++.hdkyl.in
 +.hdsky.me
 +.hdtime.org
 +.hdvideo.one
@@ -46,6 +47,7 @@
 +.m-team.io
 +.mt.cc
 +.nicept.net
++.iili.io
 +.open.cd
 +.oshen.win
 +.ourbits.club
@@ -65,6 +67,7 @@
 +.pttime.top
 +.ptvicomo.net
 +.rousi.zip
++.sda1.dev
 +.sharkpt.net
 +.skyey2.com
 +.soulvoice.club
