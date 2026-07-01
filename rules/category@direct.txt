@@ -23,44 +23,6 @@ time.android.com
 time.nist.gov
 time.cloudflare.com
 
-# 苹果核心服务与国内官网
-+.apple.cn
-+.apple.com
-+.apple.com.cn
-+.icloud.com
-+.icloud.com.cn
-+.icloud-content.com
-+.apple-cloudkit.com
-+.apple-dns.net
-+.me.com
-+.mzstatic.com
-+.aaplimg.com
-+.cdn-apple.com
-+.appstore.com 
-+.itunes.com
-+.push.apple.com
-+.digicert.com
-+.entrust.net
-+.push.apple.com
-+.digicert.com
-+.entrust.net
-swcdn.apple.com
-
-# Windows 系统、商店与系统更新
-+.cloud.microsoft
-+.office.com
-+.office365.com
-+.onedrive.com
-+.sharepoint.com
-+.officeapps.live.com
-+.outlook.com
-+.microsoft.com
-+.windows.com
-+.windowsupdate.com
-+.live.com
-+.passport.net
-+.xboxlive.com
-
 # Tailscale 内网穿透与控制
 +.tailscale.com
 +.tailscale.io
@@ -71,32 +33,6 @@ swcdn.apple.com
 +.cn.debian.org
 +.debian.org
 +.debian.net
-
-# Cloudflare 官方核心基础设施与国内专用生态
-challenges.cloudflare.com
-+.cloudflare.cn
-+.cloudflarechina.com
-+.cloudflare-cn.com
-+.cloudflareinsights.com
-+.cloudflare-dns.com
-+.speed.cloudflare.com
-+.cdnjs.cloudflare.com
-+.time.cloudflare.com
-+.cdnhwc1.com
-+.cdnhwc2.com
-+.jcloud-cdn.com
-+.baidubce.com
-+.cloudflare.net.cn
-+.cdnjs.com
-+.cdnjs.net
-+.staticfile.org
-+.staticfile.net
-+.cf-ipfs.com
-+.cloudflare-ipfs.com
-+.workers.dev.cn
-+.cloudflare.com
-+.cloudflare.net
-+.cloudflareimages.com
 
 # GitHub 国内加速域名及镜像站直连域名
 +.ghproxy.com
