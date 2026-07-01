@@ -117,6 +117,8 @@
 +.themoviedb.org
 +.tmdb.org
 +.tvdb.info
++.img.yichkp.com
++.imgpoi.com
 
 # PT-TRACKER
 +.tracker.
