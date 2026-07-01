@@ -1,21 +1,52 @@
 # NETWORK / ROUTER / FIRMWARE
-DOMAIN-SUFFIX,asuswrt-merlin.net
++.asuswrt-merlin.net
 
 # DOCKER / CONTAINER MIRROR
-DOMAIN-SUFFIX,dockerproxy.com
-DOMAIN-SUFFIX,dockerproxy.net
-DOMAIN-SUFFIX,docker.io
++.dockerproxy.com
++.dockerproxy.net
++.docker.io
 
 # TECH / DEV / RESOURCE
-DOMAIN-SUFFIX,kejiwanjia.net
-DOMAIN-SUFFIX,zstarzzz.cc
-DOMAIN-SUFFIX,66jc.top
-DOMAIN-SUFFIX,htwggj.cn
++.kejiwanjia.net
++.zstarzzz.cc
++.66jc.top
++.htwggj.cn
 
 # VPN / NODE / SERVICE
-DOMAIN-SUFFIX,ssrla.de
-DOMAIN-SUFFIX,ssrla2.de
-DOMAIN-SUFFIX,sspath.org
-DOMAIN-SUFFIX,anyway.best
-DOMAIN-SUFFIX,vunun.com
-DOMAIN-SUFFIX,liangxin1.xyz
++.ssrla.de
++.ssrla2.de
++.sspath.org
++.anyway.best
++.vunun.com
++.liangxin1.xyz
+
+# 海外 PT 站
++.avistaz.to
++.beyond-hd.me
++.bibliotik.me
++.bitpt.cn
++.blutopia.cc
++.broadcasthe.net
++.cinefiles.info
++.cinemaz.to
++.exoticaz.to
++.filelist.io
++.hdkyl.in
++.hdkylin.top
++.hdkylin.work
++.hdupt.com
++.ianon.app
++.iptorrents.com
++.itzmx.com
++.jpopsuki.eu
++.jptv.club
++.leniter.org
++.morethantv.me
++.myanonamouse.net
++.nebulance.io
++.passthepopcorn.me
++.privatehd.to
++.share.ilolicon.com
++.torrentleech.org
++.uhdbits.org
++.upxin.net
