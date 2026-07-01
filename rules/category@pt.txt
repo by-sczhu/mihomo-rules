@@ -116,7 +116,7 @@
 +.tvdb.info
 
 # PT-TRACKER
-+.+/announce.+
++.tracker.
 
 # PT-DHT
 +.dht.transmissionbt.com
