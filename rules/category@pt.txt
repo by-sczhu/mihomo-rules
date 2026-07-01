@@ -119,6 +119,7 @@
 +.tvdb.info
 +.img.yichkp.com
 +.imgpoi.com
++.wp.com
 
 # PT-TRACKER
 +.tracker.
