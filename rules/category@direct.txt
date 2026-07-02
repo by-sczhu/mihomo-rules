@@ -44,9 +44,10 @@
 +.ts.net
 
 # Debian 官方国内镜像与全球 CDN 调度
-+.cn.debian.org
 +.debian.org
 +.debian.net
++.ustc.edu.cn
++.tsinghua.edu.cn
 
 # GitHub 国内加速域名及镜像站直连域名
 +.ghproxy.com
