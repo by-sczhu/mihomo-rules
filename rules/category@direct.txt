@@ -2,6 +2,10 @@
 +.asusgo.com
 +.openos.org
 +.skk.moe
++.aliyuncdn.com
++.aliyuncdn.net
++.alipan.com
++.aliyundrive.com
 
 # 主流 NTP
 +.ntp.org
