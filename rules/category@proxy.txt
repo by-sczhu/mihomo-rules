@@ -31,9 +31,6 @@
 +.cinemaz.to
 +.exoticaz.to
 +.filelist.io
-+.hdkyl.in
-+.hdkylin.top
-+.hdkylin.work
 +.hdupt.com
 +.ianon.app
 +.iptorrents.com
