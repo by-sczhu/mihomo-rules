@@ -41,6 +41,13 @@
 # 其他权威时间源
 +.time.cloudflare.com
 
+# Nvidia 
++.nvidia.com
++.geforce.cn
++.gputechconf.cn
++.nvidia.cn
+cn.download.nvidia.com
+
 # Tailscale 内网穿透与控制
 +.tailscale.com
 +.tailscale.io
