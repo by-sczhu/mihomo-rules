@@ -26,6 +26,7 @@
 +.hdmayi.com
 +.hdpt.xyz
 +.hdkyl.in
++.hdkylin.top
 +.hdsky.me
 +.hdtime.org
 +.hdvideo.one
@@ -122,6 +123,12 @@
 +.wp.com
 
 # PT-TRACKER
++.cinefiles.info
++.eastgame.org
++.hitpt.com
++.kame.gay
++.leniter.org
++.rainbowisland.co
 +.tracker.
 
 # PT-DHT
