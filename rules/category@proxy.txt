@@ -18,7 +18,6 @@
 +.sspath.org
 +.anyway.best
 +.vunun.com
-+.liangxin1.xyz
 
 # 海外 PT 站
 +.avistaz.to
