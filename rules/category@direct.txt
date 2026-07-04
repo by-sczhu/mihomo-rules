@@ -8,7 +8,7 @@
 +.aliyundrive.com
 
 # VPN
-+.liangxin1.xyz
+
 
 # 主流 NTP
 +.ntp.org
