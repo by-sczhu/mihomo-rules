@@ -1,87 +1,91 @@
-# 个性化自建域名添加
+# ============ 个性化自建域名 ============
 +.asusgo.com
 +.openos.org
 +.skk.moe
+
+# ============ 阿里云系列 ============
 +.aliyuncdn.com
 +.aliyuncdn.net
 +.alipan.com
 +.aliyundrive.com
-
-# VPN
-
-
-# 主流 NTP
-+.ntp.org
-+.pool.ntp.org
-# 阿里云 NTP
 +.pool.aliyun.com
 +.time.pool.aliyun.com
 +.ntp.aliyun.com
 +.ntp.cloud.aliyuncs.com
-# 国内公共 NTP
+
+# ============ NTP 时间服务 ============
+## 主流 NTP
++.ntp.org
++.pool.ntp.org
+
+## 国内公共 NTP
 +.ntsc.ac.cn
 +.ntp.org.cn
 +.cn.ntp.org.cn
 +.edu.ntp.org.cn
-# 腾讯 NTP
+
+## 腾讯 NTP
 +.ntp.tencent.com
 +.ntp.cloud.tencent.com
-# 高校 NTP
+
+## 高校 NTP
 +.ntp.sjtu.edu.cn
 +.ntp.tuna.tsinghua.edu.cn
 +.ntp.ustc.edu.cn
 +.ntp.edu.cn
-# ASUS 时间服务
+
+## 其他时间服务
 +.time.asus.com
-# Apple 时间服务
 +.time.apple.com
 +.time.asia.apple.com
-# Microsoft / Android
 +.time.windows.com
 +.time.android.com
-# 教育网时间
 +.time.edu.cn
-# 其他权威时间源
 +.time.cloudflare.com
 
-# Nvidia 
+# ============ NVIDIA 驱动与服务 ============
 +.nvidia.com
++.nvidia.cn
 +.geforce.cn
 +.gputechconf.cn
-+.nvidia.cn
 cn.download.nvidia.com
 
-# Tailscale 内网穿透与控制
+# ============ Tailscale VPN ============
 +.tailscale.com
 +.tailscale.io
 +.tailscale.net
 +.ts.net
 
-# Debian 官方国内镜像与全球 CDN 调度
+# ============ Debian 与教育网 ============
 +.debian.org
 +.debian.net
 +.ustc.edu.cn
 +.tsinghua.edu.cn
 
-# GitHub 国内加速域名及镜像站直连域名
+# ============ 开源工具与 CDN ============
+## GitHub 加速与镜像
 +.ghproxy.com
 +.ghproxy.net
 +.gh-proxy.com
 +.gh-proxy.org
 +.gitclone.com
+
+## 前端 CDN
 +.jsdelivr.net
 +.cdn.jsdelivr.net
 +.fastly.net
+
+## NPM 镜像
 +.npmmirror.com
 
-# 统一推送联盟（TUPN）
+# ============ 推送服务（TUPN） ============
 +.getui.com
 +.getui.net
 +.igexin.com
 +.gepush.com
 +.mobileservice.cn
 
-# 全球顶级安全证书验签
+# ============ 全球安全证书 ============
 +.digicert.com
 +.entrust.net
 +.symcd.com
