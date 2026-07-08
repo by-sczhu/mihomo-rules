@@ -36,6 +36,7 @@
 +.hhanclub.net
 +.hhanclub.top
 +.icc2022.com
++.iili.io
 +.ilovelemonhd.me
 +.kamept.com
 +.keepfrds.com
@@ -48,7 +49,6 @@
 +.m-team.io
 +.mt.cc
 +.nicept.net
-+.iili.io
 +.open.cd
 +.oshen.win
 +.ourbits.club
@@ -124,12 +124,7 @@
 
 # PT-TRACKER
 +.cinefiles.info
-+.eastgame.org
-+.hitpt.com
-+.kame.gay
 +.leniter.org
-+.rainbowisland.co
-+.tracker.
 
 # PT-DHT
 +.dht.transmissionbt.com
