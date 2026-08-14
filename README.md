@@ -14,8 +14,8 @@
 
 | 规则集名称 | 类型 | 说明 | Raw 直连订阅地址 | 建议策略 |
 | :--- | :--- | :--- | :--- | :--- |
-| **Category-PT** | `domain` / `ipcidr` | 私有种子站点及相关域名/IP | `https://raw.githubusercontent.com/by-sczhu/mihomo-rules/main/category-pt.mrs` | `DIRECT` |
-| **self-built** | `domain` | 自定义直连（DNS 与 NTP 优化 | `https://raw.githubusercontent.com/by-sczhu/mihomo-rules/main/self-built.mrs` | `DIRECT` |
+| **direct_custom** | `domain` / `ipcidr` | 私有种子站点及相关域名/IP | `https://raw.githubusercontent.com/by-sczhu/mihomo-rules/main/direct_custom.mrs` | `DIRECT` |
+| **proxy_custom** | `domain` | 自定义直连（DNS 与 NTP 优化 | `https://raw.githubusercontent.com/by-sczhu/mihomo-rules/main/proxy_custom.mrs` | `Proxy` |
 
 ## 🛠️ 配置示例 (config.yaml)
 
@@ -23,19 +23,19 @@
 
 rule-providers:
 
-  category-pt:
+  direct_custom:
     type: http
     behavior: domain
-    url: "https://raw.githubusercontent.com/by-sczhu/mihomo-rules/main/category-pt.mrs"
+    url: "https://raw.githubusercontent.com/by-sczhu/mihomo-rules/main/direct_custom.mrs"
     interval: 86400
 
-  self-built:
+  proxy_custom:
     type: http
     behavior: domain
-    url: "https://raw.githubusercontent.com/by-sczhu/mihomo-rules/main/self-built.mrs"
+    url: "https://raw.githubusercontent.com/by-sczhu/mihomo-rules/main/proxy_custom.mrs"
     interval: 86400
 
 rules:
-  # 优先处理 PT 和 self-built 流量
-  - RULE-SET,category-pt,DIRECT
-  - RULE-SET,self-built,DIRECT
+  # 优先处理direct_custom
+  - RULE-SET,direct_custom,DIRECT
+  - RULE-SET,proxy_custom,Proxy
