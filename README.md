@@ -14,7 +14,7 @@
 
 | 规则集名称 | 类型 | 说明 | Raw 直连订阅地址 | 建议策略 |
 | :--- | :--- | :--- | :--- | :--- |
-| **direct_custom** | `domain` / `ipcidr` | 私有种子站点及相关域名/IP | `https://raw.githubusercontent.com/by-sczhu/mihomo-rules/main/direct_custom.mrs` | `DIRECT` |
+| **direct_custom** | `domain` | 私有种子站点及相关域名/IP | `https://raw.githubusercontent.com/by-sczhu/mihomo-rules/main/direct_custom.mrs` | `DIRECT` |
 | **proxy_custom** | `domain` | 自定义直连（DNS 与 NTP 优化 | `https://raw.githubusercontent.com/by-sczhu/mihomo-rules/main/proxy_custom.mrs` | `Proxy` |
 
 ## 🛠️ 配置示例 (config.yaml)
