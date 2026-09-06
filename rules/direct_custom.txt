@@ -6,6 +6,7 @@
 +.aliyuncdn.net
 +.alipan.com
 +.aliyundrive.com
++.zerx.dev
 
 # 主流 NTP
 +.ntp.org
