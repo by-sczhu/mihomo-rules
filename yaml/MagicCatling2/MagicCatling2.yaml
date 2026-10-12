@@ -47,9 +47,9 @@ proxies:
 # 注意：请提供您的机场订阅链接，每个链接一行，并为每个机场命名，末尾的[MC][SC][BK]为每个节点添加机场名称前缀，可自定义
 proxy-providers:
   # 主要订阅源 - 主节点集合，使用时请修改
-  MC: {<<: *BasePD, url: 'http://10.0.0.6:3003/2cXaAxRGfddmGz2yx1wA/download/collection/MC', override: {additional-prefix: '[MC] '}}
+  MC: {<<: *BasePD, url: 'http://10.0.0.6:3003/Qw9jRd2kYm4zF6x/download/collection/MC', override: {additional-prefix: '[MC] '}}
   # 备用订阅源 - 备选优节点集合，使用时请修改
-  BK: {<<: *BasePD, url: 'http://10.0.0.6:3003/2cXaAxRGfddmGz2yx1wA/download/collection/BK', override: {additional-prefix: '[BK] '}}
+  BK: {<<: *BasePD, url: 'http://10.0.0.6:3003/Qw9jRd2kYm4zF6x/download/collection/BK', override: {additional-prefix: '[BK] '}}
 
 # ==================== 代理策略组 ====================
 proxy-groups:
