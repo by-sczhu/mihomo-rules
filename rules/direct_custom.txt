@@ -7,7 +7,9 @@
 +.alipan.com
 +.aliyundrive.com
 +.zerx.dev
-
++.cloudflarestorage.com
++.ollama.ai
++.ollama.com
 # 主流 NTP
 +.ntp.org
 +.pool.ntp.org
