@@ -24,9 +24,9 @@ rule-anchor:
 
 proxy-providers:
   # 主要订阅源 - 主节点集合，使用时请修改
-  MC: {<<: *BasePD, url: 'http://10.0.0.6:3003/Qw9jRd2kYm4zF6x/download/collection/MC', override: {additional-prefix: '[MC] '}}
+  MC: {<<: *BasePD, url: 'http://10.0.0.9:3001/h9bLFTTreH7DGqla6MV9/download/collection/MC', override: {additional-prefix: '[MC] '}}
   # 备用订阅源 - 备选优节点集合，使用时请修改
-  BK: {<<: *BasePD, url: 'http://10.0.0.6:3003/Qw9jRd2kYm4zF6x/download/collection/BK', override: {additional-prefix: '[BK] '}}
+  BK: {<<: *BasePD, url: 'http://10.0.0.9:3001/h9bLFTTreH7DGqla6MV9/download/collection/BK', override: {additional-prefix: '[BK] '}}
 
 proxies:
   - {name: 直连, type: direct, udp: true}
