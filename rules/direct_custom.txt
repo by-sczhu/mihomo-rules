@@ -64,6 +64,7 @@
 +.hdarea.club
 +.hdatmos.club
 +.hdchina.org
++.hdwing.org
 +.hdcity.city
 +.hdcmct.org
 +.hddolby.com
