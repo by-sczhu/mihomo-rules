@@ -10,7 +10,7 @@
 +.cloudflarestorage.com
 +.ollama.ai
 +.ollama.com
-+.xingchiapi.com
+
 # 主流 NTP
 +.ntp.org
 +.pool.ntp.org
