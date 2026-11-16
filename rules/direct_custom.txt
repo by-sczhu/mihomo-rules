@@ -11,6 +11,7 @@
 +.ollama.ai
 +.ollama.com
 +.xingchiapi.com
++.ankaoxing.com
 # 主流 NTP
 +.ntp.org
 +.pool.ntp.org
