@@ -13,6 +13,7 @@
 +.xingchiapi.com
 +.ankaoxing.com
 +.scaqjg.com
++.snssdk.com
 # 主流 NTP
 +.ntp.org
 +.pool.ntp.org
