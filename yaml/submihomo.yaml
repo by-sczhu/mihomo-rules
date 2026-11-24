@@ -149,7 +149,8 @@ rules:
   # Microsoft 服务
   - RULE-SET,microsoft-cn,DIRECT
   - RULE-SET,microsoft,Microsoft
-
+  - RULE-SET,onedrive,Microsoft
+ 
   # Social 服务
   - RULE-SET,telegram,Telegram
   - RULE-SET,telegram_ip,Telegram,no-resolve  
@@ -243,6 +244,7 @@ rule-providers:
   # Microsoft 服务域名规则集   
   microsoft-cn:              {<<: *DomainMrs, url: https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/microsoft@cn.mrs}
   microsoft:                 {<<: *DomainMrs, url: https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/microsoft.mrs}
+  onedrive:                  {<<: *DomainMrs, url: https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/onedrive.mrs}
   
   # Facebook域名规则集 
   instagram:                 {<<: *DomainMrs, url: https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/instagram.mrs}
@@ -281,9 +283,8 @@ rule-providers:
   # 国内域名规则集 
   cn:                        {<<: *DomainMrs, url: https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/cn.mrs}
  
-  # [规则集] category-ads：广告类别域名
+  # 广告类别域名
   category-ads                : {<<: *DomainMrs, url: https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/category-ads.mrs}
-  # [规则集] category-ads-all：综合广告域名
   category-ads-all            : {<<: *DomainMrs, url: https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/category-ads-all.mrs}
   
   # IP 地址规则集
