@@ -103,9 +103,9 @@ proxy-groups:
 rules:
   # 设备直连：内网 / 特殊设备
   - SRC-IP-CIDR,10.0.0.2/32,DIRECT
-  - RULE-SET,private_ip,DIRECT,no-resolve
   - RULE-SET,private,DIRECT
-  
+  - RULE-SET,private_ip,DIRECT,no-resolve
+
   # 国内服务
   - RULE-SET,alibaba,DIRECT
   - RULE-SET,jd,DIRECT
