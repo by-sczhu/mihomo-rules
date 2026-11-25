@@ -104,7 +104,6 @@ rules:
   # 设备直连：内网 / 特殊设备
   - SRC-IP-CIDR,10.0.0.2/32,DIRECT
   - RULE-SET,private,DIRECT
-  - RULE-SET,private_ip,DIRECT,no-resolve
   
   # 自建直连/PT域名服务
   - RULE-SET,direct_custom,DIRECT
@@ -112,7 +111,6 @@ rules:
   # 广告拦截服务
   - RULE-SET,awavenue-ads,REJECT  
   - RULE-SET,category-ads-all,REJECT
-  - RULE-SET,ad_ip,REJECT,no-resolve
 
   # 自建代理域名服务
   - RULE-SET,proxy_custom,国外代理
@@ -134,24 +132,20 @@ rules:
   - RULE-SET,gemini,Gemini
   - RULE-SET,openai,ChatGPT
   - RULE-SET,category-ai-!cn,AI
-  - RULE-SET,ai_ip,AI,no-resolve
 
   # Apple 服务
   - RULE-SET,icloud@cn,DIRECT
   - RULE-SET,apple-cn,DIRECT
   - RULE-SET,apple,Apple
-  - RULE-SET,apple_ip,Apple,no-resolve
 
   # Cloudflare 服务
   - RULE-SET,cloudflare-cn,DIRECT
   - RULE-SET,cloudflare,Cloudflare
-  - RULE-SET,cloudflare_ip,Cloudflare,no-resolve
 
   # Google / YouTube 服务
   - RULE-SET,google-cn,DIRECT
   - RULE-SET,youtube,YouTube
   - RULE-SET,google,Google
-  - RULE-SET,google_ip,Google,no-resolve
 
   # Microsoft 服务
   - RULE-SET,microsoft-cn,DIRECT
@@ -160,12 +154,9 @@ rules:
  
   # Social 服务
   - RULE-SET,telegram,Telegram
-  - RULE-SET,telegram_ip,Telegram,no-resolve  
   - RULE-SET,instagram,Instagram
   - RULE-SET,facebook,Facebook
-  - RULE-SET,facebook_ip,Facebook,no-resolve
   - RULE-SET,twitter,Twitter
-  - RULE-SET,twitter_ip,Twitter,no-resolve
   - RULE-SET,tiktok,Tiktok
   - RULE-SET,whatsapp,Social
   - RULE-SET,category-social-media-!cn,Social
@@ -173,7 +164,6 @@ rules:
   # Media 服务
   - RULE-SET,spotify,Spotify
   - RULE-SET,netflix,Netflix
-  - RULE-SET,netflix_ip,Netflix,no-resolve  
   - RULE-SET,disney,Disney
   - RULE-SET,hbo,HBO
   - RULE-SET,category-porn,Porn
@@ -190,14 +180,26 @@ rules:
 
   # Speedtest 服务
   - RULE-SET,speedtest,Speedtest
-  
-  # 中国大陆兜底策略
-  - RULE-SET,cn,DIRECT
-  - RULE-SET,cn_ip,DIRECT,no-resolve
 
   # 非中国大陆兜底策略
   - RULE-SET,geolocation-!cn,国外代理
-
+  
+  # 中国大陆兜底策略
+  - RULE-SET,cn,DIRECT
+  
+  # IP 规则服务
+  - RULE-SET,private_ip,DIRECT,no-resolve
+  - RULE-SET,ad_ip,REJECT,no-resolve
+  - RULE-SET,ai_ip,AI,no-resolve
+  - RULE-SET,apple_ip,Apple,no-resolve
+  - RULE-SET,cloudflare_ip,Cloudflare,no-resolve
+  - RULE-SET,google_ip,Google,no-resolve
+  - RULE-SET,telegram_ip,Telegram,no-resolve
+  - RULE-SET,facebook_ip,Facebook,no-resolve
+  - RULE-SET,twitter_ip,Twitter,no-resolve
+  - RULE-SET,netflix_ip,Netflix,no-resolve   
+  - RULE-SET,cn_ip,DIRECT,no-resolve
+  
   # 最终兜底策略
   - MATCH,漏网之鱼
 
