@@ -107,8 +107,8 @@ rules:
   - RULE-SET,private_ip,DIRECT,no-resolve
 
   # 广告拦截服务
-  - RULE-SET,category-ads-all,REJECT
   - RULE-SET,awavenue-ads,REJECT  
+  - RULE-SET,category-ads-all,REJECT
   - RULE-SET,ad_ip,REJECT,no-resolve
 
   # 国内服务
