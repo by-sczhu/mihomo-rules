@@ -117,6 +117,9 @@ rules:
   # 自建直连/PT域名服务
   - RULE-SET,direct_custom,DIRECT
 
+  # 屏蔽 UDP 443（QUIC）
+  - AND,((NETWORK,udp),(DST-PORT,443),(NOT,((RULE-SET,cn)))),REJECT
+  
   # 自建代理域名服务
   - RULE-SET,proxy_custom,国外代理
   
