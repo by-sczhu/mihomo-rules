@@ -108,7 +108,7 @@ rules:
 
   # 广告拦截服务
   - RULE-SET,category-ads-all,REJECT
-  - RULE-SET,category-ads,REJECT
+  - RULE-SET,awavenue-ads,REJECT  
   - RULE-SET,ad_ip,REJECT,no-resolve
 
   # 国内服务
@@ -287,8 +287,8 @@ rule-providers:
   cn:                        {<<: *DomainMrs, url: https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/cn.mrs}
  
   # 广告类别域名
-  category-ads                : {<<: *DomainMrs, url: https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/category-ads.mrs}
-  category-ads-all            : {<<: *DomainMrs, url: https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/category-ads-all.mrs}
+  awavenue-ads:              {<<: *DomainMrs, url: https://github.com/TG-Twilight/AWAvenue-Ads-Rule/raw/refs/heads/main/Filters/AWAvenue-Ads-Rule-Clash.mrs}
+  category-ads-all:          {<<: *DomainMrs, url: https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/category-ads-all.mrs}
   
   # IP 地址规则集
   # [规则集] private_ip：私有及保留 IP 网段
