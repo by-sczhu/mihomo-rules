@@ -114,7 +114,6 @@ rules:
   # 国内服务
   - RULE-SET,alibaba,DIRECT
   - RULE-SET,jd,DIRECT
-  - RULE-SET,douyin,DIRECT
   - RULE-SET,tencent,DIRECT
   - RULE-SET,bytedance,DIRECT
   - RULE-SET,tracker,DIRECT  
@@ -208,21 +207,16 @@ rule-providers:
   # 自建直连/PT域名规则集
   direct_custom:             {<<: *DomainMrs, url: https://raw.githubusercontent.com/by-sczhu/mihomo-rules/main/rules/direct_custom.mrs}
   
-  # [规则集] alibaba：阿里巴巴服务域名
-  alibaba                     : {<<: *DomainMrs, url: https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/alibaba.mrs}
-  # [规则集] bytedance：字节跳动服务域名
-  bytedance                   : {<<: *DomainMrs, url: https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/bytedance.mrs}
-  # [规则集] douyin：抖音服务域名
-  douyin                      : {<<: *DomainMrs, url: https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/douyin.mrs}
-  # [规则集] jd：京东服务域名
-  jd                          : {<<: *DomainMrs, url: https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/jd.mrs}
-  # [规则集] tencent：腾讯服务域名
-  tencent                     : {<<: *DomainMrs, url: https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/tencent.mrs}
-  # [规则集] tracker：BT/PT Tracker 域名
-  tracker                     : {<<: *DomainMrs, url: https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/tracker.mrs}
+  # 国内直连域名
+  alibaba:                   {<<: *DomainMrs, url: https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/alibaba.mrs}
+  bytedance:                 {<<: *DomainMrs, url: https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/bytedance.mrs}
+  jd:                        {<<: *DomainMrs, url: https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/jd.mrs}
+  tencent:                   {<<: *DomainMrs, url: https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/tencent.mrs}
+  tracker:                   {<<: *DomainMrs, url: https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/tracker.mrs}
 
   # 自建代理域名规则集
-  proxy_custom:              {<<: *DomainMrs, url: https://raw.githubusercontent.com/by-sczhu/mihomo-rules/main/rules/proxy_custom.mrs} 
+  proxy_custom:              {<<: *DomainMrs, url: https://raw.githubusercontent.com/by-sczhu/mihomo-rules/main/rules/proxy_custom.mrs}
+  
   # GitHub域名规则集
   github:                    {<<: *DomainMrs, url: https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/github.mrs}
   
@@ -291,25 +285,18 @@ rule-providers:
   category-ads-all:          {<<: *DomainMrs, url: https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/category-ads-all.mrs}
   
   # IP 地址规则集
-  # [规则集] private_ip：私有及保留 IP 网段
-  private_ip                  : {<<: *IPcidrMrs, url: https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geoip/private.mrs}
-  # [规则集] ai_ip：AI 服务 IP 地址段
-  ai_ip                       : {<<: *IPcidrMrs, url: https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geoip/ai.mrs}
-  # [规则集] apple_ip：Apple 服务 IP 地址段
-  apple_ip                    : {<<: *IPcidrMrs, url: https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo-lite/geoip/apple.mrs}
-  # [规则集] google_ip：Google 服务 IP 地址段
-  google_ip                   : {<<: *IPcidrMrs, url: https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geoip/google.mrs}
-  # [规则集] telegram_ip：Telegram 服务 IP 地址段
-  telegram_ip                 : {<<: *IPcidrMrs, url: https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo-lite/geoip/telegram.mrs}
-  # [规则集] twitter_ip：X/Twitter 服务 IP 地址段
-  twitter_ip                  : {<<: *IPcidrMrs, url: https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo-lite/geoip/twitter.mrs}
-  # [规则集] cloudflare_ip：Cloudflare IP 地址段
-  cloudflare_ip               : {<<: *IPcidrMrs, url: https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geoip/cloudflare.mrs}
-  # [规则集] netflix_ip：Netflix IP 地址段
-  netflix_ip                  : {<<: *IPcidrMrs, url: https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geoip/netflix.mrs}
-  # [规则集] facebook_ip：Facebook IP 地址段
-  facebook_ip                 : {<<: *IPcidrMrs, url: https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geoip/facebook.mrs}
-   # [规则集] cn_ip：中国大陆 IP 地址段
-  cn_ip                       : {<<: *IPcidrMrs, url: https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geoip/cn.mrs} 
-  # [规则集] ad_ip：广告相关 IP 地址段
-  ad_ip                       : {<<: *IPcidrMrs, url: https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geoip/ad.mrs}
+  # 私有及保留 IP 网段
+  private_ip:                {<<: *IPcidrMrs, url: https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geoip/private.mrs}
+  # 国外IP地址规则集
+  ai_ip:                     {<<: *IPcidrMrs, url: https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geoip/ai.mrs}
+  apple_ip:                  {<<: *IPcidrMrs, url: https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo-lite/geoip/apple.mrs}
+  google_ip:                 {<<: *IPcidrMrs, url: https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geoip/google.mrs}
+  telegram_ip:               {<<: *IPcidrMrs, url: https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo-lite/geoip/telegram.mrs}
+  twitter_ip:                {<<: *IPcidrMrs, url: https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo-lite/geoip/twitter.mrs}
+  cloudflare_ip:             {<<: *IPcidrMrs, url: https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geoip/cloudflare.mrs}
+  netflix_ip:                {<<: *IPcidrMrs, url: https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geoip/netflix.mrs}
+  facebook_ip:               {<<: *IPcidrMrs, url: https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geoip/facebook.mrs}
+  # 中国大陆 IP 地址段
+  cn_ip:                     {<<: *IPcidrMrs, url: https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geoip/cn.mrs} 
+  # 广告相关 IP 地址段
+  ad_ip:                     {<<: *IPcidrMrs, url: https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geoip/ad.mrs}
