@@ -21,10 +21,11 @@
   +.snssdk.com
   +.snssdkcdn.com
 
-  # 国内 PT 综合 / 影视站
+  # 国内PT综合/影视站
   +.0ff.cc
   +.1ptba.com
   +.52pt.site
+  +.agsvpt.com
   +.audiences.me
   +.beitai.pt
   +.btschool.club
@@ -34,6 +35,7 @@
   +.chdbits.xyz
   +.chddiy.xyz
   +.crabpt.vip
+  +.dajiao.cyou
   +.greatposterwall.com
   +.haidan.cc
   +.haidan.video
@@ -46,6 +48,7 @@
   +.hdcmct.org
   +.hddolby.com
   +.hdfans.org
+  +.hdfun.me
   +.hdhome.org
   +.hdmayi.com
   +.hdpt.xyz
@@ -53,13 +56,11 @@
   +.hdkylin.top
   +.hdsky.me
   +.hdtime.org
-  +.hdvideo.one
-  +.hdvideo.top
   +.hdzone.me
   +.hhan.club
   +.hhanclub.net
   +.hhanclub.top
-  +.icc2022.com
+  +.icetorrent.org
   +.ilovelemonhd.me
   +.kamept.com
   +.keepfrds.com
@@ -74,8 +75,10 @@
   +.nicept.net
   +.iili.io
   +.open.cd
+  +.okpt.net
   +.oshen.win
   +.ourbits.club
+  +.ourhelp.club
   +.pandapt.net
   +.piggo.me
   +.ptcafe.club
@@ -89,9 +92,7 @@
   +.ptsbao.club
   +.pttime.fun
   +.pttime.org
-  +.pttime.top
   +.ptvicomo.net
-  +.rousi.zip
   +.sda1.dev
   +.sharkpt.net
   +.skyey2.com
@@ -103,8 +104,12 @@
   +.wintersakura.net
   +.zhuque.in
   +.zmpt.cc
-
-  # 动漫 / 音乐 / 游戏垂直站
+  +.hdroad.org
+  +.cnhd.org
+  +.u2.dmhy.org
+  +.xingtan.one
+  
+  # 动漫/音乐/游戏垂直站
   +.cyanbug.net
   +.dicmusic.com
   +.dmhy.best
@@ -116,10 +121,14 @@
   +.leaves.red
   +.rainbowisland.co
   +.skyeysnow.com
-
-  # 高校 PT
+  
+  # 高校PT
   +.byr.cn
   +.byr.pt
+  +.cgbt.cn
+  +.52v6.com
+  +.bt.shu6.edu.cn
+  +.whupt.net
   +.hitpt.com
   +.hudbt.hust.edu.cn
   +.nanyangpt.com
@@ -131,14 +140,25 @@
   +.tju.pt
   +.tjupt.org
   +.xauat.edu.cn
-
-  # 国内 PT 工具 / 媒体 API 候选
+  +.pt.scau.edu.cn
+  
+  # Tracker域名
+  +.tracker.byr.cn
+  +.pttracker6.tjupt.org
+  +.tracker.nanyangpt.com
+  +.tracker.keepfrds.com
+  +.tracker.m-team.cc
+  +.tracker.ourbits.club
+  +.tracker.hdsky.me
+  +.tracker.totheglory.im
+  
+  # 国内PT工具/媒体API候选
   +.douban.com
   +.doubaninfo.com
   +.doubanio.com
   +.iyuu.cn
   +.mikanani.me
-  +.img.yichkp.com
+
 
   # Debian 国内镜像 / 高校镜像
   +.debian.org
