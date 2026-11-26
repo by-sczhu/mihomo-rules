@@ -1,10 +1,10 @@
-# 自建及个性化服务
+  # 自建及个性化服务
   +.asusgo.com
   +.openos.org
   +.skk.moe
   +.zerx.dev
 
-# Cloudflare 公共 DoH 服务入口
+  # Cloudflare 公共 DoH 服务入口
   +.cloudflare-dns.com
   one.one.one.one
 
@@ -188,6 +188,8 @@
   +.igexin.com
   +.gepush.com
   +.mobileservice.cn
+  +.pushplus.plus
+  +.wxpusher.com
 
   # 企业/办公推送Webhook
   +.qyapi.weixin.qq.com
