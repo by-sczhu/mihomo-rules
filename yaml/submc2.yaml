@@ -125,7 +125,7 @@ rules:
   - RULE-SET,tracker,DIRECT  
 
   # 屏蔽 UDP 443（QUIC）
-  - AND,((NETWORK,udp),(DST-PORT,443),(NOT,((RULE-SET,cn)))),REJECT
+  # - AND,((NETWORK,udp),(DST-PORT,443),(NOT,((RULE-SET,cn)))),REJECT
   
   # GitHub 服务
   - RULE-SET,github,Github
