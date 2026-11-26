@@ -7,7 +7,8 @@
 +.alipan.com
 +.aliyundrive.com
 +.zerx.dev
-+.cloudflarestorage.com
++.cloudflare-dns.com
+one.one.one.one
 +.ollama.ai
 +.ollama.com
 +.xingchiapi.com
