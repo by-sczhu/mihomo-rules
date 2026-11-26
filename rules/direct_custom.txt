@@ -14,7 +14,7 @@
   +.alipan.com
   +.aliyundrive.com
 
-  # 国内业务 API / 应用服务（按当前直连意图列为候选）
+  # 国内业务 API / 应用服务
   +.xingchiapi.com
   +.ankaoxing.com
   +.scaqjg.com
@@ -162,13 +162,13 @@
   +.gepush.com
   +.mobileservice.cn
 
-  # 证书服务：列为直连候选，不改变其 Fake-IP 行为
+  # 证书服务
   +.digicert.com
   +.entrust.net
   +.symcd.com
   +.omniroot.com
 
-  # NTP：Real-IP 与 DIRECT 可同时成立，分别控制解析与出口
+  # NTP
   +.ntp.org
   +.ntp.org.cn
   +.pool.aliyun.com
