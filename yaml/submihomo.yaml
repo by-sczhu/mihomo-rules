@@ -283,7 +283,7 @@ rule-providers:
   cn:                        {<<: *DomainMrs, url: https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/cn.mrs}
  
   # 广告类别域名
-  awavenue-ads:              {<<: *DomainMrs, url: https://github.com/TG-Twilight/AWAvenue-Ads-Rule/raw/refs/heads/main/Filters/AWAvenue-Ads-Rule-Clash.mrs}
+  awavenue-ads:              {<<: *DomainMrs, url: https://raw.githubusercontent.com/TG-Twilight/AWAvenue-Ads-Rule/main/Filters/AWAvenue-Ads-Rule-Clash.mrs}
   category-ads-all:          {<<: *DomainMrs, url: https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/category-ads-all.mrs}
   
   # IP 地址规则集
