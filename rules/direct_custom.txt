@@ -35,27 +35,29 @@
   +.chdbits.xyz
   +.chddiy.xyz
   +.crabpt.vip
+  +.cnhd.org
   +.dajiao.cyou
-  +.greatposterwall.com
+  +.gzt.pt
   +.haidan.cc
   +.haidan.video
   +.hd4fans.org
   +.hdarea.club
   +.hdatmos.club
   +.hdchina.org
-  +.hdwing.org
-  +.hdcity.city
   +.hdcmct.org
   +.hddolby.com
   +.hdfans.org
   +.hdfun.me
   +.hdhome.org
-  +.hdmayi.com
-  +.hdpt.xyz
   +.hdkyl.in
   +.hdkylin.top
+  +.hdmayi.com
+  +.hdpt.xyz
+  +.hdroad.org
   +.hdsky.me
   +.hdtime.org
+  +.hdwing.org
+  +.hdcity.city
   +.hdzone.me
   +.hhan.club
   +.hhanclub.net
@@ -72,23 +74,23 @@
   +.m-team.cc
   +.m-team.io
   +.mt.cc
+  +.nanyangpt.com
   +.nicept.net
-  +.iili.io
-  +.open.cd
   +.okpt.net
+  +.open.cd
   +.oshen.win
   +.ourbits.club
   +.ourhelp.club
   +.pandapt.net
   +.piggo.me
   +.ptcafe.club
-  +.ptchdbits.co
   +.ptchina.org
-  +.pterclub.com
-  +.pterclub.net
+  +.ptchdbits.co
   +.ptfans.cc
   +.pthome.net
   +.pthome.org
+  +.pterclub.com
+  +.pterclub.net
   +.ptsbao.club
   +.pttime.fun
   +.pttime.org
@@ -100,49 +102,46 @@
   +.springsunday.net
   +.totheglory.im
   +.ubits.club
+  +.u2.dmhy.org
   +.ultrahd.net
   +.wintersakura.net
+  +.xingtan.one
   +.zhuque.in
   +.zmpt.cc
-  +.hdroad.org
-  +.cnhd.org
-  +.u2.dmhy.org
-  +.xingtan.one
+  
+  # 高校PT站点
+  +.byr.cn
+  +.byr.pt
+  +.bt.shu6.edu.cn
+  +.cgbt.cn
+  +.52v6.com
+  +.hitpt.com
+  +.hudbt.hust.edu.cn
+  +.neu6.edu.cn
+  +.nexushd.org
+  +.npupt.com
+  +.nwsuaf6.edu.cn
+  +.pt.scau.edu.cn
+  +.sjtu.edu.cn
+  +.tju.pt
+  +.tjupt.org
+  +.whupt.net
+  +.xauat.edu.cn
   
   # 动漫/音乐/游戏垂直站
-  +.cyanbug.net
   +.dicmusic.com
   +.dmhy.best
   +.dmhy.org
   +.eastgame.org
   +.et8.org
   +.ilolicon.com
+  +.iili.io
   +.kame.gay
   +.leaves.red
   +.rainbowisland.co
   +.skyeysnow.com
   
-  # 高校PT
-  +.byr.cn
-  +.byr.pt
-  +.cgbt.cn
-  +.52v6.com
-  +.bt.shu6.edu.cn
-  +.whupt.net
-  +.hitpt.com
-  +.hudbt.hust.edu.cn
-  +.nanyangpt.com
-  +.neu6.edu.cn
-  +.nexushd.org
-  +.npupt.com
-  +.nwsuaf6.edu.cn
-  +.sjtu.edu.cn
-  +.tju.pt
-  +.tjupt.org
-  +.xauat.edu.cn
-  +.pt.scau.edu.cn
-  
-  # Tracker域名
+  # 独立Tracker域名
   +.tracker.byr.cn
   +.pttracker6.tjupt.org
   +.tracker.nanyangpt.com
@@ -152,13 +151,14 @@
   +.tracker.hdsky.me
   +.tracker.totheglory.im
   
-  # 国内PT工具/媒体API候选
+  # IYUU+媒体API
+  +.iyuu.cn
+  +.iyuu.com
+  +.api.iyuu.cn
   +.douban.com
   +.doubaninfo.com
   +.doubanio.com
-  +.iyuu.cn
   +.mikanani.me
-
 
   # Debian 国内镜像 / 高校镜像
   +.debian.org
@@ -166,14 +166,21 @@
   +.ustc.edu.cn
   +.tsinghua.edu.cn
 
-  # GitHub 加速 / 国内镜像候选
+  # GitHub加速相关域名
+  # GHProxy系列
   +.ghproxy.com
-  +.ghproxy.net
+  +.shturl.cc/F
   +.gh-proxy.com
-  +.gh-proxy.org
+  +.shturl.cc/eo
+  +.shturl.cc/B9
+  
+  # 仓库镜像
   +.gitclone.com
   +.jsdelivr.net
   +.npmmirror.com
+  +.shturl.cc
+  +.hub.gitmirror.com
+  +.github.akams.cn
 
   # 国内推送服务
   +.getui.com
@@ -181,6 +188,12 @@
   +.igexin.com
   +.gepush.com
   +.mobileservice.cn
+
+  # 企业/办公推送Webhook
+  +.qyapi.weixin.qq.com
+  +.oapi.dingtalk.com
+  +.api.dingtalk.com
+  +.open.feishu.cn
 
   # 证书服务
   +.digicert.com
