@@ -167,6 +167,7 @@ one.one.one.one
 # 仓库镜像
 +.gitclone.com
 +.jsdelivr.net
++.jsdelivr.com
 +.npmmirror.com
 +.github.akams.cn
 # 证书服务
