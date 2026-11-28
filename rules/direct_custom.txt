@@ -3,6 +3,7 @@
 +.openos.org
 +.skk.moe
 +.zerx.dev
++.biaozhuhero.com
 
 # 2. 国内业务 API / 应用服务
 +.xingchiapi.com
