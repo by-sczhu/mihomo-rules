@@ -41,6 +41,7 @@ one.one.one.one
 +.hdchina.org
 +.hdcmct.org
 +.hddolby.com
++.uhddolby.com
 +.hdfans.org
 +.hdfun.me
 +.hdhome.org
