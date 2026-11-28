@@ -1,17 +1,20 @@
-# 自建及个性化服务
+# 1. 自建及个性化服务
 +.asusgo.com
 +.openos.org
 +.skk.moe
 +.zerx.dev
-# 国内业务 API / 应用服务
+
+# 2. 国内业务 API / 应用服务
 +.xingchiapi.com
 +.ankaoxing.com
 +.scaqjg.com
 +.snssdk.com
-# Cloudflare 公共 DoH 服务入口
+
+# 3. Cloudflare 公共 DoH 服务入口
 +.cloudflare-dns.com
 one.one.one.one
-# 国内PT综合/影视站
+
+# 4. 国内 PT 综合 / 影视站
 +.0ff.cc
 +.1ptba.com
 +.52pt.site
@@ -27,7 +30,6 @@ one.one.one.one
 +.crabpt.vip
 +.cnhd.org
 +.dajiao.cyou
-+.eastgame.org
 +.greatposterwall.com
 +.haidan.cc
 +.haidan.video
@@ -102,7 +104,8 @@ one.one.one.one
 +.xingtan.one
 +.zhuque.in
 +.zmpt.cc
-# 高校PT站点
+
+# 5. 高校 PT 站点
 +.byr.cn
 +.byr.pt
 +.bt.shu6.edu.cn
@@ -120,7 +123,8 @@ one.one.one.one
 +.tjupt.org
 +.whupt.net
 +.xauat.edu.cn
-# 动漫/音乐/游戏垂直站
+
+# 6. 动漫 / 音乐 / 游戏垂直站
 +.dicmusic.com
 +.dmhy.best
 +.dmhy.org
@@ -132,50 +136,44 @@ one.one.one.one
 +.leaves.red
 +.rainbowisland.co
 +.skyeysnow.com
-# 独立Tracker域名
-+.tracker.byr.cn
+
+# 7. 独立 Tracker / PT 相关服务
 +.cinefiles.info
-+.leniter.org
-+.pttracker6.tjupt.org
-+.tracker.nanyangpt.com
-+.tracker.keepfrds.com
-+.tracker.m-team.cc
-+.tracker.ourbits.club
-+.tracker.hdsky.me
-+.tracker.totheglory.im
-+.cinefiles.info
-# IYUU+媒体API
+
+# 8. IYUU + 媒体 API
 +.iyuu.cn
 +.iyuu.com
-+.api.iyuu.cn
 +.douban.com
 +.doubaninfo.com
 +.doubanio.com
 +.mikanani.me
-#[阿里云 CDN / 网盘
+
+# 9. 阿里云 CDN / 网盘
 +.aliyuncdn.com
 +.aliyuncdn.net
 +.aliyundrive.com
-# Debian 国内镜像 / 高校镜像
+
+# 10. Debian 国内镜像 / 高校镜像
 +.debian.org
 +.debian.net
 +.ustc.edu.cn
 +.tsinghua.edu.cn
-# GHProxy系列
+
+# 11. GitHub 加速 / 仓库镜像
 +.ghproxy.com
 +.gh-proxy.com
-# 仓库镜像
 +.gitclone.com
 +.jsdelivr.net
-+.jsdelivr.com
 +.npmmirror.com
 +.github.akams.cn
-# 证书服务
+
+# 12. 证书服务
 +.digicert.com
 +.entrust.net
 +.symcd.com
 +.omniroot.com
-# NTP时间服务
+
+# 13. NTP 时间服务
 +.ntp.org
 +.ntp.org.cn
 +.pool.aliyun.com
@@ -193,7 +191,8 @@ one.one.one.one
 +.time.android.com
 +.time.edu.cn
 +.time.cloudflare.com
-# 国内推送服务
+
+# 14. 国内推送服务
 +.getui.com
 +.getui.net
 +.igexin.com
@@ -201,7 +200,8 @@ one.one.one.one
 +.mobileservice.cn
 +.pushplus.plus
 +.wxpusher.com
-# 企业/办公推送Webhook
+
+# 15. 企业 / 办公推送 Webhook
 +.qyapi.weixin.qq.com
 +.oapi.dingtalk.com
 +.api.dingtalk.com
