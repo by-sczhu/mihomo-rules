@@ -1,14 +1,16 @@
+# 1. 路由器 / 固件 / 网络相关
 +.asuswrt-merlin.net
 
+# 2. Docker 镜像 / 容器服务
 +.dockerproxy.com
 +.dockerproxy.net
 +.docker.io
 
+# 3. 其他代理 / 网络服务
 +.kejiwanjia.net
 +.zstarzzz.cc
 +.66jc.top
 +.htwggj.cn
-
 +.ssrla.de
 +.ssrla2.de
 +.sspath.org
@@ -18,13 +20,13 @@
 +.liangxin.xyz
 +.liangxin1.xyz
 
+# 4. 海外 PT / 私有站点
 +.avistaz.to
 +.beyond-hd.me
 +.bibliotik.me
 +.bitpt.cn
 +.blutopia.cc
 +.broadcasthe.net
-+.cinefiles.info
 +.cinemaz.to
 +.exoticaz.to
 +.filelist.io
@@ -34,13 +36,11 @@
 +.itzmx.com
 +.jpopsuki.eu
 +.jptv.club
-+.leniter.org
 +.morethantv.me
 +.myanonamouse.net
 +.nebulance.io
 +.passthepopcorn.me
 +.privatehd.to
-+.share.ilolicon.com
 +.torrentleech.org
 +.uhdbits.org
 +.upxin.net
